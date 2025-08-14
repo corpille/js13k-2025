@@ -8,7 +8,7 @@ import PlayerEntity from './PlayerEntity';
 const moveSpeed = squareSize / 5;
 const jumpSpeed = (squareSize / 5) * 4;
 const gravity = squareSize / 4;
-const forceDecrease = 1;
+const forceDecrease = squareSize / 20;
 
 // Level Data
 
