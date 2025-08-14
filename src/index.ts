@@ -169,12 +169,16 @@ function changeState() {
   }
 }
 
+const fps = 60;
+
 function gameLoop() {
   processInput();
   changeState();
   render();
 
-  window.requestAnimationFrame(gameLoop);
+  setTimeout(() => {
+    requestAnimationFrame(gameLoop);
+  }, 1000 / fps);
 }
 
 function init() {
