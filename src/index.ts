@@ -5,17 +5,31 @@ import Level from './level';
 import PlayerEntity from './PlayerEntity';
 
 // Game constant
-const moveSpeed = 4;
-const jumpSpeed = 16;
-const gravity = 5;
+const moveSpeed = squareSize / 5;
+const jumpSpeed = (squareSize / 5) * 4;
+const gravity = squareSize / 4;
 const forceDecrease = 1;
 
 // Level Data
-const levelData = {
+
+const level1Data = {
   startX: 1,
   startY: 18,
   b: [
-    [0, 19, 6, 1, true],
+    [-1, 19, 7, 1, true],
+    [6, 18, 7, 1, true],
+    [10, 19, 6, 1, false],
+    [20, 19, 6, 1, true],
+    [30, 19, 11, 1, false],
+  ],
+  end: [37, 17],
+};
+
+const level2Data = {
+  startX: 1,
+  startY: 18,
+  b: [
+    [-1, 19, 7, 1, true],
     [9, 16, 6, 1, false],
     [18, 14, 2, 1, true],
     [13, 11, 3, 1, false],
@@ -23,12 +37,19 @@ const levelData = {
     [2, 7, 2, 1, false],
     [6, 5, 3, 1, true],
     [11, 3, 13, 1, false],
-    [30, 14, 7, 1, true],
+    [30, 14, 11, 1, true],
   ],
-  end: [34, 12],
+  end: [37, 12],
 };
 
-let level = new Level(levelData.startX, levelData.startY, levelData.b, levelData.end);
+const levels = [level1Data, level2Data];
+let currentLevel = 0;
+let level = new Level(
+  levels[currentLevel].startX,
+  levels[currentLevel].startY,
+  levels[currentLevel].b,
+  levels[currentLevel].end,
+);
 let player = new PlayerEntity(level.startX, level.startY, 1, 1);
 let jumpForce = 0;
 let xForce = 0;
@@ -43,7 +64,17 @@ function render() {
   ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
   level.blocks.forEach((block) => {
     ctx.fillStyle = block.isDark ? 'black' : '#D3D3D3';
-    ctx.fillRect(block.x, block.y, block.width, block.height);
+    ctx.strokeStyle = '#B8B8B8';
+    ctx.lineWidth = 3;
+
+    ctx.setLineDash([5]);
+
+    ctx.beginPath();
+    ctx.roundRect(block.x, block.y, block.width, block.height, 4);
+    if (!block.isDark) {
+      ctx.stroke();
+    }
+    ctx.fill();
   });
   ctx.fillStyle = 'red';
   ctx.fillRect(level.end.x, level.end.y, squareSize, squareSize * 2);
@@ -80,7 +111,12 @@ function processInput() {
 }
 
 function reset() {
-  level = new Level(levelData.startX, levelData.startY, levelData.b, levelData.end);
+  level = new Level(
+    levels[currentLevel].startX,
+    levels[currentLevel].startY,
+    levels[currentLevel].b,
+    levels[currentLevel].end,
+  );
   player = new PlayerEntity(level.startX, level.startY, 1, 1);
   jumpForce = 0;
   xForce = 0;
@@ -92,7 +128,7 @@ function changeState() {
   // Compute Y force
   yForce += gravityForce - jumpForce;
   const colision = level.blocks.find((block) => {
-    return isCollidingWith({ x: player.x, y: player.y + yForce, width: player.width, height: player.height }, block);
+    return isCollidingWith({ ...player, y: player.y + yForce }, block);
   });
 
   // Move player
@@ -109,14 +145,23 @@ function changeState() {
     player.isGrounded = false;
     gravityForce += 0.1;
   }
-  player.x += xForce;
+  const Xcolision = level.blocks.find((block) => {
+    return isCollidingWith({ ...player, x: player.x + xForce }, block);
+  });
+  if (!Xcolision) {
+    player.x += xForce;
+  }
 
   // Reset forces
   xForce = xForce < 0 ? Math.min(0, xForce + forceDecrease) : Math.max(0, xForce - forceDecrease);
   yForce = 0;
   jumpForce = Math.max(0, jumpForce - forceDecrease);
   if (isCollidingWith(player, level.end)) {
-    alert('GG WP');
+    if (currentLevel < levels.length - 1) {
+      currentLevel++;
+    } else {
+      alert('GG WP');
+    }
     reset();
   }
   if (player.y > (gridHeight + 1) * squareSize) {
