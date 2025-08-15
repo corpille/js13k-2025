@@ -1,4 +1,4 @@
-* {
+*, *:after, *:before {
     box-sizing: border-box;
 }
 
@@ -6,15 +6,20 @@ html {
     background: #333;
     height: 100%;
     width: 100%;
+    font-family: Arial;
 }
 
 body {
+    position: relative;
     display: flex;
+    flex-direction: column;
     height: 100%;
     width: 100%;
     margin: 0;
     justify-content: center;
     align-items: center;
+    color: white;
+    overflow: hidden;
 }
 
 canvas {
@@ -29,4 +34,87 @@ canvas {
     left: 8px;
     color:white;
     font-size: 24px;
+}
+
+#lvls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.lvl {
+    position: relative;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 0.25rem;
+    background-color: #ffffff6c;
+    border: 2px dotted white;
+}
+
+.lvl:not(:last-child) {
+    margin-right: calc(4rem + 8px);
+}
+
+.lvl:not(:last-child):after {
+    content: '';
+    display: block;
+    width: 4rem;
+    height: 1px;
+    position: absolute;
+    top: 1rem;
+    left: calc(2rem + 2px);
+    border-top: 2px dotted white;
+}
+
+.lvl.done {
+    border-color: transparent;
+    background-color: #61C25C;
+}
+
+.lvl.done:before {
+    content: '';
+    display: block;
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    position: absolute;
+    width: 1rem;
+    height: 0.5rem;
+    top: 0.5rem;
+    left: 0.4rem;
+    transform: rotate(-45deg);
+}
+
+.lvl.doing {
+    border-color: #EFBD32;
+    background-color: rgba(239, 189, 50, .5);
+}
+
+#end {
+    position: absolute;
+    top: 100%;
+    left: 25%;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+}
+
+#end button {
+    margin-top: 2rem;
+    background-color: #EFBD32;
+    height: 4rem;
+    font-size: 1.5rem;
+    padding:0px 2rem;
+    border:none;
+    border-radius: 0.5rem;
+    transition: all .3s;
+    cursor: pointer;
+}
+
+#end button:hover {
+    background-color: #f1c64e;
 }

@@ -1,0 +1,146 @@
+import { forceDecrease, gravity, gridHeight, gridWidth, jumpSpeed, moveSpeed, squareSize } from './config';
+import { canvas, end } from './elements';
+import Game from './Game';
+import { isCollidingWith, querySelector } from './utils';
+
+const FPS = 60;
+
+export default class Engine {
+  game: Game;
+  levels: any[];
+
+  // Time Handling
+  interval: number = Math.floor(1000 / FPS);
+  startTime: number = performance.now();
+  previousTime: number = this.startTime;
+  currentTime: number = 0;
+  deltaTime: number = 0;
+
+  private ctx: CanvasRenderingContext2D;
+
+  constructor(levels: any[]) {
+    this.levels = levels;
+    this.game = new Game(levels);
+    this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  }
+
+  loop(timestamp: any) {
+    if (this.game.stop) {
+      return;
+    }
+    this.processInput();
+    this.currentTime = timestamp;
+    this.deltaTime = this.currentTime - this.previousTime;
+
+    if (this.deltaTime > this.interval) {
+      this.previousTime = this.currentTime - (this.deltaTime % this.interval);
+
+      this.changeState();
+      this.render();
+      this.checkEndState();
+    }
+
+    requestAnimationFrame(this.loop.bind(this));
+  }
+
+  processInput() {
+    if (!this.game.keys['Space']) {
+      this.game.isJumping = false;
+    }
+    if ((this.game.keys['KeyA'] || this.game.keys['ArrowLeft']) && this.game.player.x > 0) {
+      this.game.xForce = -moveSpeed;
+    }
+    if ((this.game.keys['KeyD'] || this.game.keys['ArrowRight']) && this.game.player.x < (gridWidth - 1) * squareSize) {
+      this.game.xForce = moveSpeed;
+    }
+    if (this.game.keys['Space'] && this.game.player.isGrounded && !this.game.isJumping) {
+      this.game.jumpForce = jumpSpeed;
+      this.game.isJumping = true;
+      this.game.level.blocks.forEach((block, index) => index !== 0 && (block.isDark = !block.isDark));
+    }
+  }
+
+  changeState() {
+    // Compute Y force
+    this.game.yForce += this.game.gravityForce - this.game.jumpForce;
+    const colision = this.game.level.blocks.find((block) => {
+      return isCollidingWith({ ...this.game.player, y: this.game.player.y + this.game.yForce }, block);
+    });
+
+    // Move player
+    if (colision) {
+      if (colision.y * squareSize < this.game.player.y + squareSize) {
+        this.game.player.y = colision.y + squareSize;
+      } else {
+        this.game.player.y = colision.y - squareSize;
+        this.game.player.isGrounded = true;
+        this.game.gravityForce = gravity;
+      }
+    } else {
+      this.game.player.y += this.game.yForce;
+      this.game.player.isGrounded = false;
+      this.game.gravityForce += 0.1;
+    }
+    const Xcolision = this.game.level.blocks.find((block) => {
+      return isCollidingWith({ ...this.game.player, x: this.game.player.x + this.game.xForce }, block);
+    });
+    if (!Xcolision) {
+      this.game.player.x += this.game.xForce;
+    }
+
+    // Reset forces
+    this.game.xForce =
+      this.game.xForce < 0
+        ? Math.min(0, this.game.xForce + forceDecrease)
+        : Math.max(0, this.game.xForce - forceDecrease);
+    this.game.yForce = 0;
+    this.game.jumpForce = Math.max(0, this.game.jumpForce - forceDecrease);
+  }
+
+  render() {
+    this.ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
+    this.game.level.blocks.forEach((block) => {
+      this.ctx.fillStyle = block.isDark ? 'black' : '#D3D3D3';
+      this.ctx.strokeStyle = '#B8B8B8';
+      this.ctx.lineWidth = 3;
+
+      this.ctx.setLineDash([5]);
+
+      this.ctx.beginPath();
+      this.ctx.roundRect(block.x, block.y, block.width, block.height, 4);
+      if (!block.isDark) {
+        this.ctx.stroke();
+      }
+      this.ctx.fill();
+    });
+    this.ctx.fillStyle = '#292d5c';
+    this.ctx.fillRect(this.game.level.end.x, this.game.level.end.y, squareSize, squareSize * 2);
+
+    this.ctx.fillStyle = '#EFBD32';
+    this.ctx.fillRect(this.game.player.x, this.game.player.y, this.game.player.width, this.game.player.height);
+  }
+
+  checkEndState() {
+    if (isCollidingWith(this.game.player, this.game.level.end)) {
+      this.validateLvl();
+      if (this.game.currentLevel === this.levels.length) {
+        this.endGame();
+      } else {
+        this.game.reset(this.levels);
+      }
+    } else if (this.game.player.y > (gridHeight + 2) * squareSize) {
+      this.game.reset(this.levels);
+    }
+  }
+
+  validateLvl() {
+    querySelector(`.lvl:nth-child(${this.game.currentLevel + 1})`).className = 'lvl done';
+    this.game.currentLevel++;
+    querySelector(`.lvl:nth-child(${this.game.currentLevel + 1})`)?.classList.add('doing');
+  }
+
+  endGame() {
+    end.style.top = `${canvas.getBoundingClientRect().top}px`;
+    this.game.stop = true;
+  }
+}
