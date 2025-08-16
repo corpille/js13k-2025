@@ -45,6 +45,9 @@ export default class Engine {
   }
 
   changeState() {
+    // Update Blocks
+    this.game.level.blocks.forEach((block) => block.update());
+
     // Compute Y force
     this.game.yForce += this.game.gravityForce - this.game.jumpForce;
     const colision = this.game.level.blocks.find((block) => {
@@ -53,6 +56,8 @@ export default class Engine {
 
     // Move player
     if (colision) {
+      console.log(colision.movingShift);
+      this.game.player.x += colision.movingShift / 2;
       if (colision.y * squareSize < this.game.player.y + squareSize) {
         this.game.player.y = colision.y + this.game.player.height;
       } else {

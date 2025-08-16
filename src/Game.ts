@@ -28,7 +28,7 @@ export default class Game {
       levels[this.currentLevel].b,
       levels[this.currentLevel].end,
     );
-    this.player = new PlayerEntity(this.level.startX, this.level.startY, 1, 1);
+    this.player = new PlayerEntity(this.level.startX, this.level.startY, 2, 2);
     this.jumpForce = 0;
     this.xForce = 0;
     this.yForce = 0;

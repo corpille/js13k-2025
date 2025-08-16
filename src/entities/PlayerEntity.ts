@@ -32,7 +32,7 @@ export default class PlayerEntity extends Entity {
   };
 
   constructor(x: number, y: number, width: number, height: number) {
-    super(x, y, width * 2, height * 2);
+    super(x, y, width, height);
 
     this.image = new Image(20, 20 * 21);
     this.image.src = cat;

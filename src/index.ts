@@ -24,10 +24,8 @@ const level2Data = {
   startY: 18,
   b: [
     [-1, 19, 7, 1, true],
-    [9, 19, 7, 1, false],
-    [19, 19, 7, 1, true],
-    [29, 19, 3, 1, false],
-    [35, 19, 6, 1, true],
+    [8, 19, 7, 1, false, 14],
+    [33, 19, 9, 1, true],
   ],
   end: [37, 17],
 };
@@ -37,16 +35,16 @@ const level3Data = {
   startY: 18,
   b: [
     [-1, 19, 7, 1, true],
-    [9, 16, 6, 1, false],
-    [18, 14, 2, 1, true],
-    [13, 11, 3, 1, false],
+    [8, 16, 6, 1, false, 7],
+    [24, 14, 3, 1, true],
+    [12, 11, 3, 1, false, 7],
     [6, 9, 4, 1, true],
     [2, 7, 2, 1, false],
     [6, 5, 3, 1, true],
-    [11, 3, 13, 1, false],
-    [30, 14, 11, 1, true],
+    [11, 3, 5, 1, false, 10],
+    [30, 4, 11, 1, true],
   ],
-  end: [37, 12],
+  end: [37, 2],
 };
 
 const levels = [level1Data, level2Data, level3Data];

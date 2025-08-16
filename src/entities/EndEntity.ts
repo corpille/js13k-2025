@@ -14,6 +14,8 @@ export default class EndEntity extends Entity {
   }
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
+    ctx.imageSmoothingEnabled = false;
+
     if (!this.isDark) {
       ctx.filter = 'invert(1)';
     }
