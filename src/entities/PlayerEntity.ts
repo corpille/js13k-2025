@@ -82,7 +82,7 @@ export default class PlayerEntity extends Entity {
       this.resetAnimationFrame();
       this.loopAnimation = false;
       this.animationCallback = () => {
-        this.currentAnimation = idleSym;
+        this.currentAnimation = this.isRunning ? runSym : idleSym;
         this.resetAnimationFrame();
         this.loopAnimation = true;
       };
@@ -96,7 +96,7 @@ export default class PlayerEntity extends Entity {
   render(ctx: CanvasRenderingContext2D) {
     ctx.imageSmoothingEnabled = false;
     this.frameCounter++;
-    if (this.frameCounter === animationSpeed) {
+    if (this.frameCounter > animationSpeed) {
       this.frameCounter = 0;
       if (this.currentFrame + 1 >= this.animations[this.currentAnimation][1]) {
         if (this.loopAnimation) {

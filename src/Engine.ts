@@ -1,5 +1,6 @@
 import { forceDecrease, FPS, gravity, gridHeight, gridWidth, jumpSpeed, moveSpeed, squareSize } from './config';
 import { canvas, end } from './elements';
+import EndEntity from './entities/EndEntity';
 import Game from './Game';
 import { isCollidingWith, querySelector } from './utils';
 
@@ -23,25 +24,6 @@ export default class Engine {
     this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   }
 
-  loop(timestamp: any) {
-    if (this.game.stop) {
-      return;
-    }
-    this.processInput();
-    this.currentTime = timestamp;
-    this.deltaTime = this.currentTime - this.previousTime;
-
-    if (this.deltaTime > this.interval) {
-      this.previousTime = this.currentTime - (this.deltaTime % this.interval);
-
-      this.changeState();
-      this.render();
-      this.checkEndState();
-    }
-
-    requestAnimationFrame(this.loop.bind(this));
-  }
-
   processInput() {
     if (!this.game.keys['Space']) {
       this.jumpDebuff = false;
@@ -58,6 +40,7 @@ export default class Engine {
       this.game.jumpForce = jumpSpeed;
       this.jumpDebuff = true;
       this.game.level.blocks.forEach((block, index) => index !== 0 && (block.isDark = !block.isDark));
+      this.game.level.end.isDark = !this.game.level.end.isDark;
     }
   }
 
@@ -114,9 +97,7 @@ export default class Engine {
     this.game.level.blocks.forEach((block) => {
       block.render(this.ctx);
     });
-    this.ctx.fillStyle = '#292d5c';
-    this.ctx.fillRect(this.game.level.end.x, this.game.level.end.y, squareSize, squareSize * 2);
-
+    this.game.level.end.render(this.ctx);
     this.game.player.render(this.ctx);
   }
 
@@ -142,5 +123,24 @@ export default class Engine {
   endGame() {
     end.style.top = `${canvas.getBoundingClientRect().top}px`;
     this.game.stop = true;
+  }
+
+  loop(timestamp: any) {
+    if (this.game.stop) {
+      return;
+    }
+    this.processInput();
+    this.currentTime = timestamp;
+    this.deltaTime = this.currentTime - this.previousTime;
+
+    if (this.deltaTime > this.interval) {
+      this.previousTime = this.currentTime - (this.deltaTime % this.interval);
+
+      this.changeState();
+      this.render();
+      this.checkEndState();
+    }
+
+    requestAnimationFrame(this.loop.bind(this));
   }
 }

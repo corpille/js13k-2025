@@ -16,7 +16,7 @@ const level1Data = {
     [-1, 19, 27, 1, true],
     [30, 19, 11, 1, false],
   ],
-  end: [38, 17],
+  end: [37, 17],
 };
 
 const level2Data = {
@@ -29,7 +29,7 @@ const level2Data = {
     [29, 19, 3, 1, false],
     [35, 19, 6, 1, true],
   ],
-  end: [38, 17],
+  end: [37, 17],
 };
 
 const level3Data = {
@@ -46,7 +46,7 @@ const level3Data = {
     [11, 3, 13, 1, false],
     [30, 14, 11, 1, true],
   ],
-  end: [38, 12],
+  end: [37, 12],
 };
 
 const levels = [level1Data, level2Data, level3Data];

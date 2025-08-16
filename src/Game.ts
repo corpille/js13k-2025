@@ -1,10 +1,12 @@
 import { gravity } from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
+import EndEntity from './entities/EndEntity';
 
 export default class Game {
   currentLevel: number;
   level: Level;
+  end: EndEntity;
   player: PlayerEntity;
   jumpForce: number = 0;
   xForce: number = 0;

@@ -12,4 +12,4 @@ export const gravity = squareSize / 4;
 export const forceDecrease = squareSize / 20;
 
 export const FPS = 60;
-export const animationSpeed = FPS / 6;
+export const animationSpeed = FPS / 10;

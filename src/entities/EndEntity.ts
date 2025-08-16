@@ -1,0 +1,24 @@
+import Entity from './Entity';
+import door from '/assets/door.webp';
+
+export default class EndEntity extends Entity {
+  image: HTMLImageElement;
+  isDark: boolean;
+
+  constructor(x: number, y: number, isDark: boolean) {
+    super(x, y, 2, 2);
+
+    this.isDark = isDark;
+    this.image = new Image(40, 40);
+    this.image.src = door;
+  }
+  render(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    if (!this.isDark) {
+      ctx.filter = 'invert(1)';
+    }
+    ctx.fillStyle = '#292d5c';
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    ctx.restore();
+  }
+}
