@@ -57,7 +57,6 @@ export default class Engine {
     if (this.game.keys['Space'] && this.game.player.isGrounded && !this.jumpDebuff) {
       this.game.jumpForce = jumpSpeed;
       this.jumpDebuff = true;
-      this.game.player.jumpStart();
       this.game.level.blocks.forEach((block, index) => index !== 0 && (block.isDark = !block.isDark));
     }
   }
@@ -76,14 +75,17 @@ export default class Engine {
       } else {
         this.game.player.y = colision.y - this.game.player.height;
         this.game.player.isGrounded = true;
-        if (this.game.player.isJumping) {
-          this.game.player.landStart();
-        }
+        this.game.player.landStart();
         this.game.gravityForce = gravity;
       }
     } else {
       this.game.player.y += this.game.yForce;
       this.game.player.isGrounded = false;
+      if (this.game.yForce > 0) {
+        this.game.player.fallStart();
+      } else {
+        this.game.player.jumpStart();
+      }
       this.game.gravityForce += 0.1;
     }
     const Xcolision = this.game.level.blocks.find((block) => {
@@ -103,11 +105,8 @@ export default class Engine {
       this.game.xForce < 0
         ? Math.min(0, this.game.xForce + forceDecrease)
         : Math.max(0, this.game.xForce - forceDecrease);
-    this.game.yForce = 0;
     this.game.jumpForce = Math.max(0, this.game.jumpForce - forceDecrease);
-    if (this.game.player.isJumping && !this.game.jumpForce) {
-      this.game.player.fallStart();
-    }
+    this.game.yForce = 0;
   }
 
   render() {

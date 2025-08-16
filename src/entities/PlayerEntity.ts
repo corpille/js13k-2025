@@ -4,6 +4,12 @@ import Entity from './Entity';
 let frameWidth = 20;
 let frameHeight = 20;
 
+const idleSym = Symbol('idle');
+const runSym = Symbol('run');
+const jumpSym = Symbol('jump');
+const fallSym = Symbol('fall');
+const landSym = Symbol('land');
+
 export default class PlayerEntity extends Entity {
   isGrounded: boolean = false;
   isRunning: boolean = false;
@@ -11,26 +17,26 @@ export default class PlayerEntity extends Entity {
   isLeft: boolean = false;
   image: HTMLImageElement;
   currentFrame: number;
-  currentAnimation: string = 'idle';
+  currentAnimation: symbol = idleSym;
   frameCounter: number;
   loopAnimation: boolean;
   animationCallback: Function | null;
 
-  animations: { [name: string]: number[] } = {
-    idle: [0, 7],
-    run: [8, 12],
-    jump: [13, 17],
-    fall: [18, 19],
-    land: [20, 21],
+  animations: { [name: symbol]: number[] } = {
+    [idleSym]: [0, 7],
+    [runSym]: [8, 12],
+    [jumpSym]: [13, 17],
+    [fallSym]: [18, 19],
+    [landSym]: [20, 21],
   };
 
   constructor(x: number, y: number, width: number, height: number) {
     super(x, y, width * 2, height * 2);
 
     this.image = new Image(20, 20 * 21);
-    this.image.src = '../assets/cat.png';
+    this.image.src = '../assets/cat.webp';
     this.frameCounter = 0;
-    this.currentAnimation = 'idle';
+    this.currentAnimation = idleSym;
     this.currentFrame = this.animations[this.currentAnimation][0];
     this.loopAnimation = true;
   }
@@ -38,7 +44,7 @@ export default class PlayerEntity extends Entity {
   runStart() {
     if (!this.isRunning && !this.isJumping) {
       this.isRunning = true;
-      this.currentAnimation = 'run';
+      this.currentAnimation = runSym;
       this.resetAnimationFrame();
     }
   }
@@ -46,7 +52,7 @@ export default class PlayerEntity extends Entity {
   runStop() {
     if (this.isRunning) {
       this.isRunning = false;
-      this.currentAnimation = 'idle';
+      this.currentAnimation = idleSym;
       this.resetAnimationFrame();
     }
   }
@@ -54,28 +60,28 @@ export default class PlayerEntity extends Entity {
   jumpStart() {
     if (!this.isJumping) {
       this.isJumping = true;
-      this.currentAnimation = 'jump';
+      this.currentAnimation = jumpSym;
       this.resetAnimationFrame();
       this.loopAnimation = false;
     }
   }
 
   fallStart() {
-    if (this.currentAnimation !== 'fall') {
-      this.currentAnimation = 'fall';
+    if (this.currentAnimation !== fallSym) {
+      this.currentAnimation = fallSym;
       this.resetAnimationFrame();
       this.loopAnimation = false;
     }
   }
 
   landStart() {
-    if (this.isJumping) {
+    if (this.currentAnimation === fallSym) {
       this.isJumping = false;
-      this.currentAnimation = 'land';
+      this.currentAnimation = landSym;
       this.resetAnimationFrame();
       this.loopAnimation = false;
       this.animationCallback = () => {
-        this.currentAnimation = 'idle';
+        this.currentAnimation = idleSym;
         this.resetAnimationFrame();
         this.loopAnimation = true;
       };
@@ -91,14 +97,16 @@ export default class PlayerEntity extends Entity {
     this.frameCounter++;
     if (this.frameCounter === animationSpeed) {
       this.frameCounter = 0;
-      this.currentFrame++;
-      if (this.currentFrame >= this.animations[this.currentAnimation][1]) {
+      if (this.currentFrame + 1 >= this.animations[this.currentAnimation][1]) {
         if (this.loopAnimation) {
           this.resetAnimationFrame();
-        } else if (this.animationCallback) {
+        }
+        if (this.animationCallback) {
           this.animationCallback();
           this.animationCallback = null;
         }
+      } else {
+        this.currentFrame++;
       }
     }
 
