@@ -1,6 +1,6 @@
-import { squareSize } from './config';
+import { squareSize } from '../config';
 
-export default class GameEntity {
+export default class Entity {
   x: number;
   y: number;
   width: number;

@@ -1,13 +1,12 @@
-import { forceDecrease, gravity, gridHeight, gridWidth, jumpSpeed, moveSpeed, squareSize } from './config';
+import { forceDecrease, FPS, gravity, gridHeight, gridWidth, jumpSpeed, moveSpeed, squareSize } from './config';
 import { canvas, end } from './elements';
 import Game from './Game';
 import { isCollidingWith, querySelector } from './utils';
 
-const FPS = 60;
-
 export default class Engine {
   game: Game;
   levels: any[];
+  jumpDebuff: boolean = false;
 
   // Time Handling
   interval: number = Math.floor(1000 / FPS);
@@ -45,17 +44,20 @@ export default class Engine {
 
   processInput() {
     if (!this.game.keys['Space']) {
-      this.game.isJumping = false;
+      this.jumpDebuff = false;
     }
     if ((this.game.keys['KeyA'] || this.game.keys['ArrowLeft']) && this.game.player.x > 0) {
       this.game.xForce = -moveSpeed;
+      this.game.player.isLeft = true;
     }
     if ((this.game.keys['KeyD'] || this.game.keys['ArrowRight']) && this.game.player.x < (gridWidth - 1) * squareSize) {
       this.game.xForce = moveSpeed;
+      this.game.player.isLeft = false;
     }
-    if (this.game.keys['Space'] && this.game.player.isGrounded && !this.game.isJumping) {
+    if (this.game.keys['Space'] && this.game.player.isGrounded && !this.jumpDebuff) {
       this.game.jumpForce = jumpSpeed;
-      this.game.isJumping = true;
+      this.jumpDebuff = true;
+      this.game.player.jumpStart();
       this.game.level.blocks.forEach((block, index) => index !== 0 && (block.isDark = !block.isDark));
     }
   }
@@ -70,10 +72,13 @@ export default class Engine {
     // Move player
     if (colision) {
       if (colision.y * squareSize < this.game.player.y + squareSize) {
-        this.game.player.y = colision.y + squareSize;
+        this.game.player.y = colision.y + this.game.player.height;
       } else {
-        this.game.player.y = colision.y - squareSize;
+        this.game.player.y = colision.y - this.game.player.height;
         this.game.player.isGrounded = true;
+        if (this.game.player.isJumping) {
+          this.game.player.landStart();
+        }
         this.game.gravityForce = gravity;
       }
     } else {
@@ -86,6 +91,11 @@ export default class Engine {
     });
     if (!Xcolision) {
       this.game.player.x += this.game.xForce;
+      if (this.game.xForce) {
+        this.game.player.runStart();
+      } else if (this.game.player.isRunning) {
+        this.game.player.runStop();
+      }
     }
 
     // Reset forces
@@ -95,29 +105,20 @@ export default class Engine {
         : Math.max(0, this.game.xForce - forceDecrease);
     this.game.yForce = 0;
     this.game.jumpForce = Math.max(0, this.game.jumpForce - forceDecrease);
+    if (this.game.player.isJumping && !this.game.jumpForce) {
+      this.game.player.fallStart();
+    }
   }
 
   render() {
     this.ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
     this.game.level.blocks.forEach((block) => {
-      this.ctx.fillStyle = block.isDark ? 'black' : '#D3D3D3';
-      this.ctx.strokeStyle = '#B8B8B8';
-      this.ctx.lineWidth = 3;
-
-      this.ctx.setLineDash([5]);
-
-      this.ctx.beginPath();
-      this.ctx.roundRect(block.x, block.y, block.width, block.height, 4);
-      if (!block.isDark) {
-        this.ctx.stroke();
-      }
-      this.ctx.fill();
+      block.render(this.ctx);
     });
     this.ctx.fillStyle = '#292d5c';
     this.ctx.fillRect(this.game.level.end.x, this.game.level.end.y, squareSize, squareSize * 2);
 
-    this.ctx.fillStyle = '#EFBD32';
-    this.ctx.fillRect(this.game.player.x, this.game.player.y, this.game.player.width, this.game.player.height);
+    this.game.player.render(this.ctx);
   }
 
   checkEndState() {

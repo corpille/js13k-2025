@@ -52,8 +52,6 @@ const level3Data = {
 const levels = [level1Data, level2Data, level3Data];
 let engine = new Engine(levels);
 
-let ctx: CanvasRenderingContext2D;
-
 window.addEventListener('keydown', function (e) {
   engine.game.keys[e.code] = true;
 });
@@ -81,9 +79,8 @@ function init() {
 
   canvas.height = squareSize * gridHeight;
   canvas.width = squareSize * gridWidth;
-  ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
   createLvlProgression();
+
   end.style.height = `${squareSize * gridHeight + 8}px`;
   end.style.width = `${squareSize * gridWidth + 8}px`;
   end.style.top = '100%';

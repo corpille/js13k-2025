@@ -1,6 +1,6 @@
-import { gravity, squareSize } from './config';
+import { gravity } from './config';
 import Level from './level';
-import PlayerEntity from './PlayerEntity';
+import PlayerEntity from './entities/PlayerEntity';
 
 export default class Game {
   currentLevel: number;
