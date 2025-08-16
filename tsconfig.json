@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2019",
     "module": "esnext",
+    "types": ["vite/client"],
     "lib": ["esnext", "DOM"],
     "moduleResolution": "Node",
     "strict": true,
@@ -14,5 +15,5 @@
     "skipLibCheck": true,
     "strictPropertyInitialization": false
   },
-  "include": ["src", "assets"]
+  "include": ["src"]
 }

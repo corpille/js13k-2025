@@ -1,5 +1,6 @@
 import { animationSpeed, squareSize } from '../config';
 import Entity from './Entity';
+import cat from '/assets/cat.webp';
 
 let frameWidth = 20;
 let frameHeight = 20;
@@ -34,7 +35,7 @@ export default class PlayerEntity extends Entity {
     super(x, y, width * 2, height * 2);
 
     this.image = new Image(20, 20 * 21);
-    this.image.src = '../assets/cat.webp';
+    this.image.src = cat;
     this.frameCounter = 0;
     this.currentAnimation = idleSym;
     this.currentFrame = this.animations[this.currentAnimation][0];
