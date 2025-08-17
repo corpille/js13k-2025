@@ -13,3 +13,5 @@ export const forceDecrease = squareSize / 20;
 
 export const FPS = 60;
 export const animationSpeed = FPS / 10;
+
+export const coyoteFrames = 3;

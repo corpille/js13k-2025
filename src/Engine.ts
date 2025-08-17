@@ -1,6 +1,15 @@
-import { forceDecrease, FPS, gravity, gridHeight, gridWidth, jumpSpeed, moveSpeed, squareSize } from './config';
+import {
+  coyoteFrames,
+  forceDecrease,
+  FPS,
+  gravity,
+  gridHeight,
+  gridWidth,
+  jumpSpeed,
+  moveSpeed,
+  squareSize,
+} from './config';
 import { canvas, end } from './elements';
-import EndEntity from './entities/EndEntity';
 import Game from './Game';
 import { isCollidingWith, querySelector } from './utils';
 
@@ -8,6 +17,7 @@ export default class Engine {
   game: Game;
   levels: any[];
   jumpDebuff: boolean = false;
+  jumpFrame: number = coyoteFrames;
 
   // Time Handling
   interval: number = Math.floor(1000 / FPS);
@@ -58,25 +68,30 @@ export default class Engine {
     let yOffset = 0;
     let xOffset = 0;
     if (colision) {
-      xOffset = colision.movingShift / 2;
+      xOffset += colision.movingShift / 2;
       if (this.game.player.hitBox.y > colision.y) {
         this.game.player.hitBox.y = colision.y + this.game.player.hitBox.height;
       } else {
         this.game.player.y = colision.y - this.game.player.height;
         this.game.player.hitBox.y = colision.y - this.game.player.hitBox.height;
         this.game.player.isGrounded = true;
+        this.jumpFrame = 0;
+
         this.game.player.landStart();
         this.game.gravityForce = gravity;
       }
     } else {
-      yOffset += this.game.yForce;
-      this.game.player.isGrounded = false;
-      if (this.game.yForce > 0) {
-        this.game.player.fallStart();
-      } else {
-        this.game.player.jumpStart();
+      this.jumpFrame++;
+      if ((this.game.yForce && this.jumpFrame > coyoteFrames) || this.game.yForce < 0) {
+        yOffset += this.game.yForce;
+        this.game.player.isGrounded = false;
+        if (this.game.yForce > 0) {
+          this.game.player.fallStart();
+        } else {
+          this.game.player.jumpStart();
+        }
+        this.game.gravityForce += 0.1;
       }
-      this.game.gravityForce += 0.1;
     }
 
     const Xcolision = this.game.level.blocks.find((block) => {
@@ -114,11 +129,14 @@ export default class Engine {
     if (isCollidingWith(this.game.player, this.game.level.end)) {
       this.validateLvl();
       if (this.game.currentLevel === this.levels.length) {
+        this.jumpFrame = coyoteFrames;
         this.endGame();
       } else {
+        this.jumpFrame = coyoteFrames;
         this.game.reset(this.levels);
       }
     } else if (this.game.player.y > (gridHeight + 2) * squareSize) {
+      this.jumpFrame = coyoteFrames;
       this.game.reset(this.levels);
     }
   }
