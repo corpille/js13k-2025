@@ -22,7 +22,6 @@ export default class BlocEntity extends Entity {
     if (this.moveRange !== 0) {
       this.frameCounter++;
       if (this.frameCounter > moveSpeed) {
-        console.log(this.startX);
         this.frameCounter = 0;
         if (this.movingRight && this.x + this.movingShift > this.startX + this.moveRange) {
           this.movingRight = false;

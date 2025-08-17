@@ -51,23 +51,25 @@ export default class Engine {
     // Compute Y force
     this.game.yForce += this.game.gravityForce - this.game.jumpForce;
     const colision = this.game.level.blocks.find((block) => {
-      return isCollidingWith({ ...this.game.player, y: this.game.player.y + this.game.yForce }, block);
+      return isCollidingWith({ ...this.game.player.hitBox, y: this.game.player.hitBox.y + this.game.yForce }, block);
     });
 
     // Move player
+    let yOffset = 0;
+    let xOffset = 0;
     if (colision) {
-      console.log(colision.movingShift);
-      this.game.player.x += colision.movingShift / 2;
-      if (colision.y * squareSize < this.game.player.y + squareSize) {
-        this.game.player.y = colision.y + this.game.player.height;
+      xOffset = colision.movingShift / 2;
+      if (this.game.player.hitBox.y > colision.y) {
+        this.game.player.hitBox.y = colision.y + this.game.player.hitBox.height;
       } else {
         this.game.player.y = colision.y - this.game.player.height;
+        this.game.player.hitBox.y = colision.y - this.game.player.hitBox.height;
         this.game.player.isGrounded = true;
         this.game.player.landStart();
         this.game.gravityForce = gravity;
       }
     } else {
-      this.game.player.y += this.game.yForce;
+      yOffset += this.game.yForce;
       this.game.player.isGrounded = false;
       if (this.game.yForce > 0) {
         this.game.player.fallStart();
@@ -76,17 +78,19 @@ export default class Engine {
       }
       this.game.gravityForce += 0.1;
     }
+
     const Xcolision = this.game.level.blocks.find((block) => {
-      return isCollidingWith({ ...this.game.player, x: this.game.player.x + this.game.xForce }, block);
+      return isCollidingWith({ ...this.game.player.hitBox, x: this.game.player.hitBox.x + this.game.xForce }, block);
     });
     if (!Xcolision) {
-      this.game.player.x += this.game.xForce;
+      xOffset += this.game.xForce;
       if (this.game.xForce) {
         this.game.player.runStart();
       } else if (this.game.player.isRunning) {
         this.game.player.runStop();
       }
     }
+    this.game.player.update(xOffset, yOffset);
 
     // Reset forces
     this.game.xForce =

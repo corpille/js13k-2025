@@ -22,6 +22,7 @@ export default class PlayerEntity extends Entity {
   frameCounter: number;
   loopAnimation: boolean;
   animationCallback: Function | null;
+  hitBox: Entity;
 
   animations: { [name: symbol]: number[] } = {
     [idleSym]: [0, 7],
@@ -40,6 +41,7 @@ export default class PlayerEntity extends Entity {
     this.currentAnimation = idleSym;
     this.currentFrame = this.animations[this.currentAnimation][0];
     this.loopAnimation = true;
+    this.hitBox = new Entity(x + 0.5, y, width - 1, height - 1);
   }
 
   runStart() {
@@ -91,6 +93,17 @@ export default class PlayerEntity extends Entity {
 
   resetAnimationFrame() {
     this.currentFrame = this.animations[this.currentAnimation][0];
+  }
+
+  update(x: number = 0, y: number = 0) {
+    if (x) {
+      this.x += x;
+      this.hitBox.x += x;
+    }
+    if (y) {
+      this.y += y;
+      this.hitBox.y += y;
+    }
   }
 
   render(ctx: CanvasRenderingContext2D) {
