@@ -36,9 +36,9 @@ export default class BlocEntity extends Entity {
 
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
-    ctx.fillStyle = this.isDark ? '#282828' : 'rgba(255, 255, 255, 0.3)';
-    ctx.strokeStyle = this.isDark ? 'black' : 'rgba(255, 255, 255, 0.6)';
-    ctx.lineWidth = this.isDark ? 4 : 2;
+    ctx.fillStyle = this.isDark ? '#282828' : 'rgba(0, 0, 0, 0.05)';
+    ctx.strokeStyle = this.isDark ? 'black' : 'rgba(0, 0, 0, 0.2)';
+    ctx.lineWidth = 2;
 
     if (!this.isDark) {
       ctx.setLineDash([5]);
@@ -46,13 +46,24 @@ export default class BlocEntity extends Entity {
 
     ctx.beginPath();
     let corners: number | number[] = 4;
-    if (this.y + this.height === squareSize * gridHeight) {
+    if (this.y === 0) {
       corners = [4, 4, 0, 0];
     }
-    ctx.roundRect(this.x, gridRealHeight - this.y - this.height, this.width, this.height, corners);
-
-    ctx.stroke();
+    const y = gridRealHeight - this.y - this.height;
+    ctx.roundRect(this.x, y, this.width, this.height, corners);
     ctx.fill();
+    ctx.stroke();
+    ctx.closePath();
+
+    if (this.y === 0) {
+      ctx.strokeStyle = this.isDark ? '#282828' : '#dbd8c5';
+      ctx.setLineDash([0]);
+      ctx.beginPath();
+      ctx.moveTo(this.x, y + this.height);
+      ctx.lineTo(this.x + this.width, y + this.height);
+      ctx.stroke();
+      ctx.closePath();
+    }
     ctx.restore();
   }
 }

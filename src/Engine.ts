@@ -49,8 +49,7 @@ export default class Engine {
     if (this.game.keys['Space'] && this.game.player.isGrounded && !this.jumpDebuff) {
       this.game.jumpForce = jumpSpeed;
       this.jumpDebuff = true;
-      this.game.level.blocks.forEach((block, index) => index !== 0 && (block.isDark = !block.isDark));
-      this.game.level.end.isDark = !this.game.level.end.isDark;
+      this.game.invertLevel();
     }
   }
 
@@ -60,8 +59,9 @@ export default class Engine {
 
     // Compute Y force
     this.game.yForce += this.game.gravityForce + this.game.jumpForce;
-    const yColision = this.game.level.blocks.find((block) => {
-      return isCollidingWith({ ...this.game.player.hitBox, y: this.game.player.hitBox.y + this.game.yForce }, block);
+    const yColision = this.game.checkColission({
+      ...this.game.player.hitBox,
+      y: this.game.player.hitBox.y + this.game.yForce,
     });
 
     // Move player
@@ -94,9 +94,11 @@ export default class Engine {
       }
     }
 
-    const xColision = this.game.level.blocks.find((block) => {
-      return isCollidingWith({ ...this.game.player.hitBox, x: this.game.player.hitBox.x + this.game.xForce }, block);
+    const xColision = this.game.checkColission({
+      ...this.game.player.hitBox,
+      x: this.game.player.hitBox.x + this.game.xForce,
     });
+
     if (!xColision) {
       xOffset += this.game.xForce;
       if (this.game.xForce) {
@@ -118,11 +120,7 @@ export default class Engine {
 
   render() {
     this.ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
-    this.game.level.blocks.forEach((block) => {
-      block.render(this.ctx);
-    });
-    this.game.level.end.render(this.ctx);
-    this.game.player.render(this.ctx);
+    this.game.render(this.ctx);
   }
 
   checkEndState() {
@@ -141,9 +139,7 @@ export default class Engine {
   }
 
   validateLvl() {
-    querySelector(`.lvl:nth-child(${this.game.currentLevel + 1})`).className = 'lvl done';
     this.game.currentLevel++;
-    querySelector(`.lvl:nth-child(${this.game.currentLevel + 1})`)?.classList.add('doing');
   }
 
   endGame() {

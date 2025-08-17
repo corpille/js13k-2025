@@ -23,7 +23,7 @@ body {
 }
 
 canvas {
-    background: #913c33;
+    background: #F4F0DB;
     border: 10px solid #282828;
     border-radius: 6px;
 }
@@ -92,7 +92,6 @@ canvas {
 
 #end {
     position: absolute;
-    display: none;
     top: 100%;
     left: 25%;
     background-color: rgba(0,0,0,0.5);
@@ -102,6 +101,7 @@ canvas {
     justify-content: center;
     align-items: center;
     font-size: 42px;
+    /* display: none; */
 }
 
 #end button {
