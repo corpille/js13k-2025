@@ -1,4 +1,4 @@
-import { FPS, squareSize } from '../config';
+import { FPS, gridHeight, squareSize } from '../config';
 import Entity from './Entity';
 
 const moveSpeed = 1;
@@ -35,17 +35,24 @@ export default class BlocEntity extends Entity {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = this.isDark ? 'black' : '#D3D3D3';
-    ctx.strokeStyle = '#B8B8B8';
-    ctx.lineWidth = 3;
+    ctx.save();
+    ctx.fillStyle = this.isDark ? '#282828' : 'rgba(255, 255, 255, 0.3)';
+    ctx.strokeStyle = this.isDark ? 'black' : 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = this.isDark ? 4 : 2;
 
-    ctx.setLineDash([5]);
+    if (!this.isDark) {
+      ctx.setLineDash([5]);
+    }
 
     ctx.beginPath();
-    ctx.roundRect(this.x, this.y, this.width, this.height, 4);
-    if (!this.isDark) {
-      ctx.stroke();
+    let corners: number | number[] = 4;
+    if (this.y + this.height === squareSize * gridHeight) {
+      corners = [4, 4, 0, 0];
     }
+    ctx.roundRect(this.x, this.y, this.width, this.height, corners);
+
+    ctx.stroke();
     ctx.fill();
+    ctx.restore();
   }
 }

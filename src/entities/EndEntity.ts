@@ -17,7 +17,7 @@ export default class EndEntity extends Entity {
     ctx.imageSmoothingEnabled = false;
 
     if (!this.isDark) {
-      ctx.filter = 'invert(1)';
+      ctx.filter = 'invert(1) opacity(0.4)';
     }
     ctx.fillStyle = '#292d5c';
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
