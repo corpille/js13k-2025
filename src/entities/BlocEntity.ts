@@ -1,4 +1,4 @@
-import { FPS, gridHeight, squareSize } from '../config';
+import { FPS, gridHeight, gridRealHeight, squareSize } from '../config';
 import Entity from './Entity';
 
 const moveSpeed = 1;
@@ -49,7 +49,7 @@ export default class BlocEntity extends Entity {
     if (this.y + this.height === squareSize * gridHeight) {
       corners = [4, 4, 0, 0];
     }
-    ctx.roundRect(this.x, this.y, this.width, this.height, corners);
+    ctx.roundRect(this.x, gridRealHeight - this.y - this.height, this.width, this.height, corners);
 
     ctx.stroke();
     ctx.fill();

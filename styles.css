@@ -92,6 +92,7 @@ canvas {
 
 #end {
     position: absolute;
+    display: none;
     top: 100%;
     left: 25%;
     background-color: rgba(0,0,0,0.5);

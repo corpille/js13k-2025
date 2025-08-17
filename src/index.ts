@@ -9,42 +9,54 @@ restartButton?.addEventListener('click', () => {
 });
 
 // Level Data
+const testLevel = {
+  startX: 1,
+  startY: 1,
+  b: [
+    [-1, 0, 27, 1, true],
+    [5, 3, 7, 1, true],
+    [30, 0, 11, 1, false],
+  ],
+  m: [],
+  end: [37, 10],
+};
+
 const level1Data = {
   startX: 1,
-  startY: 18,
+  startY: 1,
   b: [
-    [-1, 19, 27, 1, true],
-    [30, 19, 11, 1, false],
+    [-1, 0, 27, 1, true],
+    [30, 0, 11, 1, false],
   ],
-  end: [37, 17],
+  end: [37, 1],
 };
 
 const level2Data = {
   startX: 1,
-  startY: 18,
+  startY: 1,
   b: [
-    [-1, 19, 7, 1, true],
-    [8, 19, 7, 1, false, 14],
-    [33, 19, 9, 1, true],
+    [-1, 0, 7, 1, true],
+    [8, 0, 7, 1, false, 14],
+    [33, 0, 9, 1, true],
   ],
-  end: [37, 17],
+  end: [37, 1],
 };
 
 const level3Data = {
   startX: 1,
-  startY: 18,
+  startY: 1,
   b: [
-    [-1, 19, 7, 1, true],
-    [8, 16, 6, 1, false, 7],
-    [24, 14, 3, 1, true],
-    [12, 11, 3, 1, false, 7],
-    [6, 9, 4, 1, true],
-    [2, 7, 2, 1, false],
-    [6, 5, 3, 1, true],
-    [11, 3, 5, 1, false, 11],
-    [30, 4, 11, 1, true],
+    [-1, 0, 7, 1, true],
+    [8, 3, 6, 1, false, 7],
+    [24, 5, 3, 1, true],
+    [12, 8, 3, 1, false, 7],
+    [6, 10, 4, 1, true],
+    [2, 13, 2, 1, false],
+    [6, 14, 3, 1, true],
+    [11, 16, 5, 1, false, 11],
+    [30, 15, 11, 1, true],
   ],
-  end: [37, 2],
+  end: [37, 16],
 };
 
 const levels = [level1Data, level2Data, level3Data];

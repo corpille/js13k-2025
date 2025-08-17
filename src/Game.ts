@@ -22,8 +22,8 @@ export default class Game {
   }
 
   reset(levels: any[]) {
-    const { startX, startY, b, end } = levels[this.currentLevel];
-    this.level = new Level(startX, startY, b, end);
+    const { startX, startY, b, m, end } = levels[this.currentLevel];
+    this.level = new Level(startX, startY, b, m ?? [], end);
     this.player = new PlayerEntity(this.level.startX, this.level.startY, 2, 2);
     this.jumpForce = 0;
     this.xForce = 0;

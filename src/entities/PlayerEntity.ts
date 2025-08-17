@@ -1,4 +1,4 @@
-import { animationSpeed, squareSize } from '../config';
+import { animationSpeed, gridRealHeight, gridRealWidth, squareSize } from '../config';
 import Entity from './Entity';
 import cat from '/assets/cat.webp';
 
@@ -97,11 +97,14 @@ export default class PlayerEntity extends Entity {
 
   update(x: number = 0, y: number = 0) {
     if (x) {
-      this.x += x;
       this.hitBox.x += x;
+      if (this.hitBox.x < 0) {
+        this.hitBox.x = 0;
+      } else if (this.hitBox.x + this.hitBox.width > gridRealWidth) {
+        this.hitBox.x = gridRealWidth - this.hitBox.width;
+      }
     }
     if (y) {
-      this.y += y;
       this.hitBox.y += y;
     }
   }
@@ -126,9 +129,11 @@ export default class PlayerEntity extends Entity {
 
     ctx.save();
     if (this.isLeft) {
-      ctx.translate(this.width, 0);
+      ctx.translate(this.width / 2, 0);
       ctx.scale(-1, 1);
     }
+
+    const dx = (squareSize / 2) * (this.isLeft ? 1 : -1);
 
     ctx.drawImage(
       this.image,
@@ -136,11 +141,20 @@ export default class PlayerEntity extends Entity {
       0,
       frameWidth,
       frameHeight,
-      this.x * (this.isLeft ? -1 : 1),
-      this.y,
+      (this.hitBox.x + dx) * (this.isLeft ? -1 : 1),
+      gridRealHeight - this.hitBox.y - this.height,
       this.width,
       this.height,
     );
+
+    // Hitbox Debug
+    // ctx.strokeStyle = 'red';
+    // ctx.strokeRect(
+    //   this.hitBox.x * (this.isLeft ? -1 : 1),
+    //   gridRealHeight - this.hitBox.y - this.hitBox.height,
+    //   this.hitBox.width,
+    //   this.hitBox.height,
+    // );
     ctx.restore();
   }
 }

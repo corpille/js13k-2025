@@ -1,3 +1,4 @@
+import { gridRealHeight } from '../config';
 import Entity from './Entity';
 import door from '/assets/door.webp';
 
@@ -20,7 +21,7 @@ export default class EndEntity extends Entity {
       ctx.filter = 'invert(1) opacity(0.4)';
     }
     ctx.fillStyle = '#292d5c';
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    ctx.drawImage(this.image, this.x, gridRealHeight - this.y - this.height, this.width, this.height);
     ctx.restore();
   }
 }
