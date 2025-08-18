@@ -1,36 +1,56 @@
 import { FPS, gridHeight, gridRealHeight, squareSize } from '../config';
 import Entity from './Entity';
 
-const moveSpeed = 1;
+const moveSpeed = 5;
 export default class BlocEntity extends Entity {
   isDark: boolean;
   startX: number;
-  moveRange: number;
-  frameCounter: number = 0;
-  currentOffset: number = 0;
+  moveRangeX: number = 0;
+  movingShiftX: number = 0;
+  currentMoveShiftX: number = 0;
   movingRight: boolean = true;
-  movingShift: number = 0;
 
-  constructor(x: number, y: number, width: number, height: number, isDark: boolean, moveRange: number) {
+  moveRangeY: number = 0;
+  movingShiftY: number = 0;
+  movingTop: boolean = false;
+
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    isDark: boolean,
+    moveRangeX: number = 0,
+    moveRangeY: number = 0,
+  ) {
     super(x, y, width, height);
     this.startX = this.x;
     this.isDark = isDark;
-    this.moveRange = (moveRange ?? 0) * squareSize;
+    this.moveRangeY = Math.abs((moveRangeY ?? 0) * squareSize);
+    this.moveRangeX = Math.abs((moveRangeX ?? 0) * squareSize);
+    this.movingRight = moveRangeX > 0;
+    this.movingTop = moveRangeY > 0;
+    this.movingShiftX = 0;
+    this.movingShiftY = 0;
   }
 
   update() {
-    if (this.moveRange !== 0) {
-      this.frameCounter++;
-      if (this.frameCounter > moveSpeed) {
-        this.frameCounter = 0;
-        if (this.movingRight && this.x + this.movingShift > this.startX + this.moveRange) {
-          this.movingRight = false;
-        } else if (!this.movingRight && this.x + this.movingShift <= this.startX) {
-          this.movingRight = true;
-        }
-        this.movingShift = (this.movingRight ? 1 : -1) * 10;
-        this.x += this.movingShift;
+    if (this.moveRangeX !== 0) {
+      if (this.movingShiftX >= this.moveRangeX) {
+        this.movingShiftX = 0;
+        this.movingRight = !this.movingRight;
       }
+      this.movingShiftX += moveSpeed;
+      this.currentMoveShiftX = (this.movingRight ? 1 : -1) * moveSpeed;
+      this.x += this.currentMoveShiftX;
+    }
+    if (this.moveRangeY !== 0) {
+      if (this.movingShiftY >= this.moveRangeY) {
+        this.movingShiftY = 0;
+        this.movingTop = !this.movingTop;
+      }
+      this.movingShiftY += moveSpeed;
+      this.y += (this.movingTop ? 1 : -1) * moveSpeed;
     }
   }
 

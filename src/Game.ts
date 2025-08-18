@@ -20,6 +20,8 @@ export default class Game {
   isJumping: boolean = false;
   keys: { [name: string]: boolean } = {};
   stop: boolean = false;
+  treatCount: number = 0;
+  foundTreat: boolean = false;
 
   constructor(levels: any[]) {
     this.currentLevel = 0;
@@ -27,9 +29,9 @@ export default class Game {
   }
 
   reset(levels: any[]) {
-    const { startX, startY, b, m, end } = levels[this.currentLevel];
-    this.level = new Level(b, end);
-    this.mirrorLevel = new Level(m ?? [], undefined, true);
+    const { startX, startY, b, m, end, treat, mirrorTreat } = levels[this.currentLevel];
+    this.level = new Level(b, treat, end);
+    this.mirrorLevel = new Level(m ?? [], mirrorTreat, undefined, true);
     this.hasMirror = !!this.mirrorLevel.blocks.length;
     this.player = new PlayerEntity(startX, startY, 2, 2);
     this.player = new PlayerEntity(startX, startY, 2, 2);
@@ -39,6 +41,14 @@ export default class Game {
     this.keys = {};
     this.isJumping = false;
     this.gravityForce = gravity;
+  }
+
+  validateLvl() {
+    this.currentLevel++;
+    if (this.foundTreat) {
+      this.foundTreat = false;
+      this.treatCount++;
+    }
   }
 
   render(ctx: CanvasRenderingContext2D) {

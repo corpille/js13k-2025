@@ -55,6 +55,21 @@ export default class Engine {
   }
 
   changeState() {
+    if (this.game.level.treat && !this.game.foundTreat) {
+      const hasTreat = isCollidingWith(this.game.player.hitBox, this.game.level.treat);
+      if (hasTreat) {
+        this.game.level.treat.gathered = true;
+        this.game.foundTreat = true;
+      }
+    }
+    if (this.game.mirrorLevel.treat && !this.game.foundTreat) {
+      const hasMirrorTreat = isCollidingWith(this.game.player.hitBox, this.game.mirrorLevel.treat);
+      if (hasMirrorTreat) {
+        this.game.mirrorLevel.treat.gathered = true;
+        this.game.foundTreat = true;
+      }
+    }
+
     // Update Blocks
     this.game.level.blocks.forEach((block) => block.update());
 
@@ -76,21 +91,24 @@ export default class Engine {
       }
       if (!isCoyoting || (isCoyoting && this.jumpFrame > coyoteFrames)) {
         yOffset += this.game.yForce;
-        this.game.player.isGrounded = false;
         if (this.game.yForce < 0) {
           this.game.player.fallStart();
-        } else {
+        } else if (this.game.yForce > 0 && this.game.player.isGrounded) {
           this.game.player.jumpStart();
         }
+        this.game.player.isGrounded = false;
         this.game.gravityForce -= 0.15;
       }
     } else {
       if (colisions.bottom) {
-        xOffset += colisions.bottom.block.movingShift / 2;
-        this.game.player.hitBox.y = colisions.bottom.block.y + colisions.bottom.block.height;
+        const block = colisions.bottom.block;
+        xOffset += block.currentMoveShiftX;
+        this.game.player.hitBox.y = block.y + block.height;
+        if (!this.game.player.isGrounded) {
+          this.game.player.landStart();
+        }
         this.game.player.isGrounded = true;
         this.game.gravityForce = gravity;
-        this.game.player.landStart();
       }
 
       if (colisions.top) {
@@ -104,8 +122,6 @@ export default class Engine {
       xOffset += this.game.xForce;
       if (this.game.xForce) {
         this.game.player.runStart();
-      } else if (this.game.player.isRunning) {
-        this.game.player.runStop();
       }
     } else {
       if (colisions.right) {
@@ -115,7 +131,9 @@ export default class Engine {
       if (colisions.left) {
         this.game.player.hitBox.x = colisions.left.block.x + colisions.left.block.width;
       }
-      this.game.player.runStop();
+      if (this.game.xForce === 0 && this.game.player.isRunning) {
+        this.game.player.runStop();
+      }
     }
     this.game.player.update(xOffset, yOffset);
 
@@ -134,8 +152,8 @@ export default class Engine {
   }
 
   checkEndState() {
-    if (isCollidingWith(this.game.player.hitBox, this.game.level.end)) {
-      this.validateLvl();
+    if (this.game.level.end.isDark && isCollidingWith(this.game.player.hitBox, this.game.level.end)) {
+      this.game.validateLvl();
       this.jumpFrame = coyoteFrames;
       if (this.game.currentLevel === this.levels.length) {
         this.endGame();
@@ -146,10 +164,6 @@ export default class Engine {
       this.jumpFrame = coyoteFrames;
       this.game.reset(this.levels);
     }
-  }
-
-  validateLvl() {
-    this.game.currentLevel++;
   }
 
   endGame() {
