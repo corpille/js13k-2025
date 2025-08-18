@@ -21,21 +21,21 @@ export default class PlayerEntity extends Entity {
   currentAnimation: symbol = idleSym;
   frameCounter: number;
   loopAnimation: boolean;
-  animationCallback: Function | null;
+  backToIdle: boolean;
   hitBox: Entity;
 
   animations: { [name: symbol]: number[] } = {
     [idleSym]: [0, 7],
     [runSym]: [8, 12],
-    [jumpSym]: [13, 17],
-    [fallSym]: [18, 19],
-    [landSym]: [20, 21],
+    [jumpSym]: [14, 16],
+    [fallSym]: [17, 19],
+    [landSym]: [19, 20],
   };
 
   constructor(x: number, y: number, width: number, height: number) {
     super(x, y, width, height);
 
-    this.image = new Image(20, 20 * 21);
+    this.image = new Image(20, 21 * 20);
     this.image.src = cat;
     this.frameCounter = 0;
     this.currentAnimation = idleSym;
@@ -80,14 +80,10 @@ export default class PlayerEntity extends Entity {
   landStart() {
     if (this.currentAnimation === fallSym) {
       this.isJumping = false;
-      this.currentAnimation = landSym;
+      this.currentAnimation = this.isRunning ? runSym : landSym;
       this.resetAnimationFrame();
-      this.loopAnimation = false;
-      this.animationCallback = () => {
-        this.currentAnimation = this.isRunning ? runSym : idleSym;
-        this.resetAnimationFrame();
-        this.loopAnimation = true;
-      };
+      this.loopAnimation = this.isRunning;
+      this.backToIdle = true;
     }
   }
 
@@ -114,13 +110,14 @@ export default class PlayerEntity extends Entity {
     this.frameCounter++;
     if (this.frameCounter > animationSpeed) {
       this.frameCounter = 0;
-      if (this.currentFrame + 1 >= this.animations[this.currentAnimation][1]) {
+      if (this.currentFrame + 1 === this.animations[this.currentAnimation][1] + 1) {
         if (this.loopAnimation) {
           this.resetAnimationFrame();
-        }
-        if (this.animationCallback) {
-          this.animationCallback();
-          this.animationCallback = null;
+        } else if (this.backToIdle) {
+          this.currentAnimation = idleSym;
+          this.resetAnimationFrame();
+          this.loopAnimation = true;
+          this.backToIdle = false;
         }
       } else {
         this.currentFrame++;
