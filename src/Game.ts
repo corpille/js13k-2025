@@ -87,7 +87,7 @@ export default class Game {
   }
 
   checkColission(entity: Entity) {
-    return [...this.level.blocks, ...this.mirrorLevel.blocks].find((block) => {
+    return [...this.level.blocks, ...this.mirrorLevel.blocks].filter((block) => {
       return isCollidingWith(entity, block);
     });
   }

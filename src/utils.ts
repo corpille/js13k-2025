@@ -12,3 +12,12 @@ export function isCollidingWith(a: Entity, b: Entity) {
     a.y + a.height > b.y
   );
 }
+
+export function isPointCollission(p: { x: number; y: number }, r: Entity) {
+  return (
+    p.x >= r.x && // right of the left edge AND
+    p.x <= r.x + r.width && // left of the right edge AND
+    p.y >= r.y && // below the top AND
+    p.y <= r.y + r.height
+  );
+}

@@ -11,7 +11,8 @@ import {
 } from './config';
 import { canvas, end } from './elements';
 import Game from './Game';
-import { isCollidingWith, querySelector } from './utils';
+import { checkColissions } from './physics';
+import { isCollidingWith } from './utils';
 
 export default class Engine {
   game: Game;
@@ -38,11 +39,11 @@ export default class Engine {
     if (!this.game.keys['Space']) {
       this.jumpDebuff = false;
     }
-    if ((this.game.keys['KeyA'] || this.game.keys['ArrowLeft']) && this.game.player.x > 0) {
+    if (this.game.keys['KeyA'] || this.game.keys['ArrowLeft']) {
       this.game.xForce = -moveSpeed;
       this.game.player.isLeft = true;
     }
-    if ((this.game.keys['KeyD'] || this.game.keys['ArrowRight']) && this.game.player.x < (gridWidth - 1) * squareSize) {
+    if (this.game.keys['KeyD'] || this.game.keys['ArrowRight']) {
       this.game.xForce = moveSpeed;
       this.game.player.isLeft = false;
     }
@@ -59,23 +60,14 @@ export default class Engine {
 
     // Compute Y force
     this.game.yForce += this.game.gravityForce + this.game.jumpForce;
-    const yColision = this.game.checkColission({
-      ...this.game.player.hitBox,
-      y: this.game.player.hitBox.y + this.game.yForce,
-    });
 
     // Move player
     let yOffset = 0;
     let xOffset = 0;
-    if (yColision) {
-      xOffset += yColision.movingShift / 2;
-      if (this.game.player.hitBox.y >= yColision.y + yColision.height * 0.75) {
-        this.game.player.hitBox.y = yColision.y + yColision.height;
-        this.game.player.isGrounded = true;
-        this.game.player.landStart();
-        this.game.gravityForce = gravity;
-      }
-    } else {
+
+    const colisions = checkColissions(this.game);
+
+    if ((!colisions.bottom && this.game.yForce < 0) || (!colisions.top && this.game.yForce > 0)) {
       const isCoyoting = this.game.player.isGrounded && this.game.yForce < 0;
       if (isCoyoting) {
         this.jumpFrame++;
@@ -92,20 +84,38 @@ export default class Engine {
         }
         this.game.gravityForce -= 0.15;
       }
+    } else {
+      if (colisions.bottom) {
+        xOffset += colisions.bottom.block.movingShift / 2;
+        this.game.player.hitBox.y = colisions.bottom.block.y + colisions.bottom.block.height;
+        this.game.player.isGrounded = true;
+        this.game.gravityForce = gravity;
+        this.game.player.landStart();
+      }
+
+      if (colisions.top) {
+        this.game.player.hitBox.y = colisions.top.block.y - this.game.player.hitBox.height;
+        this.game.player.fallStart();
+        this.game.jumpForce = 0;
+      }
     }
 
-    const xColision = this.game.checkColission({
-      ...this.game.player.hitBox,
-      x: this.game.player.hitBox.x + this.game.xForce,
-    });
-
-    if (!xColision) {
+    if ((!colisions.right && this.game.xForce > 0) || (!colisions.left && this.game.xForce < 0)) {
       xOffset += this.game.xForce;
       if (this.game.xForce) {
         this.game.player.runStart();
       } else if (this.game.player.isRunning) {
         this.game.player.runStop();
       }
+    } else {
+      if (colisions.right) {
+        this.game.player.hitBox.x = colisions.right.block.x - this.game.player.hitBox.width;
+      }
+
+      if (colisions.left) {
+        this.game.player.hitBox.x = colisions.left.block.x + colisions.left.block.width;
+      }
+      this.game.player.runStop();
     }
     this.game.player.update(xOffset, yOffset);
 

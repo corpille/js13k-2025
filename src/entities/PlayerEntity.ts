@@ -147,7 +147,7 @@ export default class PlayerEntity extends Entity {
       this.height,
     );
 
-    // Hitbox Debug
+    // DEBUG
     // ctx.strokeStyle = 'red';
     // ctx.strokeRect(
     //   this.hitBox.x * (this.isLeft ? -1 : 1),

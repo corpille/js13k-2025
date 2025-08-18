@@ -8,19 +8,25 @@ restartButton?.addEventListener('click', () => {
   init();
 });
 
+// DEBUG
 // Level Data
 const testLevel = {
-  startX: 1,
-  startY: 1,
+  startX: 4,
+  startY: 5,
   b: [
-    [-1, 0, 7, 1, true],
-    [5, 3, 7, 1, false],
+    [-1, 0, 17, 1, true],
+    [5, 1, 1, 4, true],
+    [1, 1, 1, 4, true],
+    [1, 7, 5, 1, true],
+    [10, 1, 1, 10, true],
+    // [5, 3, 7, 1, true],
+    // [10, 7, 7, 1, true],
     [25, 0, 16, 1, false],
   ],
-  m: [
-    [-1, 0, 7, 1, true],
-    [10, 7, 7, 1, true],
-  ],
+  // m: [
+  //   [-1, 0, 7, 1, true],
+  //   [10, 7, 7, 1, true],
+  // ],
   end: [37, 1],
 };
 
