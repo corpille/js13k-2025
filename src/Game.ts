@@ -41,6 +41,7 @@ export default class Game {
     this.keys = {};
     this.isJumping = false;
     this.gravityForce = gravity;
+    this.foundTreat = false;
   }
 
   validateLvl() {
