@@ -1,6 +1,6 @@
 import { gridRealHeight } from '../config';
 import Entity from './Entity';
-import door from '/assets/door.webp';
+import endImage from '/assets/cardboard.webp';
 
 export default class EndEntity extends Entity {
   image: HTMLImageElement;
@@ -11,7 +11,7 @@ export default class EndEntity extends Entity {
 
     this.isDark = isDark;
     this.image = new Image(40, 40);
-    this.image.src = door;
+    this.image.src = endImage;
   }
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
