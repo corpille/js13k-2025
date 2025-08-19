@@ -107,7 +107,6 @@ export default class PlayerEntity extends Entity {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    ctx.imageSmoothingEnabled = false;
     this.frameCounter++;
     if (this.frameCounter > animationSpeed) {
       this.frameCounter = 0;

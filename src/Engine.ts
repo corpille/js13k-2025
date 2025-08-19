@@ -18,7 +18,7 @@ export default class Engine {
   game: Game;
   levels: any[];
   jumpDebuff: boolean = false;
-  jumpFrame: number = coyoteFrames;
+  jumpFrame: number = 0;
 
   // Time Handling
   interval: number = Math.floor(1000 / FPS);
@@ -144,6 +144,7 @@ export default class Engine {
   }
 
   render() {
+    this.ctx.imageSmoothingEnabled = false;
     this.ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
     this.game.render(this.ctx);
     this.game.renderUI(this.ctx);
@@ -152,14 +153,14 @@ export default class Engine {
   checkEndState() {
     if (this.game.level.end.isDark && isCollidingWith(this.game.player.hitBox, this.game.level.end)) {
       this.game.validateLvl();
-      this.jumpFrame = coyoteFrames;
+      this.jumpFrame = 0;
       if (this.game.currentLevel === this.levels.length) {
         this.endGame();
       } else {
         this.game.reset(this.levels, true);
       }
     } else if (this.game.player.hitBox.y < -this.game.player.hitBox.height * 2) {
-      this.jumpFrame = coyoteFrames;
+      this.jumpFrame = 0;
       this.game.reset(this.levels);
     }
   }

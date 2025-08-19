@@ -1,4 +1,3 @@
-import { gridHeight, gridRealHeight } from './config';
 import BlocEntity from './entities/BlocEntity';
 import EndEntity from './entities/EndEntity';
 import Entity from './entities/Entity';
@@ -6,6 +5,7 @@ import TreatEntity from './entities/TreatEntity';
 import { isCollidingWith } from './utils';
 
 export default class Level {
+  name: string;
   mirrored: boolean;
   blocks: BlocEntity[];
   end: EndEntity;
@@ -13,7 +13,15 @@ export default class Level {
   foundTreat: boolean = false;
   alreadyFoundTreat: boolean = false;
 
-  constructor(blocks: any[], mirrored: boolean, alreadyFoundTreat: boolean = false, treat?: number[], end?: number[]) {
+  constructor(
+    name: string,
+    blocks: any[],
+    mirrored: boolean,
+    alreadyFoundTreat: boolean = false,
+    treat?: number[],
+    end?: number[],
+  ) {
+    this.name = name;
     this.mirrored = mirrored;
     this.alreadyFoundTreat = alreadyFoundTreat;
     this.blocks = blocks.map(

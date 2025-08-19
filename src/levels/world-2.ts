@@ -1,4 +1,5 @@
 const level1 = {
+  name: '2-1',
   startX: 1,
   startY: 1,
   b: [
@@ -16,6 +17,7 @@ const level1 = {
 };
 
 const level2 = {
+  name: '2-2',
   startX: 1,
   startY: 1,
   b: [
@@ -40,6 +42,7 @@ const level2 = {
 };
 
 const level3 = {
+  name: '2-3',
   startX: 1,
   startY: 1,
   b: [
