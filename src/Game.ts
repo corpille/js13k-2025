@@ -1,9 +1,10 @@
-import { gravity, gridHeight, gridRealHeight, gridRealWidth } from './config';
+import { gravity, gridHeight, gridRealHeight, gridRealWidth, squareSize } from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import Entity from './entities/Entity';
+import text from '../assets/text.png';
 
 export default class Game {
   currentLevel: number;
@@ -13,43 +14,41 @@ export default class Game {
   player: PlayerEntity;
   mirroredPlayer: PlayerEntity;
   hasMirror: boolean = false;
-  jumpForce: number = 0;
-  xForce: number = 0;
-  yForce: number = 0;
-  gravityForce: number = gravity;
+  jumpForce: number;
+  xForce: number;
+  yForce: number;
+  gravityForce: number;
   isJumping: boolean = false;
   keys: { [name: string]: boolean } = {};
   stop: boolean = false;
-  treatCount: number = 0;
-  foundTreat: boolean = false;
+  treatCount: number;
+  image: HTMLImageElement;
 
   constructor(levels: any[]) {
     this.currentLevel = 0;
+    this.treatCount = 0;
     this.reset(levels);
   }
 
-  reset(levels: any[]) {
+  reset(levels: any[], changeLevel: boolean = false) {
     const { startX, startY, b, m, end, treat, mirrorTreat } = levels[this.currentLevel];
-    this.level = new Level(b, treat, end);
-    this.mirrorLevel = new Level(m ?? [], mirrorTreat, undefined, true);
+    this.level = new Level(b, false, this.level?.alreadyFoundTreat && !changeLevel, treat, end);
+    this.mirrorLevel = new Level(m ?? [], true, this.mirrorLevel?.alreadyFoundTreat && !changeLevel, mirrorTreat);
     this.hasMirror = !!this.mirrorLevel.blocks.length;
     this.player = new PlayerEntity(startX, startY, 2, 2);
     this.player = new PlayerEntity(startX, startY, 2, 2);
     this.jumpForce = 0;
     this.xForce = 0;
-    this.yForce = 0;
     this.keys = {};
     this.isJumping = false;
     this.gravityForce = gravity;
-    this.foundTreat = false;
+
+    this.image = new Image(20, 21 * 20);
+    this.image.src = text;
   }
 
   validateLvl() {
     this.currentLevel++;
-    if (this.foundTreat) {
-      this.foundTreat = false;
-      this.treatCount++;
-    }
   }
 
   render(ctx: CanvasRenderingContext2D) {
@@ -90,6 +89,37 @@ export default class Game {
 
       ctx.restore();
     }
+  }
+
+  renderUI(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    // Draw treat
+    ctx.beginPath();
+    ctx.fillStyle = 'orange';
+    ctx.roundRect(16, 16, 20, 20, 4);
+    ctx.fill();
+    ctx.closePath();
+
+    //Draw treat number
+    const textWidth = 3;
+    const textHeight = 5;
+    const magnifiying = 4;
+    String(this.treatCount)
+      .split('')
+      .forEach((c, i) => {
+        ctx.drawImage(
+          this.image,
+          parseInt(c) * textWidth,
+          0,
+          textWidth,
+          textHeight,
+          48 + i * (textWidth + 1) * magnifiying,
+          16,
+          textWidth * magnifiying,
+          textHeight * magnifiying,
+        );
+      });
+    ctx.restore();
   }
 
   invertLevel() {

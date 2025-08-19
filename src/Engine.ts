@@ -55,26 +55,24 @@ export default class Engine {
   }
 
   changeState() {
-    if (this.game.level.treat && !this.game.foundTreat) {
-      const hasTreat = isCollidingWith(this.game.player.hitBox, this.game.level.treat);
-      if (hasTreat) {
-        this.game.level.treat.gathered = true;
-        this.game.foundTreat = true;
-      }
+    // Treat Handling
+    this.game.level.checkTreatGathering(this.game.player.hitBox);
+    this.game.mirrorLevel.checkTreatGathering(this.game.player.hitBox);
+
+    if (this.game.level.foundTreat && !this.game.level.alreadyFoundTreat) {
+      this.game.treatCount++;
+      this.game.level.alreadyFoundTreat = true;
     }
-    if (this.game.mirrorLevel.treat && !this.game.foundTreat) {
-      const hasMirrorTreat = isCollidingWith(this.game.player.hitBox, this.game.mirrorLevel.treat);
-      if (hasMirrorTreat) {
-        this.game.mirrorLevel.treat.gathered = true;
-        this.game.foundTreat = true;
-      }
+    if (this.game.mirrorLevel.foundTreat && !this.game.mirrorLevel.alreadyFoundTreat) {
+      this.game.treatCount++;
+      this.game.mirrorLevel.alreadyFoundTreat = true;
     }
 
     // Update Blocks
     this.game.level.blocks.forEach((block) => block.update());
 
     // Compute Y force
-    this.game.yForce += this.game.gravityForce + this.game.jumpForce;
+    this.game.yForce = this.game.gravityForce + this.game.jumpForce;
 
     // Move player
     let yOffset = 0;
@@ -143,12 +141,12 @@ export default class Engine {
         ? Math.min(0, this.game.xForce + forceDecrease)
         : Math.max(0, this.game.xForce - forceDecrease);
     this.game.jumpForce = Math.max(0, this.game.jumpForce - forceDecrease);
-    this.game.yForce = 0;
   }
 
   render() {
     this.ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
     this.game.render(this.ctx);
+    this.game.renderUI(this.ctx);
   }
 
   checkEndState() {
@@ -158,7 +156,7 @@ export default class Engine {
       if (this.game.currentLevel === this.levels.length) {
         this.endGame();
       } else {
-        this.game.reset(this.levels);
+        this.game.reset(this.levels, true);
       }
     } else if (this.game.player.hitBox.y < -this.game.player.hitBox.height * 2) {
       this.jumpFrame = coyoteFrames;
