@@ -16,7 +16,6 @@ export default class EndEntity extends Entity {
     if (!this.isDark) {
       ctx.filter = 'invert(1) opacity(0.4)';
     }
-    ctx.fillStyle = '#292d5c';
     ctx.drawImage(cardBoardImage, this.x, gridRealHeight - this.y - this.height, this.width, this.height);
     ctx.restore();
   }

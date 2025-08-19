@@ -1,4 +1,4 @@
-import { gravity, gridRealHeight, gridRealWidth, squareSize } from './config';
+import { defaultRadius, gravity, gridRealHeight, gridRealWidth, squareSize } from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
@@ -7,6 +7,7 @@ import Entity from './entities/Entity';
 import { treatImage } from './assets';
 
 export default class Game {
+  pause: boolean;
   currentLevel: number;
   end: EndEntity;
   level: Level;
@@ -22,6 +23,7 @@ export default class Game {
   keys: { [name: string]: boolean } = {};
   stop: boolean = false;
   treatCount: number;
+  radius: number;
 
   constructor(levels: any[]) {
     this.currentLevel = 0;
@@ -30,6 +32,7 @@ export default class Game {
   }
 
   reset(levels: any[], changeLevel: boolean = false) {
+    this.pause = false;
     const { name, startX, startY, b, m, end, treat, mirrorTreat } = levels[this.currentLevel];
     this.level = new Level(name, b, false, this.level?.alreadyFoundTreat && !changeLevel, treat, end);
     this.mirrorLevel = new Level(name, m ?? [], true, this.mirrorLevel?.alreadyFoundTreat && !changeLevel, mirrorTreat);
@@ -41,6 +44,7 @@ export default class Game {
     this.keys = {};
     this.isJumping = false;
     this.gravityForce = gravity;
+    this.radius = defaultRadius;
   }
 
   validateLvl() {
@@ -48,6 +52,31 @@ export default class Game {
   }
 
   render(ctx: CanvasRenderingContext2D) {
+    // Draw animation circle
+    ctx.save();
+    ctx.fillStyle = '#1d1d21';
+    ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
+
+    ctx.beginPath();
+    ctx.arc(
+      this.player.hitBox.x + this.player.hitBox.height / 2,
+      gridRealHeight - this.player.hitBox.y - this.player.hitBox.height * 1.25 + Math.max(0, this.radius) / 2,
+      Math.max(0, this.radius),
+      0,
+      Math.PI * 2,
+      true,
+    );
+    ctx.restore();
+    ctx.clip();
+
+    // Draw background
+    ctx.save();
+    ctx.beginPath();
+    ctx.fillStyle = '#F4F0DB';
+    ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
+    ctx.closePath();
+    ctx.restore();
+
     if (!this.hasMirror) {
       this.level.render(ctx);
       this.player.render(ctx);
@@ -87,13 +116,20 @@ export default class Game {
     }
   }
 
-  renderUI(ctx: CanvasRenderingContext2D) {
+  renderUI(ctx: CanvasRenderingContext2D, inverted: boolean = false) {
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+
     // Draw treat
     ctx.drawImage(treatImage, 8, 6, squareSize, squareSize);
+    if (inverted) {
+      ctx.filter = 'invert(1)';
+    }
     displayNumber(ctx, 8 + squareSize, 16, this.treatCount);
 
     // Draw Level
     displayString(ctx, gridRealWidth - 84, 16, `#${this.level.name}`);
+    ctx.restore();
   }
 
   invertLevel() {

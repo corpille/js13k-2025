@@ -56,6 +56,7 @@ export default class BlocEntity extends Entity {
 
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
+    ctx.beginPath();
     ctx.fillStyle = this.isDark ? '#282828' : 'rgba(0, 0, 0, 0.05)';
     ctx.strokeStyle = this.isDark ? 'black' : 'rgba(0, 0, 0, 0.2)';
     ctx.lineWidth = 2;
@@ -64,15 +65,14 @@ export default class BlocEntity extends Entity {
       ctx.setLineDash([5]);
     }
 
-    ctx.beginPath();
     let corners: number | number[] = 4;
     if (this.y === 0) {
       corners = [4, 4, 0, 0];
     }
     const y = gridRealHeight - this.y - this.height;
     ctx.roundRect(this.x, y, this.width, this.height, corners);
-    ctx.fill();
     ctx.stroke();
+    ctx.fill();
     ctx.closePath();
 
     if (this.y === 0) {

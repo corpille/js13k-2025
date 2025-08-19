@@ -17,3 +17,4 @@ export const FPS = 60;
 export const animationSpeed = FPS / 10;
 
 export const coyoteFrames = 3;
+export const defaultRadius = 3000;

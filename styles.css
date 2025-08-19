@@ -23,7 +23,6 @@ body {
 }
 
 canvas {
-    background: #F4F0DB;
     border: 10px solid #282828;
     border-radius: 6px;
 }
@@ -94,7 +93,6 @@ canvas {
     position: absolute;
     top: 100%;
     left: 25%;
-    background-color: rgba(0,0,0,0.5);
     border-radius: 6px;
     display: flex;
     flex-direction: column;

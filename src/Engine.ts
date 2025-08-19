@@ -1,5 +1,6 @@
 import {
   coyoteFrames,
+  defaultRadius,
   forceDecrease,
   FPS,
   gravity,
@@ -14,6 +15,7 @@ import Game from './Game';
 import { checkColissions } from './physics';
 import { isCollidingWith } from './utils';
 
+let radius = 3000;
 export default class Engine {
   game: Game;
   levels: any[];
@@ -144,21 +146,49 @@ export default class Engine {
   }
 
   render() {
+    this.ctx.save();
     this.ctx.imageSmoothingEnabled = false;
     this.ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
     this.game.render(this.ctx);
     this.game.renderUI(this.ctx);
+    this.ctx.restore();
+  }
+
+  playTransition(callback: Function) {
+    const unZoom = () => {
+      if (this.game.radius < defaultRadius) {
+        this.game.radius += 22;
+        setTimeout(unZoom.bind(this));
+      }
+    };
+    const zoom = () => {
+      if (this.game.radius >= 0) {
+        this.game.radius -= 24;
+        setTimeout(zoom.bind(this));
+      } else {
+        if (callback()) {
+          this.game.radius = 0;
+          setTimeout(unZoom, 100);
+        }
+      }
+    };
+    zoom();
   }
 
   checkEndState() {
     if (this.game.level.end.isDark && isCollidingWith(this.game.player.hitBox, this.game.level.end)) {
-      this.game.validateLvl();
-      this.jumpFrame = 0;
-      if (this.game.currentLevel === this.levels.length) {
-        this.endGame();
-      } else {
+      this.game.player.runStop();
+      this.game.pause = true;
+      this.playTransition(() => {
+        this.game.validateLvl();
+        this.jumpFrame = 0;
+        if (this.game.currentLevel === this.levels.length) {
+          this.endGame();
+          return false;
+        }
         this.game.reset(this.levels, true);
-      }
+        return true;
+      });
     } else if (this.game.player.hitBox.y < -this.game.player.hitBox.height * 2) {
       this.jumpFrame = 0;
       this.game.reset(this.levels);
@@ -166,8 +196,13 @@ export default class Engine {
   }
 
   endGame() {
+    this.game.radius = squareSize * 1.5;
     end.style.top = `${canvas.getBoundingClientRect().top}px`;
-    this.game.stop = true;
+    this.game.pause = true;
+    setTimeout(() => {
+      this.game.renderUI(this.ctx, true);
+      this.game.stop = true;
+    }, 50);
   }
 
   loop(timestamp: any) {
@@ -181,9 +216,14 @@ export default class Engine {
     if (this.deltaTime > this.interval) {
       this.previousTime = this.currentTime - (this.deltaTime % this.interval);
 
-      this.changeState();
+      if (!this.game.pause) {
+        this.changeState();
+      }
       this.render();
-      this.checkEndState();
+
+      if (!this.game.pause) {
+        this.checkEndState();
+      }
     }
 
     requestAnimationFrame(this.loop.bind(this));
