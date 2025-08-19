@@ -1,10 +1,14 @@
+import { treatImage } from '../assets';
 import { gridRealHeight, squareSize } from '../config';
 import Entity from './Entity';
-import door from '/assets/door.webp';
+
+const animationSpeed = 6;
 
 export default class TreatEntity extends Entity {
-  image: HTMLImageElement;
   gathered: boolean = false;
+  frameCounter: number = 0;
+  offsetShift: number = 0;
+  moveDown: boolean = true;
 
   constructor(x: number, y: number) {
     super(x, y, 1, 1);
@@ -13,18 +17,23 @@ export default class TreatEntity extends Entity {
     if (this.gathered) {
       return;
     }
-    ctx.save();
-    ctx.beginPath();
-    ctx.fillStyle = 'orange';
-    ctx.roundRect(
-      this.x + squareSize / 4,
-      gridRealHeight - (this.y + this.height - squareSize / 4),
-      this.width - squareSize / 2,
-      this.height - squareSize / 2,
-      4,
+
+    this.frameCounter++;
+    if (this.frameCounter > animationSpeed) {
+      this.frameCounter = 0;
+      this.offsetShift += this.moveDown ? 1 : -1;
+      if (this.offsetShift === 3) {
+        this.moveDown = false;
+      } else if (this.offsetShift === -3) {
+        this.moveDown = true;
+      }
+    }
+    ctx.drawImage(
+      treatImage,
+      this.x,
+      gridRealHeight - this.y - this.height + this.offsetShift,
+      this.width,
+      this.height,
     );
-    ctx.fill();
-    ctx.closePath();
-    ctx.restore();
   }
 }

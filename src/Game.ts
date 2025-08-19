@@ -1,10 +1,10 @@
-import { gravity, gridRealHeight, gridRealWidth } from './config';
+import { gravity, gridRealHeight, gridRealWidth, squareSize } from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
 import { displayDash, displayHashtag, displayNumber, displayString, isCollidingWith } from './utils';
 import Entity from './entities/Entity';
-import text from '../assets/text.webp';
+import { treatImage } from './assets';
 
 export default class Game {
   currentLevel: number;
@@ -22,13 +22,10 @@ export default class Game {
   keys: { [name: string]: boolean } = {};
   stop: boolean = false;
   treatCount: number;
-  image: HTMLImageElement;
 
   constructor(levels: any[]) {
     this.currentLevel = 0;
     this.treatCount = 0;
-    this.image = new Image(38, 5);
-    this.image.src = text;
     this.reset(levels);
   }
 
@@ -91,20 +88,12 @@ export default class Game {
   }
 
   renderUI(ctx: CanvasRenderingContext2D) {
-    ctx.save();
     // Draw treat
-    ctx.beginPath();
-    ctx.fillStyle = 'orange';
-    ctx.roundRect(16, 16, 20, 20, 4);
-    ctx.fill();
-    ctx.closePath();
+    ctx.drawImage(treatImage, 8, 6, squareSize, squareSize);
+    displayNumber(ctx, 8 + squareSize, 16, this.treatCount);
 
-    const pad = 16;
-    //Draw treat number
-    displayNumber(ctx, pad * 3, pad, this.treatCount);
-    displayString(ctx, gridRealWidth - pad * 6, pad, `#${this.level.name}`);
-
-    ctx.restore();
+    // Draw Level
+    displayString(ctx, gridRealWidth - 84, 16, `#${this.level.name}`);
   }
 
   invertLevel() {

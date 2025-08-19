@@ -1,13 +1,10 @@
 import BlocEntity from './entities/BlocEntity';
 import Entity from './entities/Entity';
-import text from '../assets/text.webp';
+import { textImage } from './assets';
 
 const textHeight = 5;
 const magnifiying = 4;
 const textWidth = 3;
-
-const textImage = new Image(38, 5);
-textImage.src = text;
 
 export const querySelector = (selector: string) => document.querySelector(selector) as HTMLElement;
 

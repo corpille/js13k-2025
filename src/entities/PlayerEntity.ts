@@ -1,6 +1,6 @@
+import { catImage } from '../assets';
 import { animationSpeed, gridRealHeight, gridRealWidth, squareSize } from '../config';
 import Entity from './Entity';
-import cat from '/assets/cat.webp';
 
 let frameWidth = 20;
 let frameHeight = 20;
@@ -16,7 +16,6 @@ export default class PlayerEntity extends Entity {
   isRunning: boolean = false;
   isJumping: boolean = false;
   isLeft: boolean = false;
-  image: HTMLImageElement;
   currentFrame: number;
   currentAnimation: symbol = idleSym;
   frameCounter: number;
@@ -33,15 +32,13 @@ export default class PlayerEntity extends Entity {
   };
 
   constructor(x: number, y: number, width: number, height: number) {
-    super(x, y, width, height);
+    super(x, y, 2, 2);
 
-    this.image = new Image(20, 21 * 20);
-    this.image.src = cat;
     this.frameCounter = 0;
     this.currentAnimation = idleSym;
     this.currentFrame = this.animations[this.currentAnimation][0];
     this.loopAnimation = true;
-    this.hitBox = new Entity(x + 0.5, y, width - 1, height - 1);
+    this.hitBox = new Entity(x, y, width - 1, height - 1);
   }
 
   runStart() {
@@ -134,7 +131,7 @@ export default class PlayerEntity extends Entity {
     const dx = (squareSize / 2) * (this.isLeft ? 1 : -1);
 
     ctx.drawImage(
-      this.image,
+      catImage,
       this.currentFrame * frameWidth,
       0,
       frameWidth,
