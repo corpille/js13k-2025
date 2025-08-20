@@ -10,12 +10,11 @@ import {
   moveSpeed,
   squareSize,
 } from './config';
-import { canvas, end } from './elements';
+import { canvas } from './elements';
 import Game from './Game';
 import { checkColissions } from './physics';
 import { isCollidingWith } from './utils';
 
-let radius = 3000;
 export default class Engine {
   game: Game;
   levels: any[];
@@ -150,7 +149,12 @@ export default class Engine {
     this.ctx.imageSmoothingEnabled = false;
     this.ctx.clearRect(0, 0, gridWidth * squareSize, gridHeight * squareSize);
     this.game.render(this.ctx);
-    this.game.renderUI(this.ctx);
+    this.ctx.restore();
+  }
+
+  renderUI(inverted: boolean = false) {
+    this.ctx.save();
+    this.game.renderUI(this.ctx, inverted);
     this.ctx.restore();
   }
 
@@ -197,18 +201,14 @@ export default class Engine {
 
   endGame() {
     this.game.radius = squareSize * 1.5;
-    end.style.top = `${canvas.getBoundingClientRect().top}px`;
     this.game.pause = true;
     setTimeout(() => {
-      this.game.renderUI(this.ctx, true);
+      this.renderUI(true);
       this.game.stop = true;
     }, 50);
   }
 
   loop(timestamp: any) {
-    if (this.game.stop) {
-      return;
-    }
     this.processInput();
     this.currentTime = timestamp;
     this.deltaTime = this.currentTime - this.previousTime;
@@ -216,14 +216,19 @@ export default class Engine {
     if (this.deltaTime > this.interval) {
       this.previousTime = this.currentTime - (this.deltaTime % this.interval);
 
-      if (!this.game.pause) {
-        this.changeState();
-      }
-      this.render();
+      if (!this.game.stop) {
+        if (!this.game.pause) {
+          this.changeState();
+        }
+        if (this.game.started) {
+          this.render();
+        }
 
-      if (!this.game.pause) {
-        this.checkEndState();
+        if (!this.game.pause) {
+          this.checkEndState();
+        }
       }
+      this.renderUI();
     }
 
     requestAnimationFrame(this.loop.bind(this));

@@ -2,12 +2,31 @@ import { defaultRadius, gravity, gridRealHeight, gridRealWidth, squareSize } fro
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
-import { displayDash, displayHashtag, displayNumber, displayString, isCollidingWith } from './utils';
+import { isCollidingWith } from './utils';
 import Entity from './entities/Entity';
 import { treatImage } from './assets';
+import { displayString } from './ui';
+import { Button } from './ui-elements/Button';
+import { Text } from './ui-elements/Text';
+
+const title = new Text(0, 0, 'Untitled Game', 12, [true, true]);
+const startButton = new Button(0, Math.round((gridRealHeight - title.height) / 2) + title.height + 30, 'Play', 5, [
+  true,
+  false,
+]);
+const endMessage = new Text(0, 0, 'GG WP', 12, [true, true]);
+export const restartButton = new Button(
+  0,
+  Math.round((gridRealHeight - title.height) / 2) + title.height + 30,
+  'Restart',
+  5,
+  [true, false],
+);
 
 export default class Game {
+  started: boolean = false;
   pause: boolean;
+  stop: boolean = false;
   currentLevel: number;
   end: EndEntity;
   level: Level;
@@ -21,13 +40,16 @@ export default class Game {
   gravityForce: number;
   isJumping: boolean = false;
   keys: { [name: string]: boolean } = {};
-  stop: boolean = false;
   treatCount: number;
   radius: number;
 
   constructor(levels: any[]) {
     this.currentLevel = 0;
     this.treatCount = 0;
+    startButton.onClick = () => {
+      this.started = true;
+      console.log('onStart');
+    };
     this.reset(levels);
   }
 
@@ -117,19 +139,52 @@ export default class Game {
   }
 
   renderUI(ctx: CanvasRenderingContext2D, inverted: boolean = false) {
-    ctx.save();
+    console.log('renderUI');
     ctx.imageSmoothingEnabled = false;
 
-    // Draw treat
-    ctx.drawImage(treatImage, 8, 6, squareSize, squareSize);
-    if (inverted) {
-      ctx.filter = 'invert(1)';
-    }
-    displayNumber(ctx, 8 + squareSize, 16, this.treatCount);
+    if (!this.started) {
+      startButton.rendered = true;
+      restartButton.rendered = false;
+      // Draw background
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = '#F4F0DB';
+      ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
+      ctx.closePath();
+      ctx.restore();
 
-    // Draw Level
-    displayString(ctx, gridRealWidth - 84, 16, `#${this.level.name}`);
-    ctx.restore();
+      title.render(ctx);
+      startButton.render(ctx);
+    } else {
+      if (this.stop) {
+        startButton.rendered = false;
+        restartButton.rendered = true;
+        this;
+        // Draw background
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = '#1d1d21';
+        ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
+        ctx.closePath();
+
+        ctx.filter = 'invert(1)';
+
+        endMessage.render(ctx);
+        restartButton.render(ctx);
+        ctx.restore();
+      }
+      // Draw treat
+      ctx.drawImage(treatImage, 8, 6, squareSize, squareSize);
+      ctx.save();
+      if (this.stop) {
+        ctx.filter = 'invert(1)';
+      }
+      displayString(ctx, squareSize + 4, 16, `${this.treatCount}`);
+      ctx.restore();
+
+      // Draw Level
+      // displayString(ctx, gridRealWidth - 84, 16, `#${this.level.name}`);
+    }
   }
 
   invertLevel() {
