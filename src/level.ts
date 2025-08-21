@@ -66,7 +66,7 @@ export default class Level {
     this.blocks.forEach((block) => {
       block.render(ctx);
     });
-    if (!this.foundTreat) {
+    if (this.treat && !this.foundTreat) {
       ctx.save();
       if (this.alreadyFoundTreat) {
         ctx.filter = 'opacity(0.3)';

@@ -6,7 +6,6 @@ import { UiText } from './ui-elements/UiText';
 import { UiImage } from './ui-elements/UiImage';
 import { UiButton } from './ui-elements/UiButton';
 import Game from './Game';
-import world1 from './levels/world-1';
 
 export const startSym = Symbol('start');
 export const gameSym = Symbol('game');
