@@ -1,4 +1,4 @@
-import { FPS, gridHeight, gridRealHeight, squareSize } from '../config';
+import { darkBackground, FPS, gridHeight, gridRealHeight, squareSize } from '../config';
 import Entity from './Entity';
 
 const moveSpeed = 5;
@@ -57,8 +57,8 @@ export default class BlocEntity extends Entity {
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.beginPath();
-    ctx.fillStyle = this.isDark ? '#282828' : 'rgba(0, 0, 0, 0.05)';
-    ctx.strokeStyle = this.isDark ? 'black' : 'rgba(0, 0, 0, 0.2)';
+    ctx.fillStyle = this.isDark ? darkBackground : `${darkBackground}05`;
+    ctx.strokeStyle = this.isDark ? 'black' : `${darkBackground}20`;
     ctx.lineWidth = 2;
 
     if (!this.isDark) {
@@ -76,7 +76,7 @@ export default class BlocEntity extends Entity {
     ctx.closePath();
 
     if (this.y === 0) {
-      ctx.strokeStyle = this.isDark ? '#282828' : '#dbd8c5';
+      ctx.strokeStyle = this.isDark ? darkBackground : '#f3f2ec';
       ctx.setLineDash([0]);
       ctx.beginPath();
       ctx.moveTo(this.x, y + this.height);

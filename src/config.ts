@@ -18,3 +18,6 @@ export const animationSpeed = FPS / 10;
 
 export const coyoteFrames = 3;
 export const defaultRadius = 3000;
+
+export const lightBackground = '#f7f6f0';
+export const darkBackground = '#282828';

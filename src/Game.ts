@@ -1,11 +1,9 @@
-import { defaultRadius, gravity, gridRealHeight, gridRealWidth, squareSize } from './config';
+import { darkBackground, defaultRadius, gravity, gridRealHeight, gridRealWidth, lightBackground } from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import Entity from './entities/Entity';
-import { treatImage } from './assets';
-import { displayString } from './ui';
 import { UiScene } from './ui-elements/Scene';
 import { endScene, gameScene, startButton, startScene, treatCounter, treatEndCounter } from './scenes';
 
@@ -18,7 +16,6 @@ export default class Game {
   level: Level;
   mirrorLevel: Level;
   player: PlayerEntity;
-  mirroredPlayer: PlayerEntity;
   hasMirror: boolean = false;
   jumpForce: number;
   xForce: number;
@@ -82,7 +79,7 @@ export default class Game {
   render(ctx: CanvasRenderingContext2D) {
     // Draw animation circle
     ctx.save();
-    ctx.fillStyle = '#1d1d21';
+    ctx.fillStyle = darkBackground;
     ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
 
     ctx.beginPath();
@@ -100,7 +97,7 @@ export default class Game {
     // Draw background
     ctx.save();
     ctx.beginPath();
-    ctx.fillStyle = '#F4F0DB';
+    ctx.fillStyle = lightBackground;
     ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
     ctx.closePath();
     ctx.restore();

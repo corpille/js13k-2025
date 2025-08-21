@@ -1,5 +1,5 @@
 import { treatImage } from './assets';
-import { gridRealHeight, squareSize } from './config';
+import { darkBackground, gridRealHeight, lightBackground, squareSize } from './config';
 import { UiList } from './ui-elements/UiList';
 import { UiScene } from './ui-elements/Scene';
 import { UiText } from './ui-elements/UiText';
@@ -7,7 +7,7 @@ import { UiImage } from './ui-elements/UiImage';
 import { UiButton } from './ui-elements/UiButton';
 
 // Start Scene
-const startScene = new UiScene('#F4F0DB');
+const startScene = new UiScene(lightBackground);
 const startList = new UiList(0, 0, [true, true]);
 const title = new UiText(0, 0, 'Untitled Game', 12, [true, false]);
 const startButton = new UiButton(0, 0, 'Play', 5, [true, false]);
@@ -23,7 +23,7 @@ gameScene.add(treatCounter);
 gameScene.add(treatUiImage);
 
 // End Scene
-const endScene = new UiScene('#1d1d21');
+const endScene = new UiScene(darkBackground);
 const endList = new UiList(0, 0, [true, true], 'column', 20);
 endList.inverted = 1;
 const endMessage = new UiText(0, 0, 'GG WP', 12, [true, false]);

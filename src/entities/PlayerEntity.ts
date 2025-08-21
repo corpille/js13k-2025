@@ -141,15 +141,6 @@ export default class PlayerEntity extends Entity {
       this.width,
       this.height,
     );
-
-    // DEBUG
-    // ctx.strokeStyle = 'red';
-    // ctx.strokeRect(
-    //   this.hitBox.x * (this.isLeft ? -1 : 1),
-    //   gridRealHeight - this.hitBox.y - this.hitBox.height,
-    //   this.hitBox.width,
-    //   this.hitBox.height,
-    // );
     ctx.restore();
   }
 }
