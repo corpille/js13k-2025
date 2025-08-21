@@ -2,17 +2,13 @@ import { textHeight, textImage, textWidth } from '../assets';
 import { getTextRealSizes } from '../ui';
 import { UiElement } from './UiElement';
 
-export class Text extends UiElement {
-  x: number;
-  y: number;
+export class UiText extends UiElement {
   text: string;
-  size: number;
-  centered: boolean[];
-  height: number;
-  width: number;
 
-  constructor(x: number, y: number, text: string, size: number, centered: boolean[]) {
-    super(x, y, text, size, centered);
+  constructor(x: number, y: number, text: string, size: number, centered?: boolean[]) {
+    super(x, y, size, centered);
+    this.text = text;
+    this.centerElement();
   }
 
   getRealSize() {
@@ -20,6 +16,8 @@ export class Text extends UiElement {
   }
 
   render(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    super.render(ctx);
     this.text
       .toUpperCase()
       .split('')
@@ -49,5 +47,6 @@ export class Text extends UiElement {
           textHeight * this.size,
         );
       });
+    ctx.restore();
   }
 }

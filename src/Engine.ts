@@ -61,11 +61,11 @@ export default class Engine {
     this.game.mirrorLevel.checkTreatGathering(this.game.player.hitBox);
 
     if (this.game.level.foundTreat && !this.game.level.alreadyFoundTreat) {
-      this.game.treatCount++;
+      this.game.updateTreat(this.game.treatCount + 1);
       this.game.level.alreadyFoundTreat = true;
     }
     if (this.game.mirrorLevel.foundTreat && !this.game.mirrorLevel.alreadyFoundTreat) {
-      this.game.treatCount++;
+      this.game.updateTreat(this.game.treatCount + 1);
       this.game.mirrorLevel.alreadyFoundTreat = true;
     }
 
@@ -154,7 +154,7 @@ export default class Engine {
 
   renderUI(inverted: boolean = false) {
     this.ctx.save();
-    this.game.renderUI(this.ctx, inverted);
+    this.game.renderUI(this.ctx);
     this.ctx.restore();
   }
 
@@ -200,10 +200,10 @@ export default class Engine {
   }
 
   endGame() {
+    this.game.loadScene('end');
     this.game.radius = squareSize * 1.5;
     this.game.pause = true;
     setTimeout(() => {
-      this.renderUI(true);
       this.game.stop = true;
     }, 50);
   }

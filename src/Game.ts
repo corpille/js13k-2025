@@ -6,22 +6,8 @@ import { isCollidingWith } from './utils';
 import Entity from './entities/Entity';
 import { treatImage } from './assets';
 import { displayString } from './ui';
-import { Button } from './ui-elements/Button';
-import { Text } from './ui-elements/Text';
-
-const title = new Text(0, 0, 'Untitled Game', 12, [true, true]);
-const startButton = new Button(0, Math.round((gridRealHeight - title.height) / 2) + title.height + 30, 'Play', 5, [
-  true,
-  false,
-]);
-const endMessage = new Text(0, 0, 'GG WP', 12, [true, true]);
-export const restartButton = new Button(
-  0,
-  Math.round((gridRealHeight - title.height) / 2) + title.height + 30,
-  'Restart',
-  5,
-  [true, false],
-);
+import { UiScene } from './ui-elements/Scene';
+import { endScene, gameScene, startButton, startScene, treatCounter, treatEndCounter } from './scenes';
 
 export default class Game {
   started: boolean = false;
@@ -42,15 +28,29 @@ export default class Game {
   keys: { [name: string]: boolean } = {};
   treatCount: number;
   radius: number;
+  scenes: { [name: string]: UiScene } = {};
+  currentScene: string = 'start';
 
   constructor(levels: any[]) {
     this.currentLevel = 0;
-    this.treatCount = 0;
+    this.updateTreat(0);
     startButton.onClick = () => {
       this.started = true;
-      console.log('onStart');
+      this.loadScene('game');
     };
+    this.scenes = {
+      start: startScene,
+      game: gameScene,
+      end: endScene,
+    };
+    this.scenes.start.load();
     this.reset(levels);
+  }
+
+  updateTreat(count: number) {
+    this.treatCount = count;
+    treatCounter.text = `${count}`;
+    treatEndCounter.text = `${count}`;
   }
 
   reset(levels: any[], changeLevel: boolean = false) {
@@ -67,6 +67,12 @@ export default class Game {
     this.isJumping = false;
     this.gravityForce = gravity;
     this.radius = defaultRadius;
+  }
+
+  loadScene(name: string) {
+    this.scenes[this.currentScene].unload();
+    this.currentScene = name;
+    this.scenes[this.currentScene].load();
   }
 
   validateLvl() {
@@ -138,53 +144,9 @@ export default class Game {
     }
   }
 
-  renderUI(ctx: CanvasRenderingContext2D, inverted: boolean = false) {
-    console.log('renderUI');
+  renderUI(ctx: CanvasRenderingContext2D) {
     ctx.imageSmoothingEnabled = false;
-
-    if (!this.started) {
-      startButton.rendered = true;
-      restartButton.rendered = false;
-      // Draw background
-      ctx.save();
-      ctx.beginPath();
-      ctx.fillStyle = '#F4F0DB';
-      ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
-      ctx.closePath();
-      ctx.restore();
-
-      title.render(ctx);
-      startButton.render(ctx);
-    } else {
-      if (this.stop) {
-        startButton.rendered = false;
-        restartButton.rendered = true;
-        this;
-        // Draw background
-        ctx.save();
-        ctx.beginPath();
-        ctx.fillStyle = '#1d1d21';
-        ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
-        ctx.closePath();
-
-        ctx.filter = 'invert(1)';
-
-        endMessage.render(ctx);
-        restartButton.render(ctx);
-        ctx.restore();
-      }
-      // Draw treat
-      ctx.drawImage(treatImage, 8, 6, squareSize, squareSize);
-      ctx.save();
-      if (this.stop) {
-        ctx.filter = 'invert(1)';
-      }
-      displayString(ctx, squareSize + 4, 16, `${this.treatCount}`);
-      ctx.restore();
-
-      // Draw Level
-      // displayString(ctx, gridRealWidth - 84, 16, `#${this.level.name}`);
-    }
+    this.scenes[this.currentScene].render(ctx);
   }
 
   invertLevel() {
