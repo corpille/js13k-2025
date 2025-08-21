@@ -10,7 +10,7 @@ treatImage.src = treat;
 export const textHeight = 7;
 export const textWidth = 5;
 
-export const textImage = new Image(190, textHeight);
+export const textImage = new Image(200, textHeight);
 textImage.src = text;
 
 export const catImage = new Image(20, 21 * 20);

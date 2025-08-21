@@ -17,33 +17,31 @@ export class UiButton extends UiElement {
 
   load() {
     super.load();
-    canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
-    canvas.addEventListener('mousemove', this.onMouseHover.bind(this));
+    canvas.addEventListener('mousedown', this.onMouseDown);
+    canvas.addEventListener('mousemove', this.onMouseHover);
   }
 
   unload() {
     super.unload();
-    canvas.removeEventListener('mousedown', this.onMouseDown.bind(this));
-    canvas.removeEventListener('mousemove', this.onMouseHover.bind(this));
+    canvas.removeEventListener('mousedown', this.onMouseDown);
+    canvas.removeEventListener('mousemove', this.onMouseHover);
   }
 
-  onMouseDown(e: MouseEvent) {
+  onMouseDown = (e: MouseEvent) => {
     const coords = getCursorPosition(e);
     if (isPointCollission(coords, this)) {
       this.onClick();
     }
-  }
+  };
 
-  onMouseHover(e: MouseEvent) {
+  onMouseHover = (e: MouseEvent) => {
     const coords = getCursorPosition(e);
     if (isPointCollission(coords, this)) {
       this.hovered = true;
-      canvas.style.cursor = 'pointer';
     } else {
       this.hovered = false;
-      canvas.style.cursor = 'initial';
     }
-  }
+  };
 
   getRealSize() {
     return getButtonRealSizes(this.text, this.size);

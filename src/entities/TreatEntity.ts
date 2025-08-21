@@ -5,7 +5,6 @@ import Entity from './Entity';
 const animationSpeed = 6;
 
 export default class TreatEntity extends Entity {
-  gathered: boolean = false;
   frameCounter: number = 0;
   offsetShift: number = 0;
   moveDown: boolean = true;
@@ -14,10 +13,6 @@ export default class TreatEntity extends Entity {
     super(x, y, 1, 1);
   }
   render(ctx: CanvasRenderingContext2D) {
-    if (this.gathered) {
-      return;
-    }
-
     this.frameCounter++;
     if (this.frameCounter > animationSpeed) {
       this.frameCounter = 0;

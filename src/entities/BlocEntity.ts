@@ -3,6 +3,7 @@ import Entity from './Entity';
 
 const moveSpeed = 5;
 export default class BlocEntity extends Entity {
+  initialIsDark: boolean;
   isDark: boolean;
   startX: number;
   moveRangeX: number = 0;
@@ -26,12 +27,17 @@ export default class BlocEntity extends Entity {
     super(x, y, width, height);
     this.startX = this.x;
     this.isDark = isDark;
+    this.initialIsDark = isDark;
     this.moveRangeY = Math.abs((moveRangeY ?? 0) * squareSize);
     this.moveRangeX = Math.abs((moveRangeX ?? 0) * squareSize);
     this.movingRight = moveRangeX > 0;
     this.movingTop = moveRangeY > 0;
     this.movingShiftX = 0;
     this.movingShiftY = 0;
+  }
+
+  reset() {
+    this.isDark = this.initialIsDark;
   }
 
   update() {

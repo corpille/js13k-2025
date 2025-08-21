@@ -1,63 +1,125 @@
-import { darkBackground, defaultRadius, gravity, gridRealHeight, gridRealWidth, lightBackground } from './config';
+import {
+  darkBackground,
+  defaultRadius,
+  gravity,
+  gridRealHeight,
+  gridRealWidth,
+  levels,
+  leveltLocalStorageKey,
+  lightBackground,
+  squareSize,
+  treatLocalStorageKey,
+} from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import Entity from './entities/Entity';
 import { UiScene } from './ui-elements/Scene';
-import { endScene, gameScene, startButton, startScene, treatCounter, treatEndCounter } from './scenes';
+import { endScene, endSym, gameScene, gameSym, getStartScene, startSym, treatCounter, treatEndCounter } from './scenes';
 
 export default class Game {
+  static _instance: Game;
   started: boolean = false;
   pause: boolean;
   stop: boolean = false;
-  currentLevel: number;
   end: EndEntity;
   level: Level;
-  mirrorLevel: Level;
   player: PlayerEntity;
-  hasMirror: boolean = false;
   jumpForce: number;
   xForce: number;
   yForce: number;
   gravityForce: number;
   isJumping: boolean = false;
   keys: { [name: string]: boolean } = {};
-  treatCount: number;
   radius: number;
-  scenes: { [name: string]: UiScene } = {};
-  currentScene: string = 'start';
+  scenes: { [name: symbol]: UiScene } = {};
+  currentScene: symbol = startSym;
+  levels: Level[] = [];
+  mirrorLevels: Level[] = [];
 
-  constructor(levels: any[]) {
-    this.currentLevel = 0;
-    this.updateTreat(0);
-    startButton.onClick = () => {
-      this.started = true;
-      this.loadScene('game');
-    };
-    this.scenes = {
-      start: startScene,
-      game: gameScene,
-      end: endScene,
-    };
-    this.scenes.start.load();
-    this.reset(levels);
+  constructor() {
+    treatCounter.text = `${this.treatCount}`;
+    treatEndCounter.text = `${this.treatCount}/${levels.length}`;
   }
 
-  updateTreat(count: number) {
-    this.treatCount = count;
-    treatCounter.text = `${count}`;
-    treatEndCounter.text = `${count}`;
+  public static get instance(): Game {
+    if (!Game._instance) {
+      Game._instance = new Game();
+      Game._instance.scenes = {
+        [startSym]: getStartScene(),
+        [gameSym]: gameScene,
+        [endSym]: endScene,
+      };
+      Game._instance.loadScene(startSym);
+    }
+    return Game._instance;
   }
 
-  reset(levels: any[], changeLevel: boolean = false) {
+  get currentLevel(): Level {
+    return this.levels[this.currentLvl];
+  }
+  get currentMirrorLevel(): Level {
+    return this.mirrorLevels[this.currentLvl];
+  }
+  get hasMirror(): boolean {
+    return !!this.currentMirrorLevel?.blocks.length;
+  }
+
+  get treatsFound(): number[] {
+    return JSON.parse(localStorage.getItem(treatLocalStorageKey) ?? '[]');
+  }
+
+  set treatFound(value: number[]) {
+    localStorage.setItem(treatLocalStorageKey, JSON.stringify(value));
+    treatCounter.text = `${this.treatCount}`;
+    treatEndCounter.text = `${this.treatCount}/${levels.length}`;
+  }
+
+  get currentLvl(): number {
+    return parseInt(localStorage.getItem(leveltLocalStorageKey) ?? '0');
+  }
+
+  set currentLvl(value: number) {
+    localStorage.setItem(leveltLocalStorageKey, value.toString());
+    treatCounter.text = `${this.treatCount}`;
+    treatEndCounter.text = `${this.treatCount}/${levels.length}`;
+  }
+
+  get treatCount(): number {
+    return this.treatsFound.length;
+  }
+
+  loadLevels(levels: any[]) {
+    this.levels = [];
+    this.mirrorLevels = [];
+    levels.forEach(({ name, startX, startY, b, m, end, treat, mirrorTreat }, i) => {
+      this.levels.push(new Level(name, startX, startY, b, false, this.treatsFound.indexOf(i) !== -1, treat, end));
+      this.mirrorLevels.push(
+        new Level(name, startX, startY, m ?? [], true, this.treatsFound.indexOf(i) !== -1, mirrorTreat),
+      );
+    });
+    this.reset();
+  }
+
+  addTreat() {
+    this.treatFound = [...this.treatsFound, this.currentLvl];
+  }
+
+  restart() {
+    this.stop = false;
     this.pause = false;
-    const { name, startX, startY, b, m, end, treat, mirrorTreat } = levels[this.currentLevel];
-    this.level = new Level(name, b, false, this.level?.alreadyFoundTreat && !changeLevel, treat, end);
-    this.mirrorLevel = new Level(name, m ?? [], true, this.mirrorLevel?.alreadyFoundTreat && !changeLevel, mirrorTreat);
-    this.hasMirror = !!this.mirrorLevel.blocks.length;
-    this.player = new PlayerEntity(startX, startY, 2, 2);
-    this.player = new PlayerEntity(startX, startY, 2, 2);
+    this.started = true;
+    this.currentLvl = 0;
+    this.loadScene(gameSym);
+    this.reset();
+  }
+
+  reset() {
+    this.pause = false;
+    this.currentLevel.reset();
+    this.currentMirrorLevel.reset();
+    this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, 2, 2);
     this.jumpForce = 0;
     this.xForce = 0;
     this.keys = {};
@@ -66,14 +128,14 @@ export default class Game {
     this.radius = defaultRadius;
   }
 
-  loadScene(name: string) {
+  loadScene(name: symbol) {
     this.scenes[this.currentScene].unload();
     this.currentScene = name;
     this.scenes[this.currentScene].load();
   }
 
   validateLvl() {
-    this.currentLevel++;
+    this.currentLvl++;
   }
 
   render(ctx: CanvasRenderingContext2D) {
@@ -103,7 +165,7 @@ export default class Game {
     ctx.restore();
 
     if (!this.hasMirror) {
-      this.level.render(ctx);
+      this.currentLevel.render(ctx);
       this.player.render(ctx);
     } else {
       // Draw mirror
@@ -119,7 +181,7 @@ export default class Game {
       ctx.fill();
       ctx.closePath();
 
-      this.mirrorLevel.render(ctx);
+      this.currentMirrorLevel.render(ctx);
       this.player.render(ctx);
       ctx.restore();
 
@@ -128,7 +190,7 @@ export default class Game {
 
       ctx.translate(0, -gridRealHeight / 2);
 
-      this.level.render(ctx);
+      this.currentLevel.render(ctx);
       this.player.render(ctx);
 
       ctx.beginPath();
@@ -147,13 +209,27 @@ export default class Game {
   }
 
   invertLevel() {
-    this.level.invert();
-    this.mirrorLevel.invert();
+    this.currentLevel.invert();
+    this.currentMirrorLevel.invert();
   }
 
   checkColission(entity: Entity) {
-    return [...this.level.blocks, ...this.mirrorLevel.blocks].filter((block) => {
+    return [...this.currentLevel.blocks, ...this.currentMirrorLevel.blocks].filter((block) => {
       return isCollidingWith(entity, block);
     });
+  }
+
+  pauseGame() {
+    this.player.runStop();
+    this.pause = true;
+  }
+
+  endGame() {
+    this.loadScene(endSym);
+    this.radius = squareSize * 1.5;
+    this.pause = true;
+    setTimeout(() => {
+      this.stop = true;
+    }, 50);
   }
 }

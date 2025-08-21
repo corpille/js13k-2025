@@ -5,6 +5,8 @@ import TreatEntity from './entities/TreatEntity';
 import { isCollidingWith } from './utils';
 
 export default class Level {
+  startX: number;
+  startY: number;
   name: string;
   mirrored: boolean;
   blocks: BlocEntity[];
@@ -15,6 +17,8 @@ export default class Level {
 
   constructor(
     name: string,
+    startX: number,
+    startY: number,
     blocks: any[],
     mirrored: boolean,
     alreadyFoundTreat: boolean = false,
@@ -22,6 +26,8 @@ export default class Level {
     end?: number[],
   ) {
     this.name = name;
+    this.startX = startX;
+    this.startY = startY;
     this.mirrored = mirrored;
     this.alreadyFoundTreat = alreadyFoundTreat;
     this.blocks = blocks.map(
@@ -36,21 +42,31 @@ export default class Level {
     }
   }
 
+  reset() {
+    this.blocks.forEach((block) => block.reset());
+    if (this.end) {
+      this.end.isDark = this.blocks[this.blocks.length - 1].isDark;
+    }
+    this.alreadyFoundTreat = this.foundTreat || this.alreadyFoundTreat;
+    this.foundTreat = false;
+  }
+
   checkTreatGathering(player: Entity) {
     if (this.treat && !this.foundTreat) {
       const hasTreat = isCollidingWith(player, this.treat);
       if (hasTreat) {
-        this.treat.gathered = true;
         this.foundTreat = true;
+        return !this.alreadyFoundTreat;
       }
     }
+    return false;
   }
 
   render(ctx: CanvasRenderingContext2D) {
     this.blocks.forEach((block) => {
       block.render(ctx);
     });
-    if (this.treat) {
+    if (!this.foundTreat) {
       ctx.save();
       if (this.alreadyFoundTreat) {
         ctx.filter = 'opacity(0.3)';

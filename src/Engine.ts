@@ -17,7 +17,6 @@ import { isCollidingWith } from './utils';
 
 export default class Engine {
   game: Game;
-  levels: any[];
   jumpDebuff: boolean = false;
   jumpFrame: number = 0;
 
@@ -30,9 +29,8 @@ export default class Engine {
 
   private ctx: CanvasRenderingContext2D;
 
-  constructor(levels: any[]) {
-    this.levels = levels;
-    this.game = new Game(levels);
+  constructor() {
+    this.game = Game.instance;
     this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   }
 
@@ -57,20 +55,15 @@ export default class Engine {
 
   changeState() {
     // Treat Handling
-    this.game.level.checkTreatGathering(this.game.player.hitBox);
-    this.game.mirrorLevel.checkTreatGathering(this.game.player.hitBox);
-
-    if (this.game.level.foundTreat && !this.game.level.alreadyFoundTreat) {
-      this.game.updateTreat(this.game.treatCount + 1);
-      this.game.level.alreadyFoundTreat = true;
-    }
-    if (this.game.mirrorLevel.foundTreat && !this.game.mirrorLevel.alreadyFoundTreat) {
-      this.game.updateTreat(this.game.treatCount + 1);
-      this.game.mirrorLevel.alreadyFoundTreat = true;
+    if (
+      this.game.currentLevel.checkTreatGathering(this.game.player.hitBox) ||
+      this.game.currentMirrorLevel.checkTreatGathering(this.game.player.hitBox)
+    ) {
+      this.game.addTreat();
     }
 
     // Update Blocks
-    this.game.level.blocks.forEach((block) => block.update());
+    this.game.currentLevel.blocks.forEach((block) => block.update());
 
     // Compute Y force
     this.game.yForce = this.game.gravityForce + this.game.jumpForce;
@@ -180,32 +173,22 @@ export default class Engine {
   }
 
   checkEndState() {
-    if (this.game.level.end.isDark && isCollidingWith(this.game.player.hitBox, this.game.level.end)) {
-      this.game.player.runStop();
-      this.game.pause = true;
+    if (this.game.currentLevel.end.isDark && isCollidingWith(this.game.player.hitBox, this.game.currentLevel.end)) {
+      this.game.pauseGame();
       this.playTransition(() => {
-        this.game.validateLvl();
         this.jumpFrame = 0;
-        if (this.game.currentLevel === this.levels.length) {
-          this.endGame();
+        if (this.game.currentLvl + 1 === this.game.levels.length) {
+          this.game.endGame();
           return false;
         }
-        this.game.reset(this.levels, true);
+        this.game.validateLvl();
+        this.game.reset();
         return true;
       });
     } else if (this.game.player.hitBox.y < -this.game.player.hitBox.height * 2) {
       this.jumpFrame = 0;
-      this.game.reset(this.levels);
+      this.game.reset();
     }
-  }
-
-  endGame() {
-    this.game.loadScene('end');
-    this.game.radius = squareSize * 1.5;
-    this.game.pause = true;
-    setTimeout(() => {
-      this.game.stop = true;
-    }, 50);
   }
 
   loop(timestamp: any) {
@@ -216,7 +199,7 @@ export default class Engine {
     if (this.deltaTime > this.interval) {
       this.previousTime = this.currentTime - (this.deltaTime % this.interval);
 
-      if (!this.game.stop) {
+      if (this.game.started && !this.game.stop) {
         if (!this.game.pause) {
           this.changeState();
         }

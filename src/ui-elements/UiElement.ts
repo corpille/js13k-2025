@@ -39,6 +39,12 @@ export class UiElement {
     }
   }
 
+  update() {
+    if (this.parent) {
+      this.parent.update();
+    }
+  }
+
   getRealSize() {
     return {
       width: 0,

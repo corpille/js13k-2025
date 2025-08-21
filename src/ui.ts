@@ -1,7 +1,12 @@
 import { textImage, btnImage } from './assets';
 
+const buttonHeight = 13;
+const buttonWidth = 13;
+const sideWidth = Math.floor(buttonWidth / 2);
+
 const textHeight = 7;
 const textWidth = 5;
+const text = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#-/ ';
 
 export function displayString(
   ctx: CanvasRenderingContext2D,
@@ -10,23 +15,12 @@ export function displayString(
   str: string,
   magnifiying: number = 3,
 ) {
+  ctx.save();
   str
     .toUpperCase()
     .split('')
     .forEach((c, i) => {
-      const code = c.charCodeAt(0);
-      let index = 0;
-      if (code >= 65) {
-        index = code - 65;
-      } else if (code === 35) {
-        index = 36;
-      } else if (code === 45) {
-        index = 37;
-      } else if (code === 32) {
-        index = 38;
-      } else {
-        index = code - 48 + 26;
-      }
+      let index = text.indexOf(c);
       ctx.drawImage(
         textImage,
         0 + index * textWidth,
@@ -39,11 +33,8 @@ export function displayString(
         textHeight * magnifiying,
       );
     });
+  ctx.restore();
 }
-
-const buttonHeight = 13;
-const buttonWidth = 13;
-const sideWidth = Math.floor(buttonWidth / 2);
 
 export function getTextRealSizes(str: string, magnifiying: number) {
   return {

@@ -17,6 +17,10 @@ export class UiScene {
     };
   }
 
+  update() {
+    this.elements.forEach((e) => e.centerElement());
+  }
+
   add(element: UiElement) {
     element.setParent(this);
     this.elements.push(element);
