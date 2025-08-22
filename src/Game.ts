@@ -16,10 +16,22 @@ import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import Entity from './entities/Entity';
 import { UiScene } from './ui-elements/Scene';
-import { endScene, endSym, gameScene, gameSym, getStartScene, startSym, treatCounter, treatEndCounter } from './scenes';
+import {
+  endScene,
+  endSym,
+  gameScene,
+  gameSym,
+  getLevelScene,
+  getStartScene,
+  levelSym,
+  startSym,
+  treatCounter,
+  treatEndCounter,
+} from './scenes';
 
 export default class Game {
   static _instance: Game;
+  _currentLvl: number;
   started: boolean = false;
   pause: boolean;
   stop: boolean = false;
@@ -50,6 +62,7 @@ export default class Game {
         [startSym]: getStartScene(),
         [gameSym]: gameScene,
         [endSym]: endScene,
+        [levelSym]: getLevelScene(),
       };
       Game._instance.loadScene(startSym);
     }
@@ -77,11 +90,17 @@ export default class Game {
   }
 
   get currentLvl(): number {
-    return parseInt(localStorage.getItem(leveltLocalStorageKey) ?? '0');
+    if (this._currentLvl === undefined) {
+      this._currentLvl = parseInt(localStorage.getItem(leveltLocalStorageKey) ?? '0');
+    }
+    return this._currentLvl;
   }
 
   set currentLvl(value: number) {
-    localStorage.setItem(leveltLocalStorageKey, value.toString());
+    if (value > this.currentLvl) {
+      localStorage.setItem(leveltLocalStorageKey, value.toString());
+    }
+    this._currentLvl = value;
     treatCounter.text = `${this.treatCount}`;
     treatEndCounter.text = `${this.treatCount}/${levels.length}`;
   }

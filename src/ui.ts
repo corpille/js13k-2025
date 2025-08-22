@@ -39,7 +39,7 @@ export function displayString(
 export function getTextRealSizes(str: string, magnifiying: number) {
   return {
     // width: (str.length * textWidth + (str.length - 1)) * magnifiying,
-    width: str.length * textWidth * magnifiying + str.length * magnifiying,
+    width: str.length * textWidth * magnifiying + (str.length - 1) * magnifiying,
     height: textHeight * magnifiying,
   };
 }

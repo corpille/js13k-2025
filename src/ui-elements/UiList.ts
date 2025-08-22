@@ -21,9 +21,14 @@ export class UiList extends UiElement {
   getRealSize() {
     const spacings = (this.elements.length - 1) * this.gap;
     return {
-      width: this.elements.reduce((w, e) => w + e.getRealSize().width, 0) + (this.direction === 'row' ? spacings : 0),
+      width:
+        this.direction === 'row'
+          ? this.elements.reduce((h, e) => h + e.getRealSize().width, 0) + spacings
+          : Math.max(...this.elements.map((e) => e.getRealSize().width)),
       height:
-        this.elements.reduce((h, e) => h + e.getRealSize().height, 0) + (this.direction === 'column' ? spacings : 0),
+        this.direction === 'column'
+          ? this.elements.reduce((h, e) => h + e.getRealSize().height, 0) + spacings
+          : Math.max(...this.elements.map((e) => e.getRealSize().height)),
     };
   }
 
@@ -48,7 +53,7 @@ export class UiList extends UiElement {
 
   setParent(parent: UiElement | UiScene) {
     super.setParent(parent);
-    this.updateElements();
+    this.centerElement();
   }
 
   updateElements() {

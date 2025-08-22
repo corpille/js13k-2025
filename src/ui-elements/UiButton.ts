@@ -4,14 +4,28 @@ import { displayString, getButtonRealSizes, getTextRealSizes } from '../ui';
 import { getCursorPosition, isPointCollission } from '../utils';
 import { UiElement } from './UiElement';
 
+const imageMagnifying = 2;
 export class UiButton extends UiElement {
   text: string;
   onClick: Function = () => {};
   hovered: boolean = false;
+  disabled: boolean = false;
+  image: HTMLImageElement | undefined;
+  disableImage: boolean;
 
-  constructor(x: number, y: number, text: string, size: number, centered: boolean[]) {
+  constructor(
+    x: number,
+    y: number,
+    text: string,
+    size: number,
+    centered: boolean[],
+    image?: HTMLImageElement,
+    disableImage: boolean = false,
+  ) {
     super(x, y, size, centered);
     this.text = text;
+    this.image = image;
+    this.disableImage = disableImage;
     this.centerElement();
   }
 
@@ -28,6 +42,7 @@ export class UiButton extends UiElement {
   }
 
   onMouseDown = (e: MouseEvent) => {
+    if (this.disabled) return;
     const coords = getCursorPosition(e);
     if (isPointCollission(coords, this)) {
       this.onClick();
@@ -35,6 +50,7 @@ export class UiButton extends UiElement {
   };
 
   onMouseHover = (e: MouseEvent) => {
+    if (this.disabled) return;
     const coords = getCursorPosition(e);
     if (isPointCollission(coords, this)) {
       this.hovered = true;
@@ -44,18 +60,31 @@ export class UiButton extends UiElement {
   };
 
   getRealSize() {
-    return getButtonRealSizes(this.text, this.size);
+    const textMagnifiying = this.size - 2;
+    const textWidth = getTextRealSizes(this.text, textMagnifiying).width;
+    const contentWidth = textWidth + (this.image ? this.image.width * imageMagnifying : 0);
+    const buttonWidth = contentWidth + this.size * 2;
+    return {
+      width: buttonWidth + buttonSideWidth * this.size * 2,
+      height: buttonHeight * this.size,
+    };
   }
 
-  render(ctx: CanvasRenderingContext2D, xOffset: number = 0, yOffset: number = 0) {
+  render(ctx: CanvasRenderingContext2D) {
     ctx.save();
     super.render(ctx);
+    const realButtonHeight = buttonHeight * this.size;
     const textMagnifiying = this.size - 2;
-    const textLength = getTextRealSizes(this.text, textMagnifiying).width;
-    const buttonLength = textLength + this.size * 2;
-    if (this.hovered) {
+    const textWidth = getTextRealSizes(this.text, textMagnifiying).width;
+    const contentWidth = textWidth + (this.image ? this.image.width * imageMagnifying : 0);
+    const buttonWidth = contentWidth + this.size * 2;
+    if (this.disabled) {
+      ctx.filter = 'invert(1)';
+    } else if (this.hovered) {
       ctx.filter = 'contrast(.6)';
     }
+
+    let paddingLeft = buttonSideWidth * this.size + this.size;
 
     //Start
     ctx.drawImage(
@@ -64,10 +93,10 @@ export class UiButton extends UiElement {
       0,
       buttonSideWidth,
       buttonHeight,
-      xOffset + this.x,
-      yOffset + this.y,
+      this.x,
+      this.y,
       buttonSideWidth * this.size,
-      buttonHeight * this.size,
+      realButtonHeight,
     );
 
     ctx.drawImage(
@@ -76,34 +105,52 @@ export class UiButton extends UiElement {
       0,
       1,
       buttonHeight,
-      xOffset + this.x + buttonSideWidth * this.size,
-      yOffset + this.y,
-      buttonLength,
-      buttonHeight * this.size,
+      this.x + buttonSideWidth * this.size,
+      this.y,
+      buttonWidth,
+      realButtonHeight,
     );
 
     ctx.save();
     ctx.filter = 'invert(1)';
     displayString(
       ctx,
-      xOffset + this.x + Math.round((buttonLength - textLength) / 2) + buttonSideWidth * this.size,
-      yOffset + this.y + Math.round((buttonHeight * this.size - textHeight * textMagnifiying) / 2),
+      this.x + paddingLeft,
+      this.y + Math.round((realButtonHeight - textHeight * textMagnifiying) / 2),
       this.text,
       textMagnifiying,
     );
     ctx.restore();
+    paddingLeft += textWidth;
 
+    paddingLeft += this.size;
+
+    if (this.image) {
+      ctx.save();
+      if (this.disableImage) {
+        ctx.filter = 'brightness(0.3) opacity(0.3)';
+      }
+      ctx.drawImage(
+        this.image,
+        this.x + paddingLeft,
+        this.y + Math.round((realButtonHeight - this.image.height * imageMagnifying) / 2),
+        this.image.width * imageMagnifying,
+        this.image.height * imageMagnifying,
+      );
+      paddingLeft += this.image.width * imageMagnifying;
+      ctx.restore();
+    }
     //End
     ctx.drawImage(
       btnImage,
-      buttonSideWidth + 1,
+      buttonSideWidth + 2,
       0,
       buttonSideWidth,
       buttonHeight,
-      xOffset + this.x + buttonLength + buttonSideWidth * this.size,
-      yOffset + this.y,
+      this.x + paddingLeft,
+      this.y,
       buttonSideWidth * this.size,
-      buttonHeight * this.size,
+      realButtonHeight,
     );
     ctx.restore();
   }
