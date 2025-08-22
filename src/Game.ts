@@ -16,18 +16,9 @@ import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import Entity from './entities/Entity';
 import { UiScene } from './ui-elements/Scene';
-import {
-  endScene,
-  endSym,
-  gameScene,
-  gameSym,
-  getLevelScene,
-  getStartScene,
-  levelSym,
-  startSym,
-  treatCounter,
-  treatEndCounter,
-} from './scenes';
+import { endSym, gameSym, getSscenesList, startLoreSym, startSym } from './scenes';
+import { treatCounter } from './scenes/gameScene';
+import { treatEndCounter } from './scenes/endScenes';
 
 export default class Game {
   static _instance: Game;
@@ -58,12 +49,7 @@ export default class Game {
   public static get instance(): Game {
     if (!Game._instance) {
       Game._instance = new Game();
-      Game._instance.scenes = {
-        [startSym]: getStartScene(),
-        [gameSym]: gameScene,
-        [endSym]: endScene,
-        [levelSym]: getLevelScene(),
-      };
+      Game._instance.scenes = getSscenesList();
       Game._instance.loadScene(startSym);
     }
     return Game._instance;
@@ -130,7 +116,7 @@ export default class Game {
     this.pause = false;
     this.started = true;
     this._currentLvl = lvl;
-    this.loadScene(gameSym);
+    this.loadScene(this._currentLvl === 0 ? startLoreSym : gameSym);
     this.levels.forEach((level) => {
       level.reset();
     });
@@ -166,7 +152,6 @@ export default class Game {
   render(ctx: CanvasRenderingContext2D) {
     // Draw animation circle
     ctx.save();
-    console.log('render');
     ctx.fillStyle = darkBackground;
     ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
 
@@ -232,7 +217,6 @@ export default class Game {
   renderUI(ctx: CanvasRenderingContext2D) {
     ctx.imageSmoothingEnabled = false;
     if (this.scenes[this.currentScene].needRefresh) {
-      console.log('render ui');
       this.scenes[this.currentScene].render(ctx);
     }
   }

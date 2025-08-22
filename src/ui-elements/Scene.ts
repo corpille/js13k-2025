@@ -7,6 +7,7 @@ export class UiScene {
   background: string;
   needRefresh: boolean = true;
   autoRefresh: boolean = false;
+  onLoad: Function = () => {};
 
   constructor(background: string = 'transparent', autoRefresh: boolean = false) {
     this.background = background;
@@ -35,6 +36,7 @@ export class UiScene {
     this.elements.forEach((element) => {
       element.load();
     });
+    this.onLoad();
   }
 
   refresh() {

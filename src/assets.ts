@@ -4,13 +4,15 @@ import cat from '/assets/cat.webp';
 import cardboard from '/assets/cardboard.webp';
 import btn from '/assets/btn.webp';
 
+export const textMatcher = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#-/ .,';
+
 export const treatImage = new Image(10, 10);
 treatImage.src = treat;
 
 export const imageTextHeight = 7;
 export const imageTextWidth = 5;
 
-export const textImage = new Image(200, imageTextHeight);
+export const textImage = new Image(textMatcher.length * imageTextWidth, imageTextHeight);
 textImage.src = text;
 
 export const catImage = new Image(20, 21 * 20);

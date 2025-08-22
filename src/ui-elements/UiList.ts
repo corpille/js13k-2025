@@ -72,6 +72,9 @@ export class UiList extends UiElement {
 
   add(element: UiElement) {
     element.setParent(this);
+    if (this.loaded) {
+      element.load();
+    }
     this.elements.push(element);
     this.updateElements();
   }

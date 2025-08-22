@@ -29,3 +29,17 @@ export function getCursorPosition(event: any) {
   const y = event.clientY - rect.top;
   return { x, y };
 }
+let canceled = false;
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (canceled) {
+        canceled = false;
+        reject();
+      } else {
+        resolve();
+      }
+    }, ms);
+  });
+}
