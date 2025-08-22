@@ -1,5 +1,5 @@
 import { treatImage } from './assets';
-import { darkBackground, gridRealHeight, levels, lightBackground, squareSize } from './config';
+import { darkBackground, levels, lightBackground } from './config';
 import { UiList } from './ui-elements/UiList';
 import { UiScene } from './ui-elements/Scene';
 import { UiText } from './ui-elements/UiText';
@@ -19,16 +19,18 @@ export function getStartScene(): UiScene {
   const title = new UiText(0, 0, 'Untitled Game', 12, [true, false]);
   startList.add(title);
 
-  if (Game.instance.currentLvl) {
-    const continueButton = new UiButton(0, 0, 'Continue', 5, [true, false]);
+  if (Game.instance.currentLvl < 6) {
+    const continueButton = new UiButton(0, 0, 'Continue', [true, false]);
     continueButton.onClick = () => {
       Game.instance.loadLevels(levels.slice(Math.max(Game.instance.currentLvl - 1, 0)));
       Game.instance.started = true;
       Game.instance.loadScene(gameSym);
     };
     startList.add(continueButton);
+  }
 
-    const levelButton = new UiButton(0, 0, 'Load level', 5, [true, false]);
+  if (Game.instance.currentLvl) {
+    const levelButton = new UiButton(0, 0, 'Load level', [true, false]);
     levelButton.onClick = () => {
       Game.instance.scenes[levelSym] = getLevelScene();
       Game.instance.loadScene(levelSym);
@@ -36,7 +38,7 @@ export function getStartScene(): UiScene {
     startList.add(levelButton);
   }
 
-  const newGameButton = new UiButton(0, 0, 'New Game', 5, [true, false]);
+  const newGameButton = new UiButton(0, 0, 'New Game', [true, false]);
   newGameButton.onClick = () => {
     Game.instance.treatFound = [];
     Game.instance.loadLevels(levels);
@@ -61,7 +63,6 @@ export function getLevelScene(): UiScene {
       0,
       0,
       `${level.name}`,
-      5,
       [false, true],
       treatImage,
       Game.instance.treatsFound.indexOf(i) === -1,
@@ -79,7 +80,7 @@ export function getLevelScene(): UiScene {
   });
   sceneList.add(levelList);
 
-  const backButton = new UiButton(0, 0, 'Back', 5, [true, false]);
+  const backButton = new UiButton(0, 0, 'Back', [true, false]);
   backButton.onClick = () => {
     Game.instance.loadScene(startSym);
   };
@@ -90,23 +91,25 @@ export function getLevelScene(): UiScene {
 
 // Game Scene
 export const gameScene = new UiScene();
-const treatUiImage = new UiImage(8, 6, 2, treatImage);
-export const treatCounter = new UiText(treatUiImage.x + treatUiImage.getRealSize().width, 16, '0', 3);
-gameScene.add(treatCounter);
-gameScene.add(treatUiImage);
+const treatInfo = new UiList(16, 16, [false, false], 'row', 8);
+const treatUiImage = new UiImage(0, 0, 2, treatImage, [false, true]);
+export const treatCounter = new UiText(0, 0, '0', 3, [false, true]);
+treatInfo.add(treatUiImage);
+treatInfo.add(treatCounter);
+gameScene.add(treatInfo);
 
 // End Scene
 export const endScene = new UiScene(darkBackground);
-const endList = new UiList(0, 0, [true, true], 'column', 20);
+const endList = new UiList(0, 0, [true, true], 'column');
 endList.inverted = 1;
 const endMessage = new UiText(0, 0, 'GG WP', 12, [true, false]);
-const restartButton = new UiButton(0, 0, 'Back to menu', 5, [true, false]);
+const restartButton = new UiButton(0, 0, 'Back to menu', [true, false]);
 
 restartButton.onClick = () => {
   Game.instance.loadScene(startSym);
 };
 
-const treatLayout = new UiList(0, 0, [true, false], 'row', 0);
+const treatLayout = new UiList(0, 0, [true, false], 'row');
 const treatUiImage2 = new UiImage(8, 6, 3, treatImage, [false, true]);
 
 export const treatEndCounter = new UiText(0, 16, '0', 5, [false, true]);

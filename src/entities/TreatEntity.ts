@@ -10,7 +10,7 @@ export default class TreatEntity extends Entity {
   moveDown: boolean = true;
 
   constructor(x: number, y: number) {
-    super(x, y, 1, 1);
+    super(x, y, 0.5, 0.5);
   }
   render(ctx: CanvasRenderingContext2D) {
     this.frameCounter++;
@@ -26,7 +26,7 @@ export default class TreatEntity extends Entity {
     ctx.drawImage(
       treatImage,
       this.x,
-      gridRealHeight - this.y - this.height + this.offsetShift,
+      gridRealHeight - this.y - this.height * 1.5 + this.offsetShift,
       this.width,
       this.height,
     );
