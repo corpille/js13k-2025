@@ -166,6 +166,7 @@ export default class Game {
   render(ctx: CanvasRenderingContext2D) {
     // Draw animation circle
     ctx.save();
+    console.log('render');
     ctx.fillStyle = darkBackground;
     ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
 
@@ -230,7 +231,10 @@ export default class Game {
 
   renderUI(ctx: CanvasRenderingContext2D) {
     ctx.imageSmoothingEnabled = false;
-    this.scenes[this.currentScene].render(ctx);
+    if (this.scenes[this.currentScene].needRefresh) {
+      console.log('render ui');
+      this.scenes[this.currentScene].render(ctx);
+    }
   }
 
   invertLevel() {
@@ -250,11 +254,11 @@ export default class Game {
   }
 
   endGame() {
-    this.loadScene(endSym);
     this.radius = squareSize * 1.5;
     this.pause = true;
     setTimeout(() => {
       this.stop = true;
+      this.loadScene(endSym);
     }, 50);
   }
 }

@@ -31,6 +31,7 @@ export class UiScene {
 
   load() {
     this.isLoaded = true;
+    this.needRefresh = true;
     this.elements.forEach((element) => {
       element.load();
     });
@@ -48,11 +49,7 @@ export class UiScene {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    if (!this.needRefresh) {
-      return;
-    }
     this.needRefresh = this.autoRefresh;
-    console.log('render');
     // Draw background
     ctx.save();
     ctx.beginPath();

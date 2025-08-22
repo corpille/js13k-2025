@@ -102,6 +102,7 @@ const restartButton = new UiButton(0, 0, 'Back to menu', [true, false]);
 restartButton.onClick = () => {
   Game.instance.loadScene(startSym);
 };
+restartButton.inverted = 0;
 
 const treatLayout = new UiList(0, 0, [true, false], 'row');
 const treatUiImage2 = new UiImage(8, 6, 3, treatImage, [false, true]);
