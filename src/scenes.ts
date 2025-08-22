@@ -1,5 +1,5 @@
 import { treatImage } from './assets';
-import { darkBackground, levels, lightBackground } from './config';
+import { darkBackground, levels, leveltLocalStorageKey, lightBackground, treatLocalStorageKey } from './config';
 import { UiList } from './ui-elements/UiList';
 import { UiScene } from './ui-elements/Scene';
 import { UiText } from './ui-elements/UiText';
@@ -19,16 +19,13 @@ export function getStartScene(): UiScene {
   const title = new UiText(0, 0, 'Untitled Game', 12, [true, false]);
   startList.add(title);
 
-  if (Game.instance.currentLvl < 6) {
+  if ((Game.instance.currentLvl || Game.instance.treatCount) && Game.instance.currentLvl < 6) {
     const continueButton = new UiButton(0, 0, 'Continue', [true, false]);
     continueButton.onClick = () => {
-      Game.instance.loadLevels(levels.slice(Math.max(Game.instance.currentLvl - 1, 0)));
-      Game.instance.started = true;
-      Game.instance.loadScene(gameSym);
+      Game.instance.restart(Game.instance.currentLvl);
     };
     startList.add(continueButton);
   }
-
   if (Game.instance.currentLvl) {
     const levelButton = new UiButton(0, 0, 'Load level', [true, false]);
     levelButton.onClick = () => {
@@ -40,8 +37,8 @@ export function getStartScene(): UiScene {
 
   const newGameButton = new UiButton(0, 0, 'New Game', [true, false]);
   newGameButton.onClick = () => {
-    Game.instance.treatFound = [];
-    Game.instance.loadLevels(levels);
+    localStorage.setItem(treatLocalStorageKey, '[]');
+    localStorage.setItem(leveltLocalStorageKey, '0');
     Game.instance.restart();
   };
 
@@ -71,10 +68,7 @@ export function getLevelScene(): UiScene {
       lvlButton.disabled = true;
     }
     lvlButton.onClick = () => {
-      Game.instance.loadLevels(levels);
-      Game.instance.currentLvl = i;
-      Game.instance.started = true;
-      Game.instance.loadScene(gameSym);
+      Game.instance.restart(i);
     };
     levelList.add(lvlButton);
   });

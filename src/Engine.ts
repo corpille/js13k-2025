@@ -7,6 +7,7 @@ import {
   gridHeight,
   gridWidth,
   jumpSpeed,
+  levels,
   moveSpeed,
   squareSize,
 } from './config';
@@ -31,6 +32,7 @@ export default class Engine {
 
   constructor() {
     this.game = Game.instance;
+    this.game.loadLevels(levels);
     this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   }
 

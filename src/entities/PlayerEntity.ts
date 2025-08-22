@@ -1,5 +1,5 @@
 import { catImage } from '../assets';
-import { animationSpeed, gridRealHeight, gridRealWidth, squareSize } from '../config';
+import { gridRealHeight, gridRealWidth, squareSize } from '../config';
 import Entity from './Entity';
 
 let frameWidth = 20;
@@ -103,22 +103,25 @@ export default class PlayerEntity extends Entity {
     }
   }
 
-  render(ctx: CanvasRenderingContext2D) {
-    this.frameCounter++;
-    if (this.frameCounter > animationSpeed) {
-      this.frameCounter = 0;
-      if (this.currentFrame + 1 === this.animations[this.currentAnimation][1] + 1) {
-        if (this.loopAnimation) {
-          this.resetAnimationFrame();
+  render(ctx: CanvasRenderingContext2D, noAnimation: boolean = true) {
+    if (noAnimation) {
+      this.frameCounter++;
+      const [start, end] = this.animations[this.currentAnimation];
+      if (this.frameCounter > end - start) {
+        this.frameCounter = 0;
+        if (this.currentFrame + 1 === end + 1) {
+          if (this.loopAnimation) {
+            this.resetAnimationFrame();
+          }
+          if (this.backToIdle) {
+            this.currentAnimation = this.isRunning ? runSym : idleSym;
+            this.resetAnimationFrame();
+            this.loopAnimation = true;
+            this.backToIdle = false;
+          }
+        } else {
+          this.currentFrame++;
         }
-        if (this.backToIdle) {
-          this.currentAnimation = this.isRunning ? runSym : idleSym;
-          this.resetAnimationFrame();
-          this.loopAnimation = true;
-          this.backToIdle = false;
-        }
-      } else {
-        this.currentFrame++;
       }
     }
 

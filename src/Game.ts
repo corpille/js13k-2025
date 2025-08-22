@@ -125,11 +125,17 @@ export default class Game {
     this.treatFound = [...this.treatsFound, this.currentLvl];
   }
 
-  restart() {
+  restart(lvl: number = 0) {
     this.stop = false;
     this.pause = false;
     this.started = true;
-    this.currentLvl = 0;
+    this._currentLvl = lvl;
+    this.levels.forEach((level) => {
+      level.reset();
+    });
+    this.mirrorLevels.forEach((mirrorLevel) => {
+      mirrorLevel.reset();
+    });
     this.loadScene(gameSym);
     this.reset();
   }
@@ -210,7 +216,7 @@ export default class Game {
       ctx.translate(0, -gridRealHeight / 2);
 
       this.currentLevel.render(ctx);
-      this.player.render(ctx);
+      this.player.render(ctx, false);
 
       ctx.beginPath();
       ctx.fillStyle = '#c5cfdb';

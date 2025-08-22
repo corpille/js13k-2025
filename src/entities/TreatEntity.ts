@@ -2,8 +2,6 @@ import { treatImage } from '../assets';
 import { gridRealHeight, squareSize } from '../config';
 import Entity from './Entity';
 
-const animationSpeed = 6;
-
 export default class TreatEntity extends Entity {
   frameCounter: number = 0;
   offsetShift: number = 0;
@@ -14,7 +12,7 @@ export default class TreatEntity extends Entity {
   }
   render(ctx: CanvasRenderingContext2D) {
     this.frameCounter++;
-    if (this.frameCounter > animationSpeed) {
+    if (this.frameCounter > 6) {
       this.frameCounter = 0;
       this.offsetShift += this.moveDown ? 1 : -1;
       if (this.offsetShift === 3) {
