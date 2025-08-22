@@ -53,9 +53,12 @@ export class UiButton extends UiElement {
   onMouseHover = (e: MouseEvent) => {
     if (this.disabled) return;
     const coords = getCursorPosition(e);
-    if (isPointCollission(coords, this)) {
+    const isOnButton = isPointCollission(coords, this);
+    if (isOnButton && !this.hovered) {
       this.hovered = true;
-    } else {
+      this.refresh();
+    } else if (!isOnButton && this.hovered) {
+      this.refresh();
       this.hovered = false;
     }
   };
@@ -100,18 +103,6 @@ export class UiButton extends UiElement {
       this.x,
       this.y,
       buttonSideWidth * this.size,
-      realButtonHeight,
-    );
-
-    ctx.drawImage(
-      btnImage,
-      0,
-      0,
-      buttonSideWidth * 2,
-      buttonHeight,
-      this.x,
-      this.y,
-      buttonSideWidth * this.size * 2,
       realButtonHeight,
     );
 

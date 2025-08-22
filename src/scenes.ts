@@ -37,7 +37,7 @@ export function getStartScene(): UiScene {
 
   const newGameButton = new UiButton(0, 0, 'New Game', [true, false]);
   newGameButton.onClick = () => {
-    localStorage.setItem(treatLocalStorageKey, '[]');
+    Game.instance.treatFound = [];
     localStorage.setItem(leveltLocalStorageKey, '0');
     Game.instance.restart();
   };
@@ -59,7 +59,7 @@ export function getLevelScene(): UiScene {
     const lvlButton = new UiButton(
       0,
       0,
-      `${level.name}`,
+      level.name,
       [false, true],
       treatImage,
       Game.instance.treatsFound.indexOf(i) === -1,
@@ -84,7 +84,7 @@ export function getLevelScene(): UiScene {
 }
 
 // Game Scene
-export const gameScene = new UiScene();
+export const gameScene = new UiScene('transparent', true);
 const treatInfo = new UiList(16, 16, [false, false], 'row', 8);
 const treatUiImage = new UiImage(0, 0, 2, treatImage, [false, true]);
 export const treatCounter = new UiText(0, 0, '0', 3, [false, true]);

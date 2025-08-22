@@ -130,13 +130,13 @@ export default class Game {
     this.pause = false;
     this.started = true;
     this._currentLvl = lvl;
+    this.loadScene(gameSym);
     this.levels.forEach((level) => {
       level.reset();
     });
     this.mirrorLevels.forEach((mirrorLevel) => {
       mirrorLevel.reset();
     });
-    this.loadScene(gameSym);
     this.reset();
   }
 

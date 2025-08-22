@@ -10,6 +10,7 @@ export default class EndEntity extends Entity {
 
     this.isDark = isDark;
   }
+
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
 

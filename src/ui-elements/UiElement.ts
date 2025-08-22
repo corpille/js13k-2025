@@ -45,6 +45,12 @@ export class UiElement {
     }
   }
 
+  refresh() {
+    if (this.parent) {
+      this.parent.refresh();
+    }
+  }
+
   getRealSize() {
     return {
       width: 0,
@@ -52,7 +58,7 @@ export class UiElement {
     };
   }
 
-  render(ctx: CanvasRenderingContext2D, xOffset: number = 0, yOffset: number = 0) {
+  render(ctx: CanvasRenderingContext2D) {
     if (this.inverted !== -1) {
       ctx.filter = `invert(${this.inverted})`;
     }

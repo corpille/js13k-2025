@@ -5,9 +5,12 @@ export class UiScene {
   elements: UiElement[] = [];
   isLoaded = false;
   background: string;
+  needRefresh: boolean = true;
+  autoRefresh: boolean = false;
 
-  constructor(background: string = 'transparent') {
+  constructor(background: string = 'transparent', autoRefresh: boolean = false) {
     this.background = background;
+    this.autoRefresh = autoRefresh;
   }
 
   getRealSize() {
@@ -33,6 +36,10 @@ export class UiScene {
     });
   }
 
+  refresh() {
+    this.needRefresh = true;
+  }
+
   unload() {
     this.isLoaded = false;
     this.elements.forEach((element) => {
@@ -41,6 +48,11 @@ export class UiScene {
   }
 
   render(ctx: CanvasRenderingContext2D) {
+    if (!this.needRefresh) {
+      return;
+    }
+    this.needRefresh = this.autoRefresh;
+    console.log('render');
     // Draw background
     ctx.save();
     ctx.beginPath();

@@ -14,6 +14,7 @@ export class UiText extends UiElement {
     this._text = value;
     if (this.parent) {
       this.parent.update();
+      this.refresh();
     }
   }
 
