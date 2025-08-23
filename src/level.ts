@@ -2,7 +2,7 @@ import BlocEntity from './entities/BlocEntity';
 import EndEntity from './entities/EndEntity';
 import Entity from './entities/Entity';
 import TreatEntity from './entities/TreatEntity';
-import { isCollidingWith } from './utils';
+import { Box, isCollidingWith } from './utils';
 
 export default class Level {
   startX: number;
@@ -51,9 +51,9 @@ export default class Level {
     this.foundTreat = false;
   }
 
-  checkTreatGathering(player: Entity) {
+  checkTreatGathering(hitBox: Box) {
     if (this.treat && !this.foundTreat) {
-      const hasTreat = isCollidingWith(player, this.treat);
+      const hasTreat = isCollidingWith(hitBox, this.treat);
       if (hasTreat) {
         this.foundTreat = true;
         return !this.alreadyFoundTreat;

@@ -2,9 +2,19 @@ import { canvas } from './elements';
 import BlocEntity from './entities/BlocEntity';
 import Entity from './entities/Entity';
 
+export interface Coord {
+  x: number;
+  y: number;
+}
+
+export interface Box extends Coord {
+  width: number;
+  height: number;
+}
+
 export const querySelector = (selector: string) => document.querySelector(selector) as HTMLElement;
 
-export function isCollidingWith(a: Entity, b: Entity) {
+export function isCollidingWith(a: Box, b: Box) {
   return (
     (!(b instanceof BlocEntity) || (b instanceof BlocEntity && b.isDark)) &&
     a.x < b.x + b.width &&
@@ -14,7 +24,7 @@ export function isCollidingWith(a: Entity, b: Entity) {
   );
 }
 
-export function isPointCollission(p: { x: number; y: number }, r: Entity) {
+export function isPointCollission(p: { x: number; y: number }, r: Box) {
   return (
     p.x >= r.x && // right of the left edge AND
     p.x <= r.x + r.width && // left of the right edge AND

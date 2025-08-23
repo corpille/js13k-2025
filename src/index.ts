@@ -1,6 +1,7 @@
-import { gridRealHeight, gridRealWidth } from './config';
+import { computedSizes, gridRealHeight, getGridRealWidth } from './config';
 import { canvas } from './elements';
 import Engine from './Engine';
+import Game from './Game';
 
 const engine = new Engine();
 
@@ -16,7 +17,14 @@ function init() {
   if (!canvas) return;
 
   canvas.height = gridRealHeight;
-  canvas.width = gridRealWidth;
+  canvas.width = getGridRealWidth();
+
+  window.addEventListener('resize', () => {
+    computedSizes();
+    canvas.height = gridRealHeight;
+    canvas.width = getGridRealWidth();
+    Game.instance.scenes[Game.instance.currentScene].needRefresh = true;
+  });
 
   window.requestAnimationFrame(engine.loop.bind(engine));
 }

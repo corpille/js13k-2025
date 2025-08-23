@@ -23,6 +23,6 @@ body {
 }
 
 canvas {
-    border: 10px solid #282828;
+    /* border: 10px solid #282828; */
     border-radius: 6px;
 }

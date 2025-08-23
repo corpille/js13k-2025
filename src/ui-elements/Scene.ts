@@ -1,4 +1,4 @@
-import { gridRealHeight, gridRealWidth } from '../config';
+import { getGridRealHeight, getGridRealWidth } from '../config';
 import { UiElement } from './UiElement';
 
 export class UiScene {
@@ -16,8 +16,8 @@ export class UiScene {
 
   getRealSize() {
     return {
-      width: gridRealWidth,
-      height: gridRealHeight,
+      width: getGridRealWidth(),
+      height: getGridRealHeight(),
     };
   }
 
@@ -56,7 +56,7 @@ export class UiScene {
     ctx.save();
     ctx.beginPath();
     ctx.fillStyle = this.background;
-    ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
+    ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
     ctx.closePath();
     ctx.restore();
 

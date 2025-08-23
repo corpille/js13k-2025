@@ -13,7 +13,7 @@ She always used to rely on him to do anything
 and this was not suiting her anymore.
 So, one morning, disguised as a cat
 She sneaked her way out and left the heavens
-only to be followed by a darkness`;
+only to be followed by a looming darkness`;
 
 export function getStartLoreScene() {
   const startLoreScene = new UiScene(darkBackground, true);
@@ -31,7 +31,7 @@ export function getStartLoreScene() {
     });
   };
 
-  const button = new UiButton(0, 0, 'Leave Heaven', [true, false]);
+  const button = new UiButton(0, 0, 'Leave', [true, false]);
 
   button.onClick = () => {
     Game.instance.loadScene(gameSym);
@@ -47,7 +47,7 @@ export function getStartLoreScene() {
       list.add(text);
       for (let i = 0; i < line.length; i++) {
         text.text = text._text + line[i];
-        await sleep(1);
+        await sleep(30);
       }
     }
     list.add(button);

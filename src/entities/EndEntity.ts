@@ -1,5 +1,5 @@
 import { cardBoardImage } from '../assets';
-import { gridRealHeight } from '../config';
+import { getGridRealHeight } from '../config';
 import Entity from './Entity';
 
 export default class EndEntity extends Entity {
@@ -17,7 +17,8 @@ export default class EndEntity extends Entity {
     if (!this.isDark) {
       ctx.filter = 'invert(1) opacity(0.4)';
     }
-    ctx.drawImage(cardBoardImage, this.x, gridRealHeight - this.y - this.height, this.width, this.height);
+    ctx.drawImage(cardBoardImage, this.x, getGridRealHeight() - this.y - this.height, this.width, this.height);
+
     ctx.restore();
   }
 }

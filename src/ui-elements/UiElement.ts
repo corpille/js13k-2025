@@ -1,4 +1,4 @@
-import { gridRealHeight, gridRealWidth } from '../config';
+import { getGridRealHeight, getGridRealWidth } from '../config';
 import { UiScene } from './Scene';
 
 export class UiElement {
@@ -27,7 +27,7 @@ export class UiElement {
   }
 
   centerElement() {
-    const parenSize = this.parent?.getRealSize() ?? { width: gridRealWidth, height: gridRealHeight };
+    const parenSize = this.parent?.getRealSize() ?? { width: getGridRealWidth(), height: getGridRealHeight() };
     const buttonRealSize = this.getRealSize();
     this.height = buttonRealSize.height;
     this.width = buttonRealSize.width;

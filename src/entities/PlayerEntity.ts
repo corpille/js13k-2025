@@ -1,9 +1,7 @@
-import { catImage } from '../assets';
-import { gridRealHeight, gridRealWidth, squareSize } from '../config';
+import { catImage, catImageHeight, catImageWidth } from '../assets';
+import { getGridRealHeight, getGridRealWidth, getSquareSize, gridWidth } from '../config';
+import { Box, Coord } from '../utils';
 import Entity from './Entity';
-
-let frameWidth = 20;
-let frameHeight = 20;
 
 const idleSym = Symbol('idle');
 const runSym = Symbol('run');
@@ -22,6 +20,7 @@ export default class PlayerEntity extends Entity {
   loopAnimation: boolean;
   backToIdle: boolean;
   hitBox: Entity;
+  offsets: Coord = { x: 0, y: 0 };
 
   animations: { [name: symbol]: number[] } = {
     [idleSym]: [0, 7],
@@ -31,14 +30,41 @@ export default class PlayerEntity extends Entity {
     [landSym]: [19, 20],
   };
 
-  constructor(x: number, y: number, width: number, height: number) {
+  set x(value: number) {
+    this._x = value;
+  }
+
+  get x(): number {
+    const dx = (this._width / 4) * (this.isLeft ? 1 : -1);
+
+    return (this._x + dx) * getSquareSize() + this.offsets.x;
+  }
+
+  set y(value: number) {
+    this._y = value;
+  }
+
+  get y(): number {
+    return this._y * getSquareSize() + this.offsets.y;
+  }
+
+  getHitbox(): Box {
+    return {
+      x: this.x - this.hitBox.x * (this.isLeft ? 1 : -1),
+      y: this.y - this.hitBox.y,
+      width: this.hitBox.width,
+      height: this.hitBox.height,
+    };
+  }
+
+  constructor(x: number, y: number) {
     super(x, y, 2, 2);
 
     this.frameCounter = 0;
     this.currentAnimation = idleSym;
     this.currentFrame = this.animations[this.currentAnimation][0];
     this.loopAnimation = true;
-    this.hitBox = new Entity(x, y, width - 1, height - 1);
+    this.hitBox = new Entity(0.5, 0, 1, 1);
   }
 
   runStart() {
@@ -91,15 +117,13 @@ export default class PlayerEntity extends Entity {
 
   update(x: number = 0, y: number = 0) {
     if (x) {
-      this.hitBox.x += x;
-      if (this.hitBox.x < 0) {
-        this.hitBox.x = 0;
-      } else if (this.hitBox.x + this.hitBox.width > gridRealWidth) {
-        this.hitBox.x = gridRealWidth - this.hitBox.width;
+      const { x: hX, width } = this.getHitbox();
+      if (hX + x + width <= getGridRealWidth() && hX + x >= 0) {
+        this.offsets.x += x;
       }
     }
     if (y) {
-      this.hitBox.y += y;
+      this.offsets.y += y;
     }
   }
 
@@ -131,19 +155,18 @@ export default class PlayerEntity extends Entity {
       ctx.scale(-1, 1);
     }
 
-    const dx = (squareSize / 2) * (this.isLeft ? 1 : -1);
-
     ctx.drawImage(
       catImage,
-      this.currentFrame * frameWidth,
+      this.currentFrame * catImageWidth,
       0,
-      frameWidth,
-      frameHeight,
-      (this.hitBox.x + dx) * (this.isLeft ? -1 : 1),
-      gridRealHeight - this.hitBox.y - this.height,
+      catImageWidth,
+      catImageHeight,
+      this.x * (this.isLeft ? -1 : 1),
+      getGridRealHeight() - this.y - this.height,
       this.width,
       this.height,
     );
+
     ctx.restore();
   }
 }

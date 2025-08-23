@@ -1,5 +1,5 @@
 import { treatImage } from '../assets';
-import { gridRealHeight, squareSize } from '../config';
+import { getGridRealHeight } from '../config';
 import Entity from './Entity';
 
 export default class TreatEntity extends Entity {
@@ -25,7 +25,7 @@ export default class TreatEntity extends Entity {
     ctx.drawImage(
       treatImage,
       this.x,
-      gridRealHeight - this.y - this.height * 1.5 + this.offsetShift,
+      getGridRealHeight() - this.y - this.height * 1.5 + this.offsetShift,
       this.width,
       this.height,
     );

@@ -1,4 +1,6 @@
+import { getSquareSize } from './config';
 import BlocEntity from './entities/BlocEntity';
+import Entity from './entities/Entity';
 import Game from './Game';
 import { isPointCollission } from './utils';
 
@@ -20,24 +22,25 @@ interface Colission {
 }
 
 export function checkColissions(game: Game): Colission {
+  const hitBox = game.player.getHitbox();
   const colisions = game.checkColission({
-    ...game.player.hitBox,
-    x: game.player.hitBox.x + game.xForce,
-    y: game.player.hitBox.y + game.yForce,
+    x: hitBox.x + game.xForce,
+    y: hitBox.y + game.yForce,
+    width: hitBox.width,
+    height: hitBox.height,
   });
 
   let colisionChecks: ColisionCheck[] = [];
   if (colisions.length) {
-    const { x: hX, y: hY, width, height } = game.player.hitBox;
-    const x = hX + game.xForce;
-    const y = hY + game.yForce;
+    const x = hitBox.x + game.xForce;
+    const y = hitBox.y + game.yForce;
 
     colisionChecks = colisions.map((block) => {
       const c = {
-        tl: isPointCollission({ x, y: y + height }, block),
-        tr: isPointCollission({ x: x + width, y: y + height }, block),
+        tl: isPointCollission({ x, y: y + hitBox.height }, block),
+        tr: isPointCollission({ x: x + hitBox.width, y: y + hitBox.height }, block),
         bl: isPointCollission({ x, y }, block),
-        br: isPointCollission({ x: x + width, y }, block),
+        br: isPointCollission({ x: x + hitBox.width, y }, block),
       };
       let side;
       if ((c.br && c.bl) || (c.bl && !c.tl && game.yForce < 0) || (c.br && !c.tr && game.yForce < 0)) {

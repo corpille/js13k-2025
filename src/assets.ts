@@ -15,7 +15,10 @@ export const imageTextWidth = 5;
 export const textImage = new Image(textMatcher.length * imageTextWidth, imageTextHeight);
 textImage.src = text;
 
-export const catImage = new Image(20, 21 * 20);
+export const catImageWidth = 20;
+export const catImageHeight = 20;
+
+export const catImage = new Image(catImageWidth * 21, catImageHeight);
 catImage.src = cat;
 
 export const cardBoardImage = new Image(40, 40);

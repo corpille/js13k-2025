@@ -2,13 +2,13 @@ import {
   darkBackground,
   defaultRadius,
   gravity,
-  gridRealHeight,
-  gridRealWidth,
+  getGridRealHeight,
+  getGridRealWidth,
   introLocalStorageKey,
   levels,
   leveltLocalStorageKey,
   lightBackground,
-  squareSize,
+  getSquareSize,
   treatLocalStorageKey,
 } from './config';
 import Level from './level';
@@ -144,12 +144,12 @@ export default class Game {
     this.pause = false;
     this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
-    this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, 2, 2);
+    this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY);
     this.jumpForce = 0;
     this.xForce = 0;
     this.keys = {};
     this.isJumping = false;
-    this.gravityForce = gravity;
+    this.gravityForce = 0;
     this.radius = defaultRadius;
   }
 
@@ -166,13 +166,14 @@ export default class Game {
   render(ctx: CanvasRenderingContext2D) {
     // Draw animation circle
     ctx.save();
+    const hitBox = this.player.getHitbox();
     ctx.fillStyle = darkBackground;
-    ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
+    ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
 
     ctx.beginPath();
     ctx.arc(
-      this.player.hitBox.x + this.player.hitBox.height / 2,
-      gridRealHeight - this.player.hitBox.y - this.player.hitBox.height * 1.25 + Math.max(0, this.radius) / 2,
+      hitBox.x + hitBox.height / 2,
+      getGridRealHeight() - hitBox.y - hitBox.height * 1.25 + Math.max(0, this.radius) / 2,
       Math.max(0, this.radius),
       0,
       Math.PI * 2,
@@ -185,7 +186,7 @@ export default class Game {
     ctx.save();
     ctx.beginPath();
     ctx.fillStyle = lightBackground;
-    ctx.fillRect(0, 0, gridRealWidth, gridRealHeight);
+    ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
     ctx.closePath();
     ctx.restore();
 
@@ -197,12 +198,12 @@ export default class Game {
       ctx.save();
 
       ctx.filter = 'contrast(.7)';
-      ctx.translate(0, gridRealHeight * 1.5);
+      ctx.translate(0, getGridRealHeight() * 1.5);
       ctx.scale(1, -1);
 
       ctx.beginPath();
       ctx.fillStyle = 'rgba(65, 188, 226, 0.2)';
-      ctx.rect(0, 0, gridRealWidth, gridRealHeight);
+      ctx.rect(0, 0, getGridRealWidth(), getGridRealHeight());
       ctx.fill();
       ctx.closePath();
 
@@ -213,14 +214,14 @@ export default class Game {
       // Draw real
       ctx.save();
 
-      ctx.translate(0, -gridRealHeight / 2);
+      ctx.translate(0, -getGridRealHeight() / 2);
 
       this.currentLevel.render(ctx);
       this.player.render(ctx, false);
 
       ctx.beginPath();
       ctx.fillStyle = '#c5cfdb';
-      ctx.rect(0, gridRealHeight, gridRealWidth, 1);
+      ctx.rect(0, getGridRealHeight(), getGridRealWidth(), 1);
       ctx.fill();
       ctx.closePath();
 
@@ -240,10 +241,10 @@ export default class Game {
     this.currentMirrorLevel.invert();
   }
 
-  checkColission(entity: Entity) {
-    return [...this.currentLevel.blocks, ...this.currentMirrorLevel.blocks].filter((block) => {
-      return isCollidingWith(entity, block);
-    });
+  checkColission(entity: { x: number; y: number; width: number; height: number }) {
+    return [...this.currentLevel.blocks, ...this.currentMirrorLevel.blocks].filter((block) =>
+      isCollidingWith(entity, block),
+    );
   }
 
   pauseGame() {
@@ -252,7 +253,7 @@ export default class Game {
   }
 
   endGame() {
-    this.radius = squareSize * 1.5;
+    this.radius = getSquareSize() * 1.5;
     this.pause = true;
     setTimeout(() => {
       this.stop = true;

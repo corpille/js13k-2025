@@ -1,19 +1,51 @@
-import { darkBackground, FPS, gridHeight, gridRealHeight, squareSize } from '../config';
+import { darkBackground, getGridRealHeight, getSquareSize } from '../config';
+import { Coord } from '../utils';
 import Entity from './Entity';
 
-const moveSpeed = 5;
+const getBlockMoveSpeed = () => 5;
 export default class BlocEntity extends Entity {
   initialIsDark: boolean;
   isDark: boolean;
   startX: number;
-  moveRangeX: number = 0;
-  movingShiftX: number = 0;
+  _moveRangeX: number = 0;
+  _moveRangeY: number = 0;
   currentMoveShiftX: number = 0;
   movingRight: boolean = true;
 
-  moveRangeY: number = 0;
-  movingShiftY: number = 0;
   movingTop: boolean = false;
+  offsets: Coord = { x: 0, y: 0 };
+
+  set x(value: number) {
+    this._x = value;
+  }
+
+  get x(): number {
+    return this._x * getSquareSize() + this.offsets.x;
+  }
+
+  set y(value: number) {
+    this._y = value;
+  }
+
+  get y(): number {
+    return this._y * getSquareSize() + this.offsets.y;
+  }
+
+  set moveRangeX(value: number) {
+    this._moveRangeX = value;
+  }
+
+  get moveRangeX() {
+    return (this._moveRangeX ?? 0) * getSquareSize();
+  }
+
+  set moveRangeY(value: number) {
+    this._moveRangeY = value;
+  }
+
+  get moveRangeY() {
+    return (this._moveRangeY ?? 0) * getSquareSize();
+  }
 
   constructor(
     x: number,
@@ -28,12 +60,10 @@ export default class BlocEntity extends Entity {
     this.startX = this.x;
     this.isDark = isDark;
     this.initialIsDark = isDark;
-    this.moveRangeY = Math.abs((moveRangeY ?? 0) * squareSize);
-    this.moveRangeX = Math.abs((moveRangeX ?? 0) * squareSize);
+    this.moveRangeY = moveRangeY;
+    this.moveRangeX = moveRangeX;
     this.movingRight = moveRangeX > 0;
     this.movingTop = moveRangeY > 0;
-    this.movingShiftX = 0;
-    this.movingShiftY = 0;
   }
 
   reset() {
@@ -42,21 +72,23 @@ export default class BlocEntity extends Entity {
 
   update() {
     if (this.moveRangeX !== 0) {
-      if (this.movingShiftX >= this.moveRangeX) {
-        this.movingShiftX = 0;
+      if (
+        (this.moveRangeX > 0 && (this.offsets.x < 0 || this.offsets.x >= this.moveRangeX)) ||
+        (this.moveRangeX < 0 && (this.offsets.x > 0 || this.offsets.x <= this.moveRangeX))
+      ) {
         this.movingRight = !this.movingRight;
       }
-      this.movingShiftX += moveSpeed;
-      this.currentMoveShiftX = (this.movingRight ? 1 : -1) * moveSpeed;
-      this.x += this.currentMoveShiftX;
+      this.currentMoveShiftX = (this.movingRight ? 1 : -1) * getBlockMoveSpeed();
+      this.offsets.x += this.currentMoveShiftX;
     }
     if (this.moveRangeY !== 0) {
-      if (this.movingShiftY >= this.moveRangeY) {
-        this.movingShiftY = 0;
+      if (
+        (this.moveRangeY > 0 && (this.offsets.y < 0 || this.offsets.y >= this.moveRangeY)) ||
+        (this.moveRangeY < 0 && (this.offsets.y > 0 || this.offsets.y <= this.moveRangeY))
+      ) {
         this.movingTop = !this.movingTop;
       }
-      this.movingShiftY += moveSpeed;
-      this.y += (this.movingTop ? 1 : -1) * moveSpeed;
+      this.offsets.y += (this.movingTop ? 1 : -1) * getBlockMoveSpeed();
     }
   }
 
@@ -75,7 +107,7 @@ export default class BlocEntity extends Entity {
     if (this.y === 0) {
       corners = [4, 4, 0, 0];
     }
-    const y = gridRealHeight - this.y - this.height;
+    const y = getGridRealHeight() - this.y - this.height;
     ctx.roundRect(this.x, y, this.width, this.height, corners);
     ctx.stroke();
     ctx.fill();
