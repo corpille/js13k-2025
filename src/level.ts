@@ -42,12 +42,12 @@ export default class Level {
     }
   }
 
-  reset() {
+  reset(hasFoundTreat: boolean = false) {
     this.blocks.forEach((block) => block.reset());
     if (this.end) {
       this.end.isDark = this.blocks[this.blocks.length - 1].isDark;
     }
-    this.alreadyFoundTreat = this.foundTreat || this.alreadyFoundTreat;
+    this.alreadyFoundTreat = hasFoundTreat;
     this.foundTreat = false;
   }
 

@@ -39,6 +39,7 @@ export function getStartLoreScene() {
   startLoreScene.add(list);
 
   startLoreScene.onLoad = async () => {
+    list.elements = [];
     const lines = msg.split('\n');
     for (const line of lines) {
       const text = new UiText(0, 0, '', 3, [true, false]);
@@ -46,7 +47,7 @@ export function getStartLoreScene() {
       list.add(text);
       for (let i = 0; i < line.length; i++) {
         text.text = text._text + line[i];
-        await sleep(60);
+        await sleep(1);
       }
     }
     list.add(button);

@@ -10,6 +10,7 @@ export default class TreatEntity extends Entity {
   constructor(x: number, y: number) {
     super(x, y, 0.5, 0.5);
   }
+
   render(ctx: CanvasRenderingContext2D) {
     this.frameCounter++;
     if (this.frameCounter > 6) {

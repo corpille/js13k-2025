@@ -12,6 +12,7 @@ import { startSym } from '.';
 export const endScene = new UiScene(darkBackground);
 const endList = new UiList(0, 0, [true, true], 'column');
 endList.inverted = 1;
+
 const endMessage = new UiText(0, 0, 'GG WP', 12, [true, false]);
 const restartButton = new UiButton(0, 0, 'Back to menu', [true, false]);
 

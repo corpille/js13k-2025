@@ -1,3 +1,11 @@
+const level0 = {
+  name: '1-0',
+  startX: 1,
+  startY: 1,
+  b: [[-1, 0, 42, 1, true]],
+  end: [37, 1],
+  treat: [32, 1],
+};
 const level1 = {
   name: '1-1',
   startX: 1,
@@ -67,4 +75,4 @@ const level3 = {
   treat: [1, 18],
 };
 
-export default [level1, level2, level3];
+export default [level0, level1, level2, level3];

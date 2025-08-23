@@ -4,6 +4,7 @@ import {
   gravity,
   gridRealHeight,
   gridRealWidth,
+  introLocalStorageKey,
   levels,
   leveltLocalStorageKey,
   lightBackground,
@@ -53,6 +54,14 @@ export default class Game {
       Game._instance.loadScene(startSym);
     }
     return Game._instance;
+  }
+
+  get hasSeenIntro(): boolean {
+    return localStorage.getItem(introLocalStorageKey) === 'true' ? true : false;
+  }
+
+  set hasSeenIntro(value: boolean) {
+    localStorage.setItem(introLocalStorageKey, value.toString());
   }
 
   get currentLevel(): Level {
@@ -116,20 +125,25 @@ export default class Game {
     this.pause = false;
     this.started = true;
     this._currentLvl = lvl;
-    this.loadScene(this._currentLvl === 0 ? startLoreSym : gameSym);
-    this.levels.forEach((level) => {
-      level.reset();
+    if (!this.hasSeenIntro) {
+      this.loadScene(startLoreSym);
+      this.hasSeenIntro = true;
+    } else {
+      this.loadScene(gameSym);
+    }
+    this.levels.forEach((level, i) => {
+      level.reset(this.treatsFound.includes(i));
     });
-    this.mirrorLevels.forEach((mirrorLevel) => {
-      mirrorLevel.reset();
+    this.mirrorLevels.forEach((mirrorLevel, i) => {
+      mirrorLevel.reset(this.treatsFound.includes(i));
     });
     this.reset();
   }
 
   reset() {
     this.pause = false;
-    this.currentLevel.reset();
-    this.currentMirrorLevel.reset();
+    this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
+    this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, 2, 2);
     this.jumpForce = 0;
     this.xForce = 0;
