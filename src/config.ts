@@ -6,7 +6,7 @@ import world3 from './levels/world-3';
 
 // Grid
 
-const ratio = (x: number) => Math.round((x * 9) / 16);
+const ratio = (x: number) => Math.round((x * 10) / 16);
 
 const idealWidth = 20;
 
@@ -30,7 +30,7 @@ export function computedSizes() {
 computedSizes();
 
 // Forces
-export const getMoveSpeed = () => getSquareSize() / 5;
+export const getMoveSpeed = () => Math.round(getSquareSize() / 5);
 export const getJumpSpeed = () => Math.round((getSquareSize() / 5) * 4.5);
 export const gravity = Math.round(-getSquareSize() / 4);
 export const getForceDecrease = () => getSquareSize() / 20;
