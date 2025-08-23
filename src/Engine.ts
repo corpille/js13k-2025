@@ -92,6 +92,7 @@ export default class Engine {
         if (this.game.yForce < 0) {
           this.game.player.fallStart();
         } else if (this.game.yForce > 0 && this.game.player.isGrounded) {
+          yOffset = 0;
           this.game.player.jumpStart();
         }
         this.game.player.isGrounded = false;

@@ -25,8 +25,8 @@ export default class PlayerEntity extends Entity {
   animations: { [name: symbol]: number[] } = {
     [idleSym]: [0, 7],
     [runSym]: [8, 12],
-    [jumpSym]: [14, 16],
-    [fallSym]: [17, 19],
+    [jumpSym]: [13, 16, 1],
+    [fallSym]: [17, 18],
     [landSym]: [19, 20],
   };
 
@@ -71,6 +71,7 @@ export default class PlayerEntity extends Entity {
     if (!this.isRunning && !this.isJumping && this.currentAnimation !== fallSym) {
       this.currentAnimation = runSym;
       this.resetAnimationFrame();
+      this.loopAnimation = true;
     }
     this.isRunning = true;
   }
@@ -79,6 +80,7 @@ export default class PlayerEntity extends Entity {
     if (this.isRunning && this.currentAnimation !== fallSym) {
       this.currentAnimation = idleSym;
       this.resetAnimationFrame();
+      this.loopAnimation = true;
     }
     this.isRunning = false;
   }
@@ -102,6 +104,7 @@ export default class PlayerEntity extends Entity {
   }
 
   landStart() {
+    console.log('landStart');
     if (this.currentAnimation === fallSym) {
       this.isJumping = false;
       this.currentAnimation = landSym;
@@ -130,8 +133,8 @@ export default class PlayerEntity extends Entity {
   render(ctx: CanvasRenderingContext2D, noAnimation: boolean = true) {
     if (noAnimation) {
       this.frameCounter++;
-      const [start, end] = this.animations[this.currentAnimation];
-      if (this.frameCounter > end - start) {
+      const [start, end, animation] = this.animations[this.currentAnimation];
+      if (this.frameCounter > (animation ?? end - start + 1)) {
         this.frameCounter = 0;
         if (this.currentFrame + 1 === end + 1) {
           if (this.loopAnimation) {
