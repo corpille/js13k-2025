@@ -1,6 +1,6 @@
 import {
   coyoteFrames,
-  defaultRadius,
+  getDefaultRadius,
   getForceDecrease,
   FPS,
   getGridRealHeight,
@@ -160,7 +160,7 @@ export default class Engine {
 
   playTransition(callback: Function) {
     const unZoom = () => {
-      if (this.game.radius < defaultRadius) {
+      if (this.game.radius < getDefaultRadius()) {
         this.game.radius += 22;
         setTimeout(unZoom.bind(this));
       }

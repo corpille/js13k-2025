@@ -1,6 +1,6 @@
 import {
   darkBackground,
-  defaultRadius,
+  getDefaultRadius,
   gravity,
   getGridRealHeight,
   getGridRealWidth,
@@ -15,7 +15,6 @@ import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
-import Entity from './entities/Entity';
 import { UiScene } from './ui-elements/Scene';
 import { endSym, gameSym, getSscenesList, startLoreSym, startSym } from './scenes';
 import { treatCounter } from './scenes/gameScene';
@@ -150,7 +149,7 @@ export default class Game {
     this.keys = {};
     this.isJumping = false;
     this.gravityForce = 0;
-    this.radius = defaultRadius;
+    this.radius = getDefaultRadius();
   }
 
   loadScene(name: symbol) {
