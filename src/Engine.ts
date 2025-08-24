@@ -55,7 +55,7 @@ export default class Engine {
   }
 
   getGravityForce() {
-    return Math.round(-getSquareSize() / 4) - this.game.gravityForce;
+    return -getSquareSize() / 4 - this.game.gravityForce;
   }
 
   changeState() {
@@ -96,7 +96,7 @@ export default class Engine {
           this.game.player.jumpStart();
         }
         this.game.player.isGrounded = false;
-        this.game.gravityForce += 0.15;
+        this.game.gravityForce += getSquareSize() / 152;
       }
     } else {
       if (colisions.bottom) {
@@ -162,18 +162,18 @@ export default class Engine {
   playTransition(callback: Function) {
     const unZoom = () => {
       if (this.game.radius < getDefaultRadius()) {
-        this.game.radius += 22;
+        this.game.radius += getSquareSize() / 1.72;
         setTimeout(unZoom.bind(this));
       }
     };
     const zoom = () => {
       if (this.game.radius >= 0) {
-        this.game.radius -= 24;
+        this.game.radius -= getSquareSize() / 1.58;
         setTimeout(zoom.bind(this));
       } else {
         if (callback()) {
           this.game.radius = 0;
-          setTimeout(unZoom, 100);
+          setTimeout(unZoom, 300);
         }
       }
     };

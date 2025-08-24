@@ -233,7 +233,7 @@ export default class Game {
       // Draw real
       ctx.save();
 
-      ctx.translate(0, -getGridRealHeight() / 2);
+      ctx.translate(0, Math.round(-getGridRealHeight() / 2));
 
       this.currentLevel.render(ctx);
       this.player.render(ctx, false);

@@ -35,9 +35,9 @@ export default class PlayerEntity extends Entity {
   }
 
   get x(): number {
-    const dx = (this._width / 4) * (this.isLeft ? 1 : -1);
+    const dx = (this._width / 2) * (this.isLeft ? 1 : 0);
 
-    return (this._x + dx) * getSquareSize() + this.offsets.x;
+    return Math.round((this._x + dx) * getSquareSize() + this.offsets.x);
   }
 
   set y(value: number) {
@@ -45,7 +45,7 @@ export default class PlayerEntity extends Entity {
   }
 
   get y(): number {
-    return this._y * getSquareSize() + this.offsets.y;
+    return Math.round(this._y * getSquareSize() + this.offsets.y);
   }
 
   getHitbox(): Box {
@@ -104,7 +104,7 @@ export default class PlayerEntity extends Entity {
   }
 
   landStart() {
-    if (this.currentAnimation === fallSym) {
+    if ([jumpSym, fallSym].includes(this.currentAnimation)) {
       this.isJumping = false;
       this.currentAnimation = landSym;
       this.resetAnimationFrame();
@@ -153,7 +153,7 @@ export default class PlayerEntity extends Entity {
 
     ctx.save();
     if (this.isLeft) {
-      ctx.translate(this.width / 2, 0);
+      ctx.translate(Math.round(this.width / 2), 0);
       ctx.scale(-1, 1);
     }
 

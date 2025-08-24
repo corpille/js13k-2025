@@ -14,7 +14,6 @@ export function getTransitionScene(msg: string) {
 
   button.onClick = () => {
     Game.instance.loadScene(gameSym);
-    Game.instance.currentLvl++;
     Game.instance.reset();
   };
   scene.add(list);
@@ -23,6 +22,7 @@ export function getTransitionScene(msg: string) {
     list.elements = [];
     await slowDisplayText(list, msg);
     list.add(button);
+    Game.instance.currentLvl++;
   };
   return scene;
 }

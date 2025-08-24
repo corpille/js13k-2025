@@ -1,4 +1,4 @@
-import { computedSizes, gridRealHeight, getGridRealWidth } from './config';
+import { computedSizes, gridRealHeight, getGridRealWidth, getDefaultRadius } from './config';
 import { canvas } from './elements';
 import Engine from './Engine';
 import Game from './Game';
@@ -23,6 +23,7 @@ function init() {
     computedSizes();
     canvas.height = gridRealHeight;
     canvas.width = getGridRealWidth();
+    Game.instance.radius = getDefaultRadius();
     Game.instance.scenes[Game.instance.currentScene].update();
     Game.instance.scenes[Game.instance.currentScene].needRefresh = true;
   });

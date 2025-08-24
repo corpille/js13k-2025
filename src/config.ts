@@ -32,9 +32,8 @@ export function computedSizes() {
 computedSizes();
 
 // Forces
-export const getMoveSpeed = () => Math.round(getSquareSize() / 5);
-export const getJumpSpeed = () => Math.round((getSquareSize() / 5) * 4.5);
-export const gravity = Math.round(-getSquareSize() / 4);
+export const getMoveSpeed = () => getSquareSize() / 5;
+export const getJumpSpeed = () => (getSquareSize() / 5) * 4.5;
 export const getForceDecrease = () => getSquareSize() / 20;
 
 export const FPS = 60;
@@ -51,4 +50,4 @@ export const treatLocalStorageKey = `${gameName}-treat`;
 export const leveltLocalStorageKey = `${gameName}-level`;
 export const introLocalStorageKey = `${gameName}-intro`;
 
-export const worlds = [[world1[0], world1[0]], [world2[0]], [world3[0]]];
+export const worlds = [world1, world2, world3];

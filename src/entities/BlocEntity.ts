@@ -2,7 +2,7 @@ import { darkBackground, getGridRealHeight, getSquareSize } from '../config';
 import { Coord } from '../utils';
 import Entity from './Entity';
 
-const getBlockMoveSpeed = () => 5;
+const getBlockMoveSpeed = () => Math.round(getSquareSize() / 8);
 export default class BlocEntity extends Entity {
   initialIsDark: boolean;
   isDark: boolean;
