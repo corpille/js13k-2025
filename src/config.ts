@@ -33,7 +33,7 @@ computedSizes();
 
 // Forces
 export const getMoveSpeed = () => getSquareSize() / 5;
-export const getJumpSpeed = () => (getSquareSize() / 5) * 4.5;
+export const getJumpSpeed = () => (getSquareSize() / 5) * 5;
 export const getForceDecrease = () => getSquareSize() / 20;
 
 export const FPS = 60;
