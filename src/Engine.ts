@@ -6,9 +6,9 @@ import {
   getGridRealHeight,
   getGridRealWidth,
   getJumpSpeed,
-  levels,
   getSquareSize,
   getMoveSpeed,
+  worlds,
 } from './config';
 import { canvas } from './elements';
 import Game from './Game';
@@ -31,7 +31,7 @@ export default class Engine {
 
   constructor() {
     this.game = Game.instance;
-    this.game.loadLevels(levels);
+    this.game.loadLevels(worlds.flat());
     this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   }
 

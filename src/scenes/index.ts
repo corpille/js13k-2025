@@ -10,7 +10,7 @@ export const gameSym = Symbol('game');
 export const endSym = Symbol('end');
 export const levelSym = Symbol('level');
 
-export const getSscenesList = () => ({
+export const getScenesList = () => ({
   [startSym]: getStartScene(),
   [gameSym]: gameScene,
   [endSym]: endScene,

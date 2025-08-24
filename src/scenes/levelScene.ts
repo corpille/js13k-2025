@@ -1,6 +1,6 @@
 import { startSym } from '.';
 import { treatImage } from '../assets';
-import { levels, lightBackground } from '../config';
+import { lightBackground, worlds } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
@@ -14,25 +14,33 @@ export function getLevelScene(): UiScene {
   const text = new UiText(0, 0, 'Choose a level', 5, [true, false]);
   sceneList.add(text);
 
-  const levelList = new UiList(0, 0, [true, false], 'row');
-  levels.forEach((level, i) => {
-    const lvlButton = new UiButton(
-      0,
-      0,
-      level.name,
-      [false, true],
-      treatImage,
-      Game.instance.treatsFound.indexOf(i) === -1,
-    );
-    if (i > Game.instance.currentLvl) {
-      lvlButton.disabled = true;
-    }
-    lvlButton.onClick = () => {
-      Game.instance.restart(i);
-    };
-    levelList.add(lvlButton);
+  const worldList = new UiList(0, 0, [true, false]);
+  let lvlCount = 0;
+  worlds.forEach((levels, worldNb) => {
+    const levelList = new UiList(0, 0, [false, false], 'row');
+    const worldName = new UiText(0, 0, `World ${worldNb + 1}`, 2, [false, true]);
+    levelList.add(worldName);
+    levels.forEach((level) => {
+      const lvlButton = new UiButton(
+        0,
+        0,
+        level.name,
+        [false, true],
+        treatImage,
+        Game.instance.treatsFound.indexOf(lvlCount) === -1,
+      );
+      if (lvlCount > Game.instance.currentLvl) {
+        lvlButton.disabled = true;
+      }
+      lvlButton.onClick = () => {
+        Game.instance.restart(lvlCount);
+      };
+      levelList.add(lvlButton);
+      lvlCount++;
+    });
+    worldList.add(levelList);
   });
-  sceneList.add(levelList);
+  sceneList.add(worldList);
 
   const backButton = new UiButton(0, 0, 'Back', [true, false]);
   backButton.onClick = () => {

@@ -1,22 +1,21 @@
 import {
   darkBackground,
   getDefaultRadius,
-  gravity,
   getGridRealHeight,
   getGridRealWidth,
   introLocalStorageKey,
-  levels,
   leveltLocalStorageKey,
   lightBackground,
   getSquareSize,
   treatLocalStorageKey,
+  worlds,
 } from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import { UiScene } from './ui-elements/Scene';
-import { endSym, gameSym, getSscenesList, startLoreSym, startSym } from './scenes';
+import { endSym, gameSym, getScenesList, startLoreSym, startSym } from './scenes';
 import { treatCounter } from './scenes/gameScene';
 import { treatEndCounter } from './scenes/endScenes';
 
@@ -43,13 +42,13 @@ export default class Game {
 
   constructor() {
     treatCounter.text = `${this.treatCount}`;
-    treatEndCounter.text = `${this.treatCount}/${levels.length}`;
+    treatEndCounter.text = `${this.treatCount}/${worlds.flat().length}`;
   }
 
   public static get instance(): Game {
     if (!Game._instance) {
       Game._instance = new Game();
-      Game._instance.scenes = getSscenesList();
+      Game._instance.scenes = getScenesList();
       Game._instance.loadScene(startSym);
     }
     return Game._instance;
@@ -80,7 +79,7 @@ export default class Game {
   set treatFound(value: number[]) {
     localStorage.setItem(treatLocalStorageKey, JSON.stringify(value));
     treatCounter.text = `${this.treatCount}`;
-    treatEndCounter.text = `${this.treatCount}/${levels.length}`;
+    treatEndCounter.text = `${this.treatCount}/${worlds.flat().length}`;
   }
 
   get currentLvl(): number {
@@ -96,7 +95,7 @@ export default class Game {
     }
     this._currentLvl = value;
     treatCounter.text = `${this.treatCount}`;
-    treatEndCounter.text = `${this.treatCount}/${levels.length}`;
+    treatEndCounter.text = `${this.treatCount}/${worlds.flat().length}`;
   }
 
   get treatCount(): number {

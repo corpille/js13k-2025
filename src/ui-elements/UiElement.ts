@@ -19,7 +19,7 @@ export class UiElement {
   }
 
   get size(): number {
-    return this._size * (Math.round(getSquareSize()) / uiSquareRatio);
+    return Math.round((this._size * getSquareSize()) / uiSquareRatio);
   }
 
   constructor(x: number, y: number, size: number, centered: boolean[] = [false, false]) {
@@ -44,7 +44,6 @@ export class UiElement {
       this.x = this.parent.x + Math.round((parenSize.width - this.width) / 2);
     }
     if (this.centered[1]) {
-      console.log(this.parent.y);
       this.y = this.parent.y + Math.round((parenSize.height - this.height) / 2);
     }
   }

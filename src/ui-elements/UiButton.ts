@@ -1,10 +1,11 @@
 import { btnImage, buttonHeight, buttonSideWidth, imageTextHeight } from '../assets';
+import { getSquareSize, uiSquareRatio } from '../config';
 import { canvas } from '../elements';
 import { displayString, getTextRealSizes } from '../text-utils';
 import { getCursorPosition, isPointCollission } from '../utils';
 import { UiElement } from './UiElement';
 
-const imageMagnifying = 2;
+const getImageButtonMagnifying = () => Math.round((2 * getSquareSize()) / uiSquareRatio);
 
 export class UiButton extends UiElement {
   text: string;
@@ -67,7 +68,7 @@ export class UiButton extends UiElement {
     const spacing = this.size * 2;
     const textMagnifiying = Math.round((this.size / 100) * 80);
     const textWidth = getTextRealSizes(this.text, textMagnifiying).width;
-    const contentWidth = textWidth + (this.image ? this.image.width * imageMagnifying + spacing : 0);
+    const contentWidth = textWidth + (this.image ? this.image.width * getImageButtonMagnifying() + spacing : 0);
     return { textWidth, textMagnifiying, contentWidth, spacing };
   }
 
@@ -136,6 +137,7 @@ export class UiButton extends UiElement {
       if (this.disableImage) {
         ctx.filter = 'brightness(0.3) opacity(0.3)';
       }
+      const imageMagnifying = getImageButtonMagnifying();
       ctx.drawImage(
         this.image,
         this.x + paddingLeft,

@@ -24,7 +24,7 @@ export class UiList extends UiElement {
   }
 
   get gap(): number {
-    return (this._gap * Math.round(getSquareSize())) / uiSquareRatio;
+    return Math.round((this._gap * getSquareSize()) / uiSquareRatio);
   }
 
   getRealSize() {
@@ -69,9 +69,11 @@ export class UiList extends UiElement {
     this.elements.reduce((offset, element) => {
       if (this.direction === 'column') {
         element.y = this.y + offset;
+        element.x = this.x;
         offset += element.getRealSize().height + this.gap;
       } else if (this.direction === 'row') {
         element.x = this.x + offset;
+        element.y = this.y;
         offset += element.getRealSize().width + this.gap;
       }
       return offset;

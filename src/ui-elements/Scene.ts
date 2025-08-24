@@ -10,6 +10,14 @@ export class UiScene {
   needRefresh: boolean = true;
   autoRefresh: boolean = false;
   onLoad: Function = () => {};
+  centered: boolean[] = [true, true];
+
+  get height() {
+    return getGridRealWidth();
+  }
+  get width() {
+    return getGridRealHeight();
+  }
 
   constructor(background: string = 'transparent', autoRefresh: boolean = false) {
     this.background = background;
