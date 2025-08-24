@@ -23,6 +23,7 @@ function init() {
     computedSizes();
     canvas.height = gridRealHeight;
     canvas.width = getGridRealWidth();
+    Game.instance.scenes[Game.instance.currentScene].update();
     Game.instance.scenes[Game.instance.currentScene].needRefresh = true;
   });
 

@@ -1,18 +1,26 @@
-import { getGridRealHeight, getGridRealWidth } from '../config';
+import { getGridRealHeight, getGridRealWidth, getSquareSize, uiSquareRatio } from '../config';
 import { UiScene } from './Scene';
 
 export class UiElement {
   x: number;
   y: number;
-  size: number;
+  _size: number;
   height: number;
   width: number;
   onClick: Function = () => {};
   hovered: boolean;
   parent: UiElement | UiScene;
   loaded: boolean = false;
-  centered: boolean[];
+  centered: boolean[] = [false, false];
   inverted: number = -1;
+
+  set size(value: number) {
+    this._size = value;
+  }
+
+  get size(): number {
+    return this._size * (Math.round(getSquareSize()) / uiSquareRatio);
+  }
 
   constructor(x: number, y: number, size: number, centered: boolean[] = [false, false]) {
     this.x = x;
@@ -27,15 +35,17 @@ export class UiElement {
   }
 
   centerElement() {
-    const parenSize = this.parent?.getRealSize() ?? { width: getGridRealWidth(), height: getGridRealHeight() };
+    if (!this.parent) return;
+    const parenSize = this.parent.getRealSize() ?? { width: getGridRealWidth(), height: getGridRealHeight() };
     const buttonRealSize = this.getRealSize();
     this.height = buttonRealSize.height;
     this.width = buttonRealSize.width;
     if (this.centered[0]) {
-      this.x = ((this.parent as any)?.x ?? 0) + Math.round((parenSize.width - this.width) / 2);
+      this.x = this.parent.x + Math.round((parenSize.width - this.width) / 2);
     }
     if (this.centered[1]) {
-      this.y = ((this.parent as any)?.y ?? 0) + Math.round((parenSize.height - this.height) / 2);
+      console.log(this.parent.y);
+      this.y = this.parent.y + Math.round((parenSize.height - this.height) / 2);
     }
   }
 

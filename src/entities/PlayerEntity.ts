@@ -104,7 +104,6 @@ export default class PlayerEntity extends Entity {
   }
 
   landStart() {
-    console.log('landStart');
     if (this.currentAnimation === fallSym) {
       this.isJumping = false;
       this.currentAnimation = landSym;

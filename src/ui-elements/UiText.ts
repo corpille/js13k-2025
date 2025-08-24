@@ -1,4 +1,5 @@
-import { displayString, getTextRealSizes } from '../ui';
+import { getSquareSize } from '../config';
+import { displayString, getTextRealSizes } from '../text-utils';
 import { UiElement } from './UiElement';
 
 export class UiText extends UiElement {

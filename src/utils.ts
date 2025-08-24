@@ -12,8 +12,6 @@ export interface Box extends Coord {
   height: number;
 }
 
-export const querySelector = (selector: string) => document.querySelector(selector) as HTMLElement;
-
 export function isCollidingWith(a: Box, b: Box) {
   return (
     (!(b instanceof BlocEntity) || (b instanceof BlocEntity && b.isDark)) &&

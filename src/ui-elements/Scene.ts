@@ -2,6 +2,8 @@ import { getGridRealHeight, getGridRealWidth } from '../config';
 import { UiElement } from './UiElement';
 
 export class UiScene {
+  x: number = 0;
+  y: number = 0;
   elements: UiElement[] = [];
   isLoaded = false;
   background: string;

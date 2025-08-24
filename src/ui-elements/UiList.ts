@@ -1,21 +1,30 @@
+import { getSquareSize, uiSquareRatio } from '../config';
 import { UiScene } from './Scene';
 import { UiElement } from './UiElement';
 
 export class UiList extends UiElement {
   elements: UiElement[] = [];
   direction: string;
-  gap: number;
+  _gap: number;
 
   constructor(
-    x: number,
-    y: number,
+    x: number | Function,
+    y: number | Function,
     centered: boolean[] = [false, false],
     direction: string = 'column',
     gap: number = 30,
   ) {
-    super(x, y, 0, centered);
+    super(typeof x === 'function' ? x() : x, typeof y === 'function' ? y() : y, 0, centered);
     this.direction = direction;
     this.gap = gap;
+  }
+
+  set gap(value: number) {
+    this._gap = value;
+  }
+
+  get gap(): number {
+    return (this._gap * Math.round(getSquareSize())) / uiSquareRatio;
   }
 
   getRealSize() {

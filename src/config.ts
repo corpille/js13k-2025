@@ -4,15 +4,14 @@ import world1 from './levels/world-1';
 import world2 from './levels/world-2';
 import world3 from './levels/world-3';
 
-// Grid
-
-const ratio = (x: number) => Math.round((x * 10) / 16);
+// Sizes
+const ratio = (n: number, x: number, y: number = 100) => Math.round((n / y) * x);
 
 const idealWidth = 20;
+export const uiSquareRatio = 40;
 
-// Sizes
 export const gridWidth = 40;
-export const gridHeight = ratio(gridWidth);
+export const gridHeight = ratio(gridWidth, 10, 16);
 export let gridRealWidth = 0;
 let zoomRatio = 1;
 
@@ -22,7 +21,10 @@ export let getGridRealHeight = () => gridHeight * getSquareSize();
 export let gridRealHeight = 0;
 
 export function computedSizes() {
-  gridRealWidth = Math.round((window.innerWidth / 100) * 80);
+  gridRealWidth = ratio(window.innerWidth, 80);
+  if (ratio(gridRealWidth, 10, 16) > ratio(window.innerHeight, 90)) {
+    gridRealWidth = ratio(ratio(window.innerHeight, 90), 16, 10);
+  }
   const theoricalGridWidth = gridWidth * idealWidth;
   zoomRatio = (gridRealWidth * 100) / theoricalGridWidth / 100;
   gridRealHeight = gridHeight * getSquareSize();

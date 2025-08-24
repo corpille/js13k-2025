@@ -1,6 +1,6 @@
 import { btnImage, buttonHeight, buttonSideWidth, imageTextHeight } from '../assets';
 import { canvas } from '../elements';
-import { displayString, getTextRealSizes } from '../ui';
+import { displayString, getTextRealSizes } from '../text-utils';
 import { getCursorPosition, isPointCollission } from '../utils';
 import { UiElement } from './UiElement';
 
