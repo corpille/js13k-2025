@@ -1,6 +1,7 @@
 import { gameSym } from '.';
 import { darkBackground } from '../config';
 import Game from '../Game';
+import { slowDisplayText } from '../text-utils';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';
@@ -19,18 +20,6 @@ export function getStartLoreScene() {
   const startLoreScene = new UiScene(darkBackground, true);
   const list = new UiList(0, 0, [true, true]);
 
-  const editText = (textEl: UiText, str: string) => {
-    return new Promise((resolve) => {
-      if (!str.length) {
-        return resolve(1);
-      }
-      textEl.text = textEl._text + str[0];
-      setTimeout(() => {
-        editText(textEl, str.slice(1));
-      }, 100);
-    });
-  };
-
   const button = new UiButton(0, 0, 'Leave', [true, false]);
 
   button.onClick = () => {
@@ -40,16 +29,7 @@ export function getStartLoreScene() {
 
   startLoreScene.onLoad = async () => {
     list.elements = [];
-    const lines = msg.split('\n');
-    for (const line of lines) {
-      const text = new UiText(0, 0, '', 3, [true, false]);
-      text.inverted = 1;
-      list.add(text);
-      for (let i = 0; i < line.length; i++) {
-        text.text = text._text + line[i];
-        await sleep(30);
-      }
-    }
+    await slowDisplayText(list, msg);
     list.add(button);
   };
   return startLoreScene;

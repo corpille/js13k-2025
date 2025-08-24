@@ -1,7 +1,7 @@
 const level1 = {
   name: '2-1',
-  startX: 1,
-  startY: 1,
+  startX: 31,
+  startY: 19,
   b: [
     [-1, 0, 7, 1, true],
     [8, 3, 7, 1, false, 10],
@@ -10,7 +10,7 @@ const level1 = {
     [7, 14, 4, 1, false, 10],
     [0, 14, 4, 1, true],
     [24, 11, 3, 1, true, 0, 5],
-    [32, 18, 9, 1, false],
+    [32, 18, 9, 1, true],
   ],
   end: [37, 19],
   treat: [1, 15],

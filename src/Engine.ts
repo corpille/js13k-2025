@@ -188,11 +188,9 @@ export default class Engine {
         this.jumpFrame = 0;
         if (this.game.currentLvl + 1 === this.game.levels.length) {
           this.game.endGame();
-          return false;
+        } else {
+          this.game.validateLvl();
         }
-        this.game.validateLvl();
-        this.game.reset();
-        return true;
       });
     } else if (hitBox.y < -hitBox.height * 2) {
       this.jumpFrame = 0;

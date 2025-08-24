@@ -43,10 +43,10 @@ export class UiScene {
   load() {
     this.isLoaded = true;
     this.needRefresh = true;
+    this.onLoad();
     this.elements.forEach((element) => {
       element.load();
     });
-    this.onLoad();
   }
 
   refresh() {

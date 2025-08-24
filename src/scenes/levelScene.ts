@@ -32,8 +32,9 @@ export function getLevelScene(): UiScene {
       if (lvlCount > Game.instance.currentLvl) {
         lvlButton.disabled = true;
       }
+      const i = lvlCount;
       lvlButton.onClick = () => {
-        Game.instance.restart(lvlCount);
+        Game.instance.restart(i);
       };
       levelList.add(lvlButton);
       lvlCount++;

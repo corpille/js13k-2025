@@ -15,7 +15,15 @@ import PlayerEntity from './entities/PlayerEntity';
 import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import { UiScene } from './ui-elements/Scene';
-import { endSym, gameSym, getScenesList, startLoreSym, startSym } from './scenes';
+import {
+  endSym,
+  gameSym,
+  getScenesList,
+  startLoreSym,
+  startSym,
+  world1TransitionSym,
+  world2TransitionSym,
+} from './scenes';
 import { treatCounter } from './scenes/gameScene';
 import { treatEndCounter } from './scenes/endScenes';
 
@@ -158,7 +166,20 @@ export default class Game {
   }
 
   validateLvl() {
-    this.currentLvl++;
+    let levelCounter = 0;
+    const currentWorld = worlds.findIndex((w, i) => {
+      levelCounter += w.length;
+      if (this.currentLvl + 1 === levelCounter) {
+        return true;
+      }
+      return false;
+    });
+    if (currentWorld !== -1) {
+      this.loadScene(currentWorld === 0 ? world1TransitionSym : world2TransitionSym);
+    } else {
+      this.currentLvl++;
+      this.reset();
+    }
   }
 
   render(ctx: CanvasRenderingContext2D) {

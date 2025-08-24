@@ -51,4 +51,4 @@ export const treatLocalStorageKey = `${gameName}-treat`;
 export const leveltLocalStorageKey = `${gameName}-level`;
 export const introLocalStorageKey = `${gameName}-intro`;
 
-export const worlds = [world1, world2, world3];
+export const worlds = [[world1[0], world1[0]], [world2[0]], [world3[0]]];
