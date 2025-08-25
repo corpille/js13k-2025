@@ -267,11 +267,13 @@ export default class Game {
     );
   }
 
-  pause() {
+  pause(playScene: boolean = true) {
     if (!this.started) return;
     this.player.paused = true;
     this.paused = true;
-    this.loadScene(pauseSym);
+    if (playScene) {
+      this.loadScene(pauseSym);
+    }
   }
 
   unPause() {
