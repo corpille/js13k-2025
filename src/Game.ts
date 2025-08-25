@@ -19,6 +19,7 @@ import {
   endSym,
   gameSym,
   getScenesList,
+  pauseSym,
   startLoreSym,
   startSym,
   world1TransitionSym,
@@ -31,7 +32,7 @@ export default class Game {
   static _instance: Game;
   _currentLvl: number;
   started: boolean = false;
-  pause: boolean;
+  paused: boolean;
   stop: boolean = false;
   end: EndEntity;
   level: Level;
@@ -128,7 +129,7 @@ export default class Game {
 
   restart(lvl: number = 0) {
     this.stop = false;
-    this.pause = false;
+    this.paused = false;
     this.started = true;
     this._currentLvl = lvl;
     if (!this.hasSeenIntro) {
@@ -147,7 +148,7 @@ export default class Game {
   }
 
   reset() {
-    this.pause = false;
+    this.paused = false;
     this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY);
@@ -266,14 +267,22 @@ export default class Game {
     );
   }
 
-  pauseGame() {
-    this.player.runStop();
-    this.pause = true;
+  pause() {
+    if (!this.started) return;
+    this.player.paused = true;
+    this.paused = true;
+    this.loadScene(pauseSym);
+  }
+
+  unPause() {
+    this.player.paused = false;
+    this.paused = false;
+    this.loadScene(gameSym);
   }
 
   endGame() {
     this.radius = getSquareSize() * 1.5;
-    this.pause = true;
+    this.paused = true;
     setTimeout(() => {
       this.stop = true;
       this.loadScene(endSym);

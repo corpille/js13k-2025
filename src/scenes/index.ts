@@ -1,6 +1,7 @@
 import { endScene } from './endScenes';
 import { gameScene } from './gameScene';
 import { getLevelScene } from './levelScene';
+import { pauseScene } from './pauseScene';
 import { getStartLoreScene } from './startLoreScene';
 import { getStartScene } from './startScene';
 import { getTransitionScene } from './transitionScene';
@@ -8,6 +9,7 @@ import { getTransitionScene } from './transitionScene';
 export const startSym = Symbol('start');
 export const startLoreSym = Symbol('loreStart');
 export const gameSym = Symbol('game');
+export const pauseSym = Symbol('pause');
 export const endSym = Symbol('end');
 export const levelSym = Symbol('level');
 export const world1TransitionSym = Symbol('world1Transition');
@@ -16,6 +18,7 @@ export const world2TransitionSym = Symbol('world2Transition');
 export const getScenesList = () => ({
   [startSym]: getStartScene(),
   [gameSym]: gameScene,
+  [pauseSym]: pauseScene,
   [endSym]: endScene,
   [levelSym]: getLevelScene(),
   [startLoreSym]: getStartLoreScene(),

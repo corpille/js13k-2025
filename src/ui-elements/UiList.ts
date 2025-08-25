@@ -33,11 +33,11 @@ export class UiList extends UiElement {
       width:
         this.direction === 'row'
           ? this.elements.reduce((h, e) => h + e.getRealSize().width, 0) + spacings
-          : Math.max(...this.elements.map((e) => e.getRealSize().width)),
+          : Math.max(...this.elements.map((e) => e.getRealSize().width), 0),
       height:
         this.direction === 'column'
           ? this.elements.reduce((h, e) => h + e.getRealSize().height, 0) + spacings
-          : Math.max(...this.elements.map((e) => e.getRealSize().height)),
+          : Math.max(...this.elements.map((e) => e.getRealSize().height), 0),
     };
   }
 

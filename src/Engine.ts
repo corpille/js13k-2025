@@ -39,6 +39,9 @@ export default class Engine {
     if (!this.game.keys['Space']) {
       this.jumpDebuff = false;
     }
+    if (this.game.keys['Escape']) {
+      this.game.pause();
+    }
     if (this.game.keys['KeyA'] || this.game.keys['ArrowLeft']) {
       this.game.xForce = -getMoveSpeed();
       this.game.player.isLeft = true;
@@ -183,7 +186,7 @@ export default class Engine {
   checkEndState() {
     const hitBox = this.game.player.getHitbox();
     if (this.game.currentLevel.end.isDark && isCollidingWith(hitBox, this.game.currentLevel.end)) {
-      this.game.pauseGame();
+      this.game.pause();
       this.playTransition(() => {
         this.jumpFrame = 0;
         if (this.game.currentLvl + 1 === this.game.levels.length) {
@@ -207,14 +210,14 @@ export default class Engine {
       this.previousTime = this.currentTime - (this.deltaTime % this.interval);
 
       if (this.game.started && !this.game.stop) {
-        if (!this.game.pause) {
+        if (!this.game.paused) {
           this.changeState();
         }
         if (this.game.started) {
           this.render();
         }
 
-        if (!this.game.pause) {
+        if (!this.game.paused) {
           this.checkEndState();
         }
         // this.game.started = false;

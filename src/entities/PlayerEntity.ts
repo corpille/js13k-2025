@@ -20,6 +20,7 @@ export default class PlayerEntity extends Entity {
   loopAnimation: boolean;
   backToIdle: boolean;
   hitBox: Entity;
+  paused: boolean = false;
   offsets: Coord = { x: 0, y: 0 };
 
   animations: { [name: symbol]: number[] } = {
@@ -129,8 +130,8 @@ export default class PlayerEntity extends Entity {
     }
   }
 
-  render(ctx: CanvasRenderingContext2D, noAnimation: boolean = true) {
-    if (noAnimation) {
+  render(ctx: CanvasRenderingContext2D, withAnimation: boolean = true) {
+    if (withAnimation && !this.paused) {
       this.frameCounter++;
       const [start, end, animation] = this.animations[this.currentAnimation];
       if (this.frameCounter > (animation ?? end - start + 1)) {
