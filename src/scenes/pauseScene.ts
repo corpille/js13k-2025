@@ -1,5 +1,6 @@
 import { gameSym, startSym } from '.';
 import { treatImage } from '../assets';
+import AudioEngine from '../AudioEngine';
 import { darkBackground, leveltLocalStorageKey } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
@@ -26,6 +27,7 @@ scenelist.add(resumeButton);
 
 const quitButton = new UiButton(0, 0, 'Quit', [true, false]);
 quitButton.onClick = () => {
+  AudioEngine.instance.stopBgMusic();
   Game.instance.started = false;
   Game.instance._currentLvl = parseInt(localStorage.getItem(leveltLocalStorageKey) ?? '0');
   Game.instance.reset();

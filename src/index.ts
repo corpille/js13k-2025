@@ -1,3 +1,4 @@
+import Audio from './AudioEngine';
 import { computedSizes, gridRealHeight, getGridRealWidth, getDefaultRadius } from './config';
 import { canvas } from './elements';
 import Engine from './Engine';
@@ -7,6 +8,9 @@ const engine = new Engine();
 
 window.addEventListener('keydown', function (e) {
   engine.game.keys[e.code] = true;
+  // if (e.code === 'KeyR') {
+  //   Audio.instance.playBgMusic();
+  // }
 });
 
 window.addEventListener('keyup', function (e) {

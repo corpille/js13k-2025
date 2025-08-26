@@ -27,6 +27,7 @@ import {
 } from './scenes';
 import { treatCounter } from './scenes/gameScene';
 import { treatEndCounter } from './scenes/endScenes';
+import AudioEngine from './AudioEngine';
 
 export default class Game {
   static _instance: Game;
@@ -54,7 +55,7 @@ export default class Game {
     treatEndCounter.text = `${this.treatCount}/${worlds.flat().length}`;
   }
 
-  public static get instance(): Game {
+  static get instance(): Game {
     if (!Game._instance) {
       Game._instance = new Game();
       Game._instance.scenes = getScenesList();
@@ -161,6 +162,15 @@ export default class Game {
   }
 
   loadScene(name: symbol) {
+    if (name === gameSym) {
+      if (!AudioEngine.instance.isPlaying) {
+        AudioEngine.instance.playBgMusic();
+      } else {
+        AudioEngine.instance.resume();
+      }
+    } else {
+      AudioEngine.instance.pause();
+    }
     this.scenes[this.currentScene].unload();
     this.currentScene = name;
     this.scenes[this.currentScene].load();
