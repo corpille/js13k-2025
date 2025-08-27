@@ -9,7 +9,7 @@ import Game from '../Game';
 import { startSym } from '.';
 
 // End Scene
-export const endScene = new UiScene(darkBackground);
+export const endScene = new UiScene();
 const endList = new UiList(0, 0, [true, true], 'column');
 endList.inverted = 1;
 

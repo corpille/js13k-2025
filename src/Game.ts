@@ -28,6 +28,7 @@ import {
 import { treatCounter } from './scenes/gameScene';
 import { treatEndCounter } from './scenes/endScenes';
 import AudioEngine from './AudioEngine';
+import { backgrounds } from './background';
 
 export default class Game {
   static _instance: Game;
@@ -213,9 +214,11 @@ export default class Game {
     ctx.clip();
 
     // Draw background
+    ctx.drawImage(backgrounds[Game.instance.currentLvl], 0, 0, getGridRealWidth(), getGridRealHeight());
+
     ctx.save();
     ctx.beginPath();
-    ctx.fillStyle = lightBackground;
+    ctx.fillStyle = '#1111111e';
     ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
     ctx.closePath();
     ctx.restore();
@@ -250,7 +253,7 @@ export default class Game {
       this.player.render(ctx, false);
 
       ctx.beginPath();
-      ctx.fillStyle = '#c5cfdb';
+      ctx.fillStyle = '#c5cfdb69';
       ctx.rect(0, getGridRealHeight(), getGridRealWidth(), 1);
       ctx.fill();
       ctx.closePath();

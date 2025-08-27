@@ -5,9 +5,6 @@ import { slowDisplayText } from '../text-utils';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';
-import { UiText } from '../ui-elements/UiText';
-import { sleep } from '../utils';
-
 const msg = `Once upon a time, Nyx, goddess of the night
 grew tired of her husband Darkness.
 She always used to rely on him to do anything
@@ -17,7 +14,7 @@ She sneaked her way out and left the heavens
 only to be followed by a looming darkness`;
 
 export function getStartLoreScene() {
-  const startLoreScene = new UiScene(darkBackground, true);
+  const startLoreScene = new UiScene(true);
   const list = new UiList(0, 0, [true, true]);
 
   const button = new UiButton(0, 0, 'Leave', [true, false]);
@@ -29,6 +26,7 @@ export function getStartLoreScene() {
 
   startLoreScene.onLoad = async () => {
     list.elements = [];
+    list.inverted = 1;
     await slowDisplayText(list, msg);
     list.add(button);
   };

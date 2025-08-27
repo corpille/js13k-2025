@@ -90,12 +90,12 @@ export class UiList extends UiElement {
     this.updateElements();
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: CanvasRenderingContext2D, inverted: boolean) {
     ctx.save();
-    super.render(ctx);
+    super.render(ctx, inverted);
     this.elements.forEach((element) => {
       ctx.save();
-      element.render(ctx);
+      element.render(ctx, inverted || this.inverted === 1);
       ctx.restore();
     });
     ctx.restore();

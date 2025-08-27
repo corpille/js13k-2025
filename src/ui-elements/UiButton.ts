@@ -80,16 +80,17 @@ export class UiButton extends UiElement {
     };
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: CanvasRenderingContext2D, inverted: boolean) {
     ctx.save();
-    super.render(ctx);
+    super.render(ctx, inverted);
     const realButtonHeight = buttonHeight * this.size;
     const { contentWidth, textMagnifiying, textWidth, spacing } = this.getSizes();
 
     if (this.disabled) {
-      ctx.filter = 'invert(1)';
-    } else if (this.hovered) {
-      ctx.filter = 'brightness(0.8)';
+      ctx.filter = `invert(${inverted ? 0 : 1})`;
+    }
+    if (this.hovered) {
+      ctx.filter = (inverted || this.inverted === 1 ? 'invert(1) ' : '') + 'brightness(0.8)';
     }
 
     let paddingLeft = buttonSideWidth * this.size;
@@ -125,7 +126,7 @@ export class UiButton extends UiElement {
       ctx,
       this.x + paddingLeft,
       this.y + Math.round((realButtonHeight - imageTextHeight * textMagnifiying) / 2),
-      this.text,
+      this.text.toUpperCase(),
       textMagnifiying,
     );
     ctx.restore();
@@ -134,8 +135,11 @@ export class UiButton extends UiElement {
     if (this.image) {
       paddingLeft += spacing;
       ctx.save();
+      ctx.filter = ctx.filter.replace('invert(1)', '');
       if (this.disableImage) {
         ctx.filter = 'brightness(0.3) opacity(0.3)';
+      } else {
+        ctx.filter = `invert(0)`;
       }
       const imageMagnifying = getImageButtonMagnifying();
       ctx.drawImage(

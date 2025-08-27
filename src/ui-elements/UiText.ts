@@ -23,9 +23,9 @@ export class UiText extends UiElement {
     return getTextRealSizes(this._text, this.size);
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: CanvasRenderingContext2D, inverted: boolean) {
     ctx.save();
-    super.render(ctx);
+    super.render(ctx, inverted);
     displayString(ctx, this.x, this.y, this._text, this.size);
     ctx.restore();
   }

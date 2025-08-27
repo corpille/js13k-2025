@@ -4,7 +4,7 @@ import cat from '/assets/cat.webp';
 import cardboard from '/assets/cardboard.webp';
 import btn from '/assets/btn.webp';
 
-export const textMatcher = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#-/ .,';
+export const textMatcher = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#-/ .,'";
 
 export const treatImage = new Image(10, 10);
 treatImage.src = treat;

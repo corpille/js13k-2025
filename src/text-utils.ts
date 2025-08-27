@@ -8,23 +8,23 @@ const textWidth = 5;
 
 export function displayString(ctx: CanvasRenderingContext2D, x: number, y: number, str: string, size: number = 3) {
   ctx.save();
-  str
-    .toUpperCase()
-    .split('')
-    .forEach((c, i) => {
-      let index = textMatcher.indexOf(c);
-      ctx.drawImage(
-        textImage,
-        0 + index * textWidth,
-        0,
-        5,
-        textHeight,
-        x + i * textWidth * size + i * size,
-        y + (c === ',' ? size : 0),
-        textWidth * size,
-        textHeight * size,
-      );
-    });
+  str.split('').reduce((xOffset, c, i) => {
+    let index = textMatcher.indexOf(c);
+    const width = ".'".includes(c) ? 1 : ','.includes(c) ? 2 : textWidth;
+    const offset = index * textWidth + Math.floor((textWidth - width) / 2);
+    ctx.drawImage(
+      textImage,
+      0 + offset,
+      0,
+      width,
+      textHeight,
+      x + xOffset,
+      y + (c === ',' ? size : 'gjpqy'.includes(c) ? (size * 4) / 2 : 0),
+      width * size,
+      textHeight * size,
+    );
+    return xOffset + width * size + size;
+  }, 0);
   ctx.restore();
 }
 
@@ -39,11 +39,10 @@ export async function slowDisplayText(list: UiList, msg: string) {
   const lines = msg.split('\n');
   for (const line of lines) {
     const text = new UiText(0, 0, '', 3, [true, false]);
-    text.inverted = 1;
     list.add(text);
     for (let i = 0; i < line.length; i++) {
       text.text = text._text + line[i];
-      await sleep(30);
+      await sleep(0);
     }
   }
 }

@@ -7,7 +7,7 @@ import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';
 
 export function getTransitionScene(msg: string) {
-  const scene = new UiScene(darkBackground, true);
+  const scene = new UiScene(true);
   const list = new UiList(0, 0, [true, true]);
 
   const button = new UiButton(0, 0, 'Continue', [true, false]);

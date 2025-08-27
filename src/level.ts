@@ -31,21 +31,21 @@ export default class Level {
     this.mirrored = mirrored;
     this.alreadyFoundTreat = alreadyFoundTreat;
     this.blocks = blocks.map(
-      ([x, y, width, height, isDark, moveRangeX, moveRangeY]) =>
-        new BlocEntity(x, y, width, height, isDark, moveRangeX, moveRangeY),
+      ([x, y, width, height, isFilled, moveRangeX, moveRangeY]) =>
+        new BlocEntity(x, y, width, height, isFilled, moveRangeX, moveRangeY),
     );
     if (treat) {
       this.treat = new TreatEntity(treat[0], treat[1]);
     }
     if (end) {
-      this.end = new EndEntity(end[0], end[1], this.blocks[this.blocks.length - 1].isDark);
+      this.end = new EndEntity(end[0], end[1], this.blocks[this.blocks.length - 1].isFilled);
     }
   }
 
   reset(hasFoundTreat: boolean = false) {
     this.blocks.forEach((block) => block.reset());
     if (this.end) {
-      this.end.isDark = this.blocks[this.blocks.length - 1].isDark;
+      this.end.isFilled = this.blocks[this.blocks.length - 1].isFilled;
     }
     this.alreadyFoundTreat = hasFoundTreat;
     this.foundTreat = false;
@@ -80,9 +80,9 @@ export default class Level {
   }
 
   invert() {
-    this.blocks.forEach((block, index) => index !== 0 && (block.isDark = !block.isDark));
+    this.blocks.forEach((block, index) => index !== 0 && (block.isFilled = !block.isFilled));
     if (this.end) {
-      this.end.isDark = !this.end.isDark;
+      this.end.isFilled = !this.end.isFilled;
     }
   }
 }

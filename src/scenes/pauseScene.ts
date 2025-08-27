@@ -9,7 +9,7 @@ import { UiImage } from '../ui-elements/UiImage';
 import { UiList } from '../ui-elements/UiList';
 import { UiText } from '../ui-elements/UiText';
 
-export const pauseScene = new UiScene(`${darkBackground}ba`, true);
+export const pauseScene = new UiScene(true, `${darkBackground}ba`);
 const scenelist = new UiList(0, 0, [true, true]);
 
 const title = new UiText(0, 0, 'Pause', 3, [true, false]);

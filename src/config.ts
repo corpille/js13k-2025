@@ -1,5 +1,3 @@
-import { canvas } from './elements';
-import Game from './Game';
 import world1 from './levels/world-1';
 import world2 from './levels/world-2';
 import world3 from './levels/world-3';
@@ -42,7 +40,7 @@ export const coyoteFrames = 3;
 export const getDefaultRadius = () => getSquareSize() * gridWidth * 2;
 
 export const lightBackground = '#f7f6f0';
-export const darkBackground = '#282828';
+export const darkBackground = '#111111'; //'#0B1026';
 
 export const gameName = 'nyx';
 

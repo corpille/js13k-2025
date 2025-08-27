@@ -1,4 +1,5 @@
 import { levelSym } from '.';
+import { backgroundShift } from '../background';
 import { gameName, leveltLocalStorageKey, lightBackground } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
@@ -8,9 +9,12 @@ import { UiText } from '../ui-elements/UiText';
 import { getLevelScene } from './levelScene';
 
 export function getStartScene(): UiScene {
-  const scene = new UiScene(lightBackground);
+  const lvl = Game.instance.currentLvl;
+  const scene = new UiScene();
   const startList = new UiList(0, 0, [true, true]);
-  const title = new UiText(0, 0, gameName, 12, [true, false]);
+  startList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
+
+  const title = new UiText(0, 0, "Nyx's Passage", 12, [true, false]);
   startList.add(title);
 
   const buttonList = new UiList(0, 0, [true, false]);

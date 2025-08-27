@@ -14,7 +14,7 @@ export interface Box extends Coord {
 
 export function isCollidingWith(a: Box, b: Box) {
   return (
-    (!(b instanceof BlocEntity) || (b instanceof BlocEntity && b.isDark)) &&
+    (!(b instanceof BlocEntity) || (b instanceof BlocEntity && b.isFilled)) &&
     a.x < b.x + b.width &&
     a.x + a.width > b.x &&
     a.y < b.y + b.height &&
@@ -50,4 +50,8 @@ export function sleep(ms: number): Promise<void> {
       }
     }, ms);
   });
+}
+
+export function randomBetween(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }

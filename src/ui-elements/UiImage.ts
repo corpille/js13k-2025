@@ -16,9 +16,9 @@ export class UiImage extends UiElement {
     };
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: CanvasRenderingContext2D, inverted: boolean) {
     ctx.save();
-    super.render(ctx);
+    super.render(ctx, inverted);
     ctx.drawImage(this.image, this.x, this.y, this.image.width * this.size, this.image.height * this.size);
     ctx.restore();
   }

@@ -67,8 +67,8 @@ export class UiElement {
     };
   }
 
-  render(ctx: CanvasRenderingContext2D) {
-    if (this.inverted !== -1) {
+  render(ctx: CanvasRenderingContext2D, inverted: boolean) {
+    if (inverted || this.inverted !== -1) {
       ctx.filter = `invert(${this.inverted})`;
     }
   }

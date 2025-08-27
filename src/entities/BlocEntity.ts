@@ -1,11 +1,13 @@
-import { darkBackground, getGridRealHeight, getSquareSize } from '../config';
+import { backgroundShift } from '../background';
+import { darkBackground, getGridRealHeight, getSquareSize, lightBackground } from '../config';
+import Game from '../Game';
 import { Coord } from '../utils';
 import Entity from './Entity';
 
 const getBlockMoveSpeed = () => Math.round(getSquareSize() / 8);
 export default class BlocEntity extends Entity {
-  initialIsDark: boolean;
-  isDark: boolean;
+  initialisFilled: boolean;
+  isFilled: boolean;
   startX: number;
   _moveRangeX: number = 0;
   _moveRangeY: number = 0;
@@ -52,14 +54,14 @@ export default class BlocEntity extends Entity {
     y: number,
     width: number,
     height: number,
-    isDark: boolean,
+    isFilled: boolean,
     moveRangeX: number = 0,
     moveRangeY: number = 0,
   ) {
     super(x, y, width, height);
     this.startX = this.x;
-    this.isDark = isDark;
-    this.initialIsDark = isDark;
+    this.isFilled = isFilled;
+    this.initialisFilled = isFilled;
     this.moveRangeY = moveRangeY;
     this.moveRangeX = moveRangeX;
     this.movingRight = moveRangeX > 0;
@@ -67,7 +69,7 @@ export default class BlocEntity extends Entity {
   }
 
   reset() {
-    this.isDark = this.initialIsDark;
+    this.isFilled = this.initialisFilled;
   }
 
   update() {
@@ -95,11 +97,14 @@ export default class BlocEntity extends Entity {
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.beginPath();
-    ctx.fillStyle = this.isDark ? darkBackground : `${darkBackground}05`;
-    ctx.strokeStyle = this.isDark ? 'black' : `${darkBackground}20`;
+    const emptyColor = Game.instance.currentLvl > backgroundShift ? `${darkBackground}05` : `${lightBackground}35`;
+    const emptyBorderColor =
+      Game.instance.currentLvl > backgroundShift ? `${darkBackground}20` : `${lightBackground}50`;
+    ctx.fillStyle = this.isFilled ? darkBackground : emptyColor;
+    ctx.strokeStyle = this.isFilled ? 'black' : emptyBorderColor;
     ctx.lineWidth = 2;
 
-    if (!this.isDark) {
+    if (!this.isFilled) {
       ctx.setLineDash([5]);
     }
 
@@ -113,15 +118,6 @@ export default class BlocEntity extends Entity {
     ctx.fill();
     ctx.closePath();
 
-    if (this.y === 0) {
-      ctx.strokeStyle = this.isDark ? darkBackground : '#f3f2ec';
-      ctx.setLineDash([0]);
-      ctx.beginPath();
-      ctx.moveTo(this.x, y + this.height);
-      ctx.lineTo(this.x + this.width, y + this.height);
-      ctx.stroke();
-      ctx.closePath();
-    }
     ctx.restore();
   }
 }

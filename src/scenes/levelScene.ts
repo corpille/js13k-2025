@@ -1,6 +1,7 @@
 import { startSym } from '.';
 import { treatImage } from '../assets';
-import { lightBackground, worlds } from '../config';
+import { backgroundShift } from '../background';
+import { worlds } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
@@ -8,8 +9,9 @@ import { UiList } from '../ui-elements/UiList';
 import { UiText } from '../ui-elements/UiText';
 
 export function getLevelScene(): UiScene {
-  const levelScene = new UiScene(lightBackground);
+  const levelScene = new UiScene();
   const sceneList = new UiList(0, 0, [true, true]);
+  sceneList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
 
   const text = new UiText(0, 0, 'Choose a level', 5, [true, false]);
   sceneList.add(text);

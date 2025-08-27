@@ -185,7 +185,7 @@ export default class Engine {
 
   checkEndState() {
     const hitBox = this.game.player.getHitbox();
-    if (this.game.currentLevel.end.isDark && isCollidingWith(hitBox, this.game.currentLevel.end)) {
+    if (this.game.currentLevel.end.isFilled && isCollidingWith(hitBox, this.game.currentLevel.end)) {
       this.game.pause(false);
       this.playTransition(() => {
         this.jumpFrame = 0;

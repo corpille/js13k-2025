@@ -3,18 +3,18 @@ import { getGridRealHeight } from '../config';
 import Entity from './Entity';
 
 export default class EndEntity extends Entity {
-  isDark: boolean;
+  isFilled: boolean;
 
-  constructor(x: number, y: number, isDark: boolean) {
+  constructor(x: number, y: number, isFilled: boolean) {
     super(x, y, 2, 2);
 
-    this.isDark = isDark;
+    this.isFilled = isFilled;
   }
 
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
 
-    if (!this.isDark) {
+    if (!this.isFilled) {
       ctx.filter = 'invert(1) opacity(0.4)';
     }
     ctx.drawImage(cardBoardImage, this.x, getGridRealHeight() - this.y - this.height, this.width, this.height);

@@ -52,7 +52,7 @@ export default class AudioEngine {
   }
 
   get isPlaying() {
-    return this.intervals[melody.name];
+    return this.intervals[melody.name] !== undefined;
   }
 
   constructor() {

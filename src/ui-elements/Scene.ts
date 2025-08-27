@@ -1,4 +1,7 @@
-import { getGridRealHeight, getGridRealWidth } from '../config';
+import { backgrounds } from '../background';
+import { getGridRealHeight, getGridRealWidth, gridRealHeight, gridRealWidth, lightBackground } from '../config';
+import Game from '../Game';
+
 import { UiElement } from './UiElement';
 
 export class UiScene {
@@ -6,7 +9,7 @@ export class UiScene {
   y: number = 0;
   elements: UiElement[] = [];
   isLoaded = false;
-  background: string;
+  background?: string;
   needRefresh: boolean = true;
   autoRefresh: boolean = false;
   onLoad: Function = () => {};
@@ -19,7 +22,7 @@ export class UiScene {
     return getGridRealHeight();
   }
 
-  constructor(background: string = 'transparent', autoRefresh: boolean = false) {
+  constructor(autoRefresh: boolean = false, background?: string) {
     this.background = background;
     this.autoRefresh = autoRefresh;
   }
@@ -62,17 +65,20 @@ export class UiScene {
 
   render(ctx: CanvasRenderingContext2D) {
     this.needRefresh = this.autoRefresh;
-    // Draw background
-    ctx.save();
-    ctx.beginPath();
-    ctx.fillStyle = this.background;
-    ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
-    ctx.closePath();
-    ctx.restore();
-
+    if (!this.background && backgrounds[Game.instance.currentLvl]) {
+      ctx.clearRect(0, 0, getGridRealWidth(), getGridRealHeight());
+      ctx.drawImage(backgrounds[Game.instance.currentLvl], 0, 0, getGridRealWidth(), getGridRealHeight());
+    } else if (this.background) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = this.background;
+      ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
+      ctx.closePath();
+      ctx.restore();
+    }
     this.elements.forEach((element) => {
       ctx.save();
-      element.render(ctx);
+      element.render(ctx, false);
       ctx.restore();
     });
   }
