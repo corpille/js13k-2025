@@ -42,7 +42,7 @@ export async function slowDisplayText(list: UiList, msg: string) {
     list.add(text);
     for (let i = 0; i < line.length; i++) {
       text.text = text._text + line[i];
-      await sleep(0);
+      await sleep(30);
     }
   }
 }
