@@ -10,6 +10,7 @@ export const uiSquareRatio = 40;
 
 export const gridWidth = 40;
 export const gridHeight = ratio(gridWidth, 10, 16);
+console.log(gridWidth, gridHeight);
 export let gridRealWidth = 0;
 let zoomRatio = 1;
 

@@ -65,8 +65,8 @@ export default class Engine {
     const hitBox = this.game.player.getHitbox();
     // Treat Handling
     if (
-      this.game.currentLevel.checkTreatGathering(hitBox) ||
-      this.game.currentMirrorLevel.checkTreatGathering(hitBox)
+      this.game.player.isGrounded &&
+      (this.game.currentLevel.checkTreatGathering(hitBox) || this.game.currentMirrorLevel.checkTreatGathering(hitBox))
     ) {
       this.game.addTreat();
     }

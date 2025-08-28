@@ -1,5 +1,4 @@
 const level1 = {
-  name: '3-1',
   startX: 1,
   startY: 1,
   b: [

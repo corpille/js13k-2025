@@ -51,7 +51,6 @@ export default class AudioEngine {
 
   get volume(): number {
     this._volume = parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0.5');
-    console.log('_volume', this._volume);
 
     return this._volume;
   }

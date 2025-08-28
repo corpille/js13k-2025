@@ -1,5 +1,5 @@
 import { gameSym } from '.';
-import { darkBackground } from '../config';
+import { backgroundShift } from '../background';
 import Game from '../Game';
 import { slowDisplayText } from '../text-utils';
 import { UiScene } from '../ui-elements/Scene';
@@ -13,16 +13,17 @@ export function getTransitionScene(msg: string) {
   const button = new UiButton(0, 0, 'Continue', [true, false]);
 
   button.onClick = () => {
+    Game.instance.currentLvl++;
     Game.instance.loadScene(gameSym);
     Game.instance.reset();
   };
   scene.add(list);
 
   scene.onLoad = async () => {
+    list.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
     list.elements = [];
     await slowDisplayText(list, msg);
     list.add(button);
-    Game.instance.currentLvl++;
   };
   return scene;
 }

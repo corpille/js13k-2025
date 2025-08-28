@@ -22,11 +22,11 @@ export function getLevelScene(): UiScene {
     const levelList = new UiList(0, 0, [false, false], 'row');
     const worldName = new UiText(0, 0, `World ${worldNb + 1}`, 2, [false, true]);
     levelList.add(worldName);
-    levels.forEach((level) => {
+    levels.forEach((level, index) => {
       const lvlButton = new UiButton(
         0,
         0,
-        level.name,
+        `${worldNb + 1}-${index + 1}`,
         [false, true],
         treatImage,
         Game.instance.treatsFound.indexOf(lvlCount) === -1,
