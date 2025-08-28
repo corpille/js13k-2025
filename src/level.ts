@@ -69,7 +69,7 @@ export default class Level {
     if (this.treat && !this.foundTreat) {
       ctx.save();
       if (this.alreadyFoundTreat) {
-        ctx.filter = 'opacity(0.3)';
+        ctx.filter = 'opacity(0.1)';
       }
       this.treat.render(ctx);
       ctx.restore();

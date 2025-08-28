@@ -4,8 +4,7 @@ import {
   getGridRealHeight,
   getGridRealWidth,
   introLocalStorageKey,
-  leveltLocalStorageKey,
-  lightBackground,
+  levelLocalStorageKey,
   getSquareSize,
   treatLocalStorageKey,
   worlds,
@@ -95,14 +94,14 @@ export default class Game {
 
   get currentLvl(): number {
     if (this._currentLvl === undefined) {
-      this._currentLvl = parseInt(localStorage.getItem(leveltLocalStorageKey) ?? '0');
+      this._currentLvl = parseInt(localStorage.getItem(levelLocalStorageKey) ?? '0');
     }
     return this._currentLvl;
   }
 
   set currentLvl(value: number) {
     if (value > this.currentLvl) {
-      localStorage.setItem(leveltLocalStorageKey, value.toString());
+      localStorage.setItem(levelLocalStorageKey, value.toString());
     }
     this._currentLvl = value;
     treatCounter.text = `${this.treatCount}`;
@@ -133,7 +132,7 @@ export default class Game {
     this.stop = false;
     this.paused = false;
     this.started = true;
-    this._currentLvl = lvl;
+    this.currentLvl = lvl;
     if (!this.hasSeenIntro) {
       this.loadScene(startLoreSym);
       this.hasSeenIntro = true;

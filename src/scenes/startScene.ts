@@ -1,6 +1,6 @@
 import { levelSym } from '.';
 import { backgroundShift } from '../background';
-import { gameName, leveltLocalStorageKey, lightBackground } from '../config';
+import { gameName, levelLocalStorageKey, lightBackground } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
@@ -12,7 +12,6 @@ export function getStartScene(): UiScene {
   const lvl = Game.instance.currentLvl;
   const scene = new UiScene();
   const startList = new UiList(0, 0, [true, true], 'column', 40);
-  startList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
 
   const title = new UiText(0, 0, gameName, 12, [true, false]);
   startList.add(title);
@@ -22,6 +21,7 @@ export function getStartScene(): UiScene {
   scene.add(startList);
 
   scene.onLoad = () => {
+    startList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
     buttonList.elements = [];
 
     if ((Game.instance.currentLvl || Game.instance.treatCount) && Game.instance.currentLvl < 6) {
@@ -44,7 +44,7 @@ export function getStartScene(): UiScene {
     newGameButton.onClick = () => {
       Game.instance.hasSeenIntro = false;
       Game.instance.treatFound = [];
-      localStorage.setItem(leveltLocalStorageKey, '0');
+      localStorage.setItem(levelLocalStorageKey, '0');
       Game.instance.restart();
     };
 

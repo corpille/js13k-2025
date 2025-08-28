@@ -46,7 +46,8 @@ export const gameName = "Nyx's passage";
 document.title = gameName;
 
 export const treatLocalStorageKey = `${gameName}-treat`;
-export const leveltLocalStorageKey = `${gameName}-level`;
+export const levelLocalStorageKey = `${gameName}-level`;
 export const introLocalStorageKey = `${gameName}-intro`;
+export const volumeLocalStorageKey = `${gameName}-volume`;
 
 export const worlds = [world1, world2, world3];

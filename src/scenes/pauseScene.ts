@@ -1,7 +1,7 @@
 import { gameSym, startSym } from '.';
 import { treatImage } from '../assets';
 import AudioEngine from '../AudioEngine';
-import { darkBackground, leveltLocalStorageKey } from '../config';
+import { darkBackground, levelLocalStorageKey } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
@@ -25,11 +25,19 @@ resumeButton.onClick = () => {
 };
 scenelist.add(resumeButton);
 
+const muteButton = new UiButton(0, 0, 'Mute', [true, false]);
+muteButton.onClick = () => {
+  AudioEngine.instance.volume = AudioEngine.instance.volume ? 0 : 0.5;
+  muteButton.text = AudioEngine.instance.volume ? 'Mute' : 'Unmute';
+  muteButton.update();
+};
+scenelist.add(muteButton);
+
 const quitButton = new UiButton(0, 0, 'Quit', [true, false]);
 quitButton.onClick = () => {
   AudioEngine.instance.stopBgMusic();
   Game.instance.started = false;
-  Game.instance._currentLvl = parseInt(localStorage.getItem(leveltLocalStorageKey) ?? '0');
+  Game.instance._currentLvl = parseInt(localStorage.getItem(levelLocalStorageKey) ?? '0');
   Game.instance.reset();
   Game.instance.loadScene(startSym);
 };

@@ -39,6 +39,15 @@ const level3 = {
   name: '1-3',
   startX: 1,
   startY: 1,
+  b: [[-1, 0, 8, 1, true]],
+  end: [1, 19],
+  treat: [1, 7],
+};
+
+const level4 = {
+  name: '1-3',
+  startX: 1,
+  startY: 1,
   b: [
     [-1, 0, 8, 1, true],
     [11, 3, 1, 1, false],
@@ -67,4 +76,4 @@ const level3 = {
   treat: [1, 18],
 };
 
-export default [level1, level2, level3];
+export default [level1, level2, level4];
