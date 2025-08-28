@@ -11,10 +11,10 @@ import { getLevelScene } from './levelScene';
 export function getStartScene(): UiScene {
   const lvl = Game.instance.currentLvl;
   const scene = new UiScene();
-  const startList = new UiList(0, 0, [true, true]);
+  const startList = new UiList(0, 0, [true, true], 'column', 40);
   startList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
 
-  const title = new UiText(0, 0, "Nyx's Passage", 12, [true, false]);
+  const title = new UiText(0, 0, gameName, 12, [true, false]);
   startList.add(title);
 
   const buttonList = new UiList(0, 0, [true, false]);

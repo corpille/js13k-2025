@@ -1,5 +1,4 @@
 import { gameSym } from '.';
-import { darkBackground } from '../config';
 import Game from '../Game';
 import { slowDisplayText } from '../text-utils';
 import { UiScene } from '../ui-elements/Scene';

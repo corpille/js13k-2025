@@ -42,7 +42,8 @@ export const getDefaultRadius = () => getSquareSize() * gridWidth * 2;
 export const lightBackground = '#f7f6f0';
 export const darkBackground = '#111111'; //'#0B1026';
 
-export const gameName = 'nyx';
+export const gameName = "Nyx's passage";
+document.title = gameName;
 
 export const treatLocalStorageKey = `${gameName}-treat`;
 export const leveltLocalStorageKey = `${gameName}-level`;
