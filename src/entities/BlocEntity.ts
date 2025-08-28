@@ -70,6 +70,8 @@ export default class BlocEntity extends Entity {
 
   reset() {
     this.isFilled = this.initialisFilled;
+    this.offsets = { x: 0, y: 0 };
+    this.currentMoveShiftX = 0;
   }
 
   update() {
