@@ -126,11 +126,10 @@ export default class AudioEngine {
   pause() {
     if (!this.isPaused) {
       this.isPaused = true;
-
       if (this.audioContext.state === 'running') {
         Object.entries(this.timeoutIds).forEach(([name, pid]) => {
-          clearTimeout(pid);
           this.resumeTimers[name] = this.timers[melody.name] - Date.now();
+          clearTimeout(pid);
         });
         this.audioContext.suspend();
       }
@@ -142,6 +141,7 @@ export default class AudioEngine {
       this.isPaused = false;
       if (this.audioContext.state === 'suspended') {
         Object.entries(this.resumeTimers).forEach(([name, length]) => {
+          this.timers[melody.name] = Date.now() + length;
           this.timeoutIds[name] = setTimeout(() => {
             this.playBar();
           }, length);
@@ -152,7 +152,9 @@ export default class AudioEngine {
   }
 
   playBgMusic() {
-    this.resume();
+    this.isPaused = false;
+    this.mainGainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
+    this.audioContext.resume();
     this.iterators[melody.name] = 0;
     this.playBar();
   }

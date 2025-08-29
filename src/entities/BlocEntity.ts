@@ -99,7 +99,7 @@ export default class BlocEntity extends Entity {
   render(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.beginPath();
-    const emptyColor = Game.instance.currentLvl > backgroundShift ? `${darkBackground}05` : `${lightBackground}35`;
+    const emptyColor = Game.instance.currentLvl > backgroundShift ? `${darkBackground}10` : `${lightBackground}35`;
     const emptyBorderColor =
       Game.instance.currentLvl > backgroundShift ? `${darkBackground}20` : `${lightBackground}50`;
     ctx.fillStyle = this.isFilled ? darkBackground : emptyColor;

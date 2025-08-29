@@ -100,7 +100,7 @@ export default class Game {
   }
 
   set currentLvl(value: number) {
-    if (value > this.currentLvl) {
+    if (value > parseInt(localStorage.getItem(levelLocalStorageKey) ?? '0')) {
       localStorage.setItem(levelLocalStorageKey, value.toString());
     }
     this._currentLvl = value;
@@ -214,13 +214,6 @@ export default class Game {
 
     // Draw background
     ctx.drawImage(backgrounds[Game.instance.currentLvl], 0, 0, getGridRealWidth(), getGridRealHeight());
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.fillStyle = '#1111111e';
-    ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
-    ctx.closePath();
-    ctx.restore();
 
     if (!this.hasMirror) {
       this.currentLevel.render(ctx);

@@ -10,7 +10,6 @@ export const uiSquareRatio = 40;
 
 export const gridWidth = 40;
 export const gridHeight = ratio(gridWidth, 10, 16);
-console.log(gridWidth, gridHeight);
 export let gridRealWidth = 0;
 let zoomRatio = 1;
 
@@ -33,7 +32,8 @@ computedSizes();
 // Forces
 export const getMoveSpeed = () => getSquareSize() / 5;
 export const getJumpSpeed = () => (getSquareSize() / 5) * 5;
-export const getForceDecrease = () => getSquareSize() / 20;
+export const getYForceDecrease = () => getSquareSize() / 20;
+export const getXForceDecrease = () => getSquareSize() / 10;
 
 export const FPS = 60;
 

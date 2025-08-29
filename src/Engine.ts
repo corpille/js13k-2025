@@ -1,7 +1,6 @@
 import {
   coyoteFrames,
   getDefaultRadius,
-  getForceDecrease,
   FPS,
   getGridRealHeight,
   getGridRealWidth,
@@ -9,10 +8,13 @@ import {
   getSquareSize,
   getMoveSpeed,
   worlds,
+  getXForceDecrease,
+  getYForceDecrease,
 } from './config';
 import { canvas } from './elements';
 import Game from './Game';
 import { checkColissions } from './physics';
+import { gameSym } from './scenes';
 import { isCollidingWith } from './utils';
 
 export default class Engine {
@@ -39,7 +41,7 @@ export default class Engine {
     if (!this.game.keys['Space']) {
       this.jumpDebuff = false;
     }
-    if (this.game.keys['Escape']) {
+    if (this.game.keys['Escape'] && this.game.currentScene === gameSym) {
       this.game.pause();
     }
     if (this.game.keys['KeyA'] || this.game.keys['ArrowLeft']) {
@@ -143,9 +145,9 @@ export default class Engine {
     // Reset forces
     this.game.xForce =
       this.game.xForce < 0
-        ? Math.min(0, this.game.xForce + getForceDecrease())
-        : Math.max(0, this.game.xForce - getForceDecrease());
-    this.game.jumpForce = Math.max(0, this.game.jumpForce - getForceDecrease());
+        ? Math.min(0, this.game.xForce + getXForceDecrease())
+        : Math.max(0, this.game.xForce - getXForceDecrease());
+    this.game.jumpForce = Math.max(0, this.game.jumpForce - getYForceDecrease());
   }
 
   render() {

@@ -1,13 +1,15 @@
 import { gameSym, startSym } from '.';
 import { treatImage } from '../assets';
 import AudioEngine from '../AudioEngine';
-import { darkBackground, levelLocalStorageKey } from '../config';
+import { darkBackground, levelLocalStorageKey, volumeLocalStorageKey } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiImage } from '../ui-elements/UiImage';
 import { UiList } from '../ui-elements/UiList';
 import { UiText } from '../ui-elements/UiText';
+
+const getMuteStatus = () => (parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0') === 0 ? 'Unmute' : 'Mute');
 
 export const pauseScene = new UiScene(true, `${darkBackground}ba`);
 const scenelist = new UiList(0, 0, [true, true]);
@@ -25,10 +27,10 @@ resumeButton.onClick = () => {
 };
 scenelist.add(resumeButton);
 
-const muteButton = new UiButton(0, 0, 'Mute', [true, false]);
+const muteButton = new UiButton(0, 0, getMuteStatus(), [true, false]);
 muteButton.onClick = () => {
   AudioEngine.instance.volume = AudioEngine.instance.volume ? 0 : 0.5;
-  muteButton.text = AudioEngine.instance.volume ? 'Mute' : 'Unmute';
+  muteButton.text = getMuteStatus();
   muteButton.update();
 };
 scenelist.add(muteButton);
@@ -47,7 +49,9 @@ pauseScene.add(scenelist);
 
 pauseScene.onLoad = async () => {
   infoList.elements = [];
-  const text = new UiText(0, 0, `Level ${Game.instance.currentLevel.name}`, 3, [false, true]);
+  const world = Math.floor(Game.instance.currentLvl / 5) + 1;
+  const level = (Game.instance.currentLvl % 5) + 1;
+  const text = new UiText(0, 0, `Level ${world}-${level}`, 3, [false, true]);
   text.inverted = 1;
 
   const treatInfo = new UiList(0, 0, [false, true], 'row', 8);
