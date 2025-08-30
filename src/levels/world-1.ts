@@ -37,6 +37,7 @@ const level2 = {
 const level3 = {
   startX: 36,
   startY: 19,
+  isStartLeft: true,
   b: [
     [35, 18, 6, 1, true],
     [27, 17, 3, 1, false],
@@ -60,6 +61,7 @@ const level3 = {
 const level4 = {
   startX: 37,
   startY: 1,
+  isStartLeft: true,
   b: [
     [32, 0, 8, 1, true],
     [27, 3, 1, 1, false],

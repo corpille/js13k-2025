@@ -115,10 +115,12 @@ export default class Game {
   loadLevels(levels: any[]) {
     this.levels = [];
     this.mirrorLevels = [];
-    levels.forEach(({ name, startX, startY, b, m, end, treat, mirrorTreat }, i) => {
-      this.levels.push(new Level(name, startX, startY, b, false, this.treatsFound.indexOf(i) !== -1, treat, end));
+    levels.forEach(({ name, startX, startY, isStartLeft, b, m, end, treat, mirrorTreat }, i) => {
+      this.levels.push(
+        new Level(name, startX, startY, isStartLeft, b, false, this.treatsFound.indexOf(i) !== -1, treat, end),
+      );
       this.mirrorLevels.push(
-        new Level(name, startX, startY, m ?? [], true, this.treatsFound.indexOf(i) !== -1, mirrorTreat),
+        new Level(name, startX, startY, isStartLeft, m ?? [], true, this.treatsFound.indexOf(i) !== -1, mirrorTreat),
       );
     });
     this.reset();
@@ -152,7 +154,7 @@ export default class Game {
     this.paused = false;
     this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
-    this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY);
+    this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, this.currentLevel.isStartLeft);
     this.jumpForce = 0;
     this.xForce = 0;
     this.keys = {};
@@ -163,8 +165,8 @@ export default class Game {
 
   loadScene(name: symbol) {
     if (name === gameSym) {
-      if (!AudioEngine.instance.isPlaying) {
-        AudioEngine.instance.playBgMusic();
+      if (!AudioEngine.instance.isPlaying('game')) {
+        AudioEngine.instance.playBgMusic('game');
       } else {
         AudioEngine.instance.resume();
       }

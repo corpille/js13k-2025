@@ -3,7 +3,7 @@ import { SynthConfig } from './Synthetizer';
 export const minAttack = 0.008;
 
 export const subConfig: SynthConfig = {
-  volume: 1,
+  volume: 0.7,
   type: 'sawtooth',
   enveloppe: {
     attack: 0.5,
@@ -41,6 +41,23 @@ export const bassConfig: SynthConfig = {
   unisson: {
     amount: 7,
     percent: 20,
+  },
+};
+
+export const bass2Config: SynthConfig = {
+  volume: 0.2,
+  type: 'sawtooth',
+  enveloppe: {
+    attack: 1,
+    release: 1,
+  },
+  filter: {
+    cutoff: 12,
+    enveloppeShift: 0,
+  },
+  unisson: {
+    amount: 3,
+    percent: 10,
   },
 };
 

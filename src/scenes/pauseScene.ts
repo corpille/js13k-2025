@@ -8,8 +8,7 @@ import { UiButton } from '../ui-elements/UiButton';
 import { UiImage } from '../ui-elements/UiImage';
 import { UiList } from '../ui-elements/UiList';
 import { UiText } from '../ui-elements/UiText';
-
-const getMuteStatus = () => (parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0') === 0 ? 'Unmute' : 'Mute');
+import { getMuteStatus } from '../utils';
 
 export const pauseScene = new UiScene(true, `${darkBackground}ba`);
 const scenelist = new UiList(0, 0, [true, true]);

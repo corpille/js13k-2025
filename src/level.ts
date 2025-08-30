@@ -7,6 +7,7 @@ import { Box, isCollidingWith } from './utils';
 export default class Level {
   startX: number;
   startY: number;
+  isStartLeft: boolean;
   name: string;
   mirrored: boolean;
   blocks: BlocEntity[];
@@ -19,6 +20,7 @@ export default class Level {
     name: string,
     startX: number,
     startY: number,
+    isStartLeft: boolean = false,
     blocks: any[],
     mirrored: boolean,
     alreadyFoundTreat: boolean = false,
@@ -28,6 +30,7 @@ export default class Level {
     this.name = name;
     this.startX = startX;
     this.startY = startY;
+    this.isStartLeft = isStartLeft;
     this.mirrored = mirrored;
     this.alreadyFoundTreat = alreadyFoundTreat;
     this.blocks = blocks.map(

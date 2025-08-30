@@ -58,9 +58,10 @@ export default class PlayerEntity extends Entity {
     };
   }
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, isStartLeft: boolean) {
     super(x, y, 2, 2);
 
+    this.isLeft = isStartLeft;
     this.frameCounter = 0;
     this.currentAnimation = idleSym;
     this.currentFrame = this.animations[this.currentAnimation][0];

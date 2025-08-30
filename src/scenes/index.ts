@@ -26,7 +26,7 @@ Shifted in a mirror dimension, a small, white cat was peeking at her.
 Its fur was the color of snow and its eyes a deep blue. 
 It moved with a serene grace, strangely unafraid of the light. 
 At the sight of Nyx's look, the white cat ran away.
-Drawn to her precense, she pierce through the dimensions and followed her`;
+Drawn to her precense, she pierce through the dimensions and followed her.`;
 
 export const getScenesList = () => ({
   [startSym]: getStartScene(),
