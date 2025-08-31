@@ -225,7 +225,6 @@ export default class Engine {
         if (!this.game.paused) {
           this.checkEndState();
         }
-        // this.game.started = false;
       }
       this.renderUI();
     }

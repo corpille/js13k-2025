@@ -19,6 +19,7 @@ export function getStartLoreScene() {
   const button = new UiButton(0, 0, 'Leave', [true, false]);
 
   button.onClick = () => {
+    Game.instance.started = true;
     Game.instance.loadScene(gameSym);
   };
   startLoreScene.add(list);
@@ -27,6 +28,7 @@ export function getStartLoreScene() {
     list.elements = [];
     list.inverted = 1;
     await slowDisplayText(list, msg);
+    startLoreScene.autoRefresh = false;
     list.add(button);
   };
   return startLoreScene;

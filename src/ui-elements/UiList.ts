@@ -6,6 +6,7 @@ export class UiList extends UiElement {
   elements: UiElement[] = [];
   direction: string;
   _gap: number;
+  _needRender: boolean;
 
   constructor(
     x: number | Function,
@@ -25,6 +26,17 @@ export class UiList extends UiElement {
 
   get gap(): number {
     return Math.round((this._gap * getSquareSize()) / uiSquareRatio);
+  }
+
+  get needRender(): boolean {
+    return this._needRender;
+  }
+
+  set needRender(value: boolean) {
+    this._needRender = true;
+    this.elements.forEach((element) => {
+      element.needRender = value;
+    });
   }
 
   getRealSize() {

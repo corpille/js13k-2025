@@ -1,7 +1,7 @@
 import { getGridRealHeight, getGridRealWidth, getSquareSize, uiSquareRatio } from '../config';
 import { UiScene } from './Scene';
 
-export class UiElement {
+export abstract class UiElement {
   x: number;
   y: number;
   _size: number;
@@ -13,6 +13,7 @@ export class UiElement {
   loaded: boolean = false;
   centered: boolean[] = [false, false];
   inverted: number = -1;
+  abstract needRender: boolean;
 
   set size(value: number) {
     this._size = value;
@@ -46,6 +47,7 @@ export class UiElement {
     if (this.centered[1]) {
       this.y = this.parent.y + Math.round((parenSize.height - this.height) / 2);
     }
+    this.needRender = true;
   }
 
   update() {

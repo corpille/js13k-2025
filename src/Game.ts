@@ -268,9 +268,9 @@ export default class Game {
 
   renderUI(ctx: CanvasRenderingContext2D) {
     ctx.imageSmoothingEnabled = false;
-    if (this.scenes[this.currentScene].needRefresh) {
-      this.scenes[this.currentScene].render(ctx);
-    }
+    // if (this.scenes[this.currentScene].needRefresh) {
+    this.scenes[this.currentScene].render(ctx);
+    // }
   }
 
   invertLevel() {

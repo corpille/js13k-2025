@@ -40,6 +40,7 @@ export class UiScene {
 
   add(element: UiElement) {
     element.setParent(this);
+    element.needRender = true;
     this.elements.push(element);
   }
 
@@ -64,20 +65,25 @@ export class UiScene {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    this.needRefresh = this.autoRefresh;
-    if (!this.background && backgrounds[Game.instance.currentLvl]) {
-      ctx.clearRect(0, 0, getGridRealWidth(), getGridRealHeight());
-      ctx.drawImage(backgrounds[Game.instance.currentLvl], 0, 0, getGridRealWidth(), getGridRealHeight());
-    } else if (this.background) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.fillStyle = this.background;
-      ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
-      ctx.closePath();
-      ctx.restore();
+    if (this.needRefresh) {
+      if (!this.background && backgrounds[Game.instance.currentLvl]) {
+        ctx.clearRect(0, 0, getGridRealWidth(), getGridRealHeight());
+        ctx.drawImage(backgrounds[Game.instance.currentLvl], 0, 0, getGridRealWidth(), getGridRealHeight());
+      } else if (this.background) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = this.background;
+        ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
+        ctx.closePath();
+        ctx.restore();
+      }
     }
+    this.needRefresh = this.autoRefresh;
     this.elements.forEach((element) => {
       ctx.save();
+      if (this.autoRefresh) {
+        element.needRender = true;
+      }
       element.render(ctx, false);
       ctx.restore();
     });

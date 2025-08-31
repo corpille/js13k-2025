@@ -14,6 +14,7 @@ export class UiButton extends UiElement {
   disabled: boolean = false;
   image: HTMLImageElement | undefined;
   disableImage: boolean;
+  needRender: boolean;
 
   constructor(
     x: number,
@@ -57,10 +58,10 @@ export class UiButton extends UiElement {
     const isOnButton = isPointCollission(coords, this);
     if (isOnButton && !this.hovered) {
       this.hovered = true;
-      this.refresh();
+      this.needRender = true;
     } else if (!isOnButton && this.hovered) {
-      this.refresh();
       this.hovered = false;
+      this.needRender = true;
     }
   };
 
@@ -81,6 +82,9 @@ export class UiButton extends UiElement {
   }
 
   render(ctx: CanvasRenderingContext2D, inverted: boolean) {
+    if (!this.needRender) {
+      return;
+    }
     ctx.save();
     super.render(ctx, inverted);
     const realButtonHeight = buttonHeight * this.size;
@@ -151,6 +155,7 @@ export class UiButton extends UiElement {
       );
       paddingLeft += this.image.width * imageMagnifying;
       ctx.restore();
+      this.needRender = false;
     }
 
     //End

@@ -54,6 +54,7 @@ export function getStartScene(): UiScene {
       Game.instance.treatFound = [];
       localStorage.setItem(levelLocalStorageKey, '0');
       Game.instance.restart();
+      Game.instance.started = false;
     };
     buttonList.add(newGameButton);
 
