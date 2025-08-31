@@ -8,13 +8,21 @@ import { UiElement } from './UiElement';
 const getImageButtonMagnifying = () => Math.round((2 * getSquareSize()) / uiSquareRatio);
 
 export class UiButton extends UiElement {
-  text: string;
+  _text: string;
   onClick: Function = () => {};
   hovered: boolean = false;
   disabled: boolean = false;
   image: HTMLImageElement | undefined;
   disableImage: boolean;
   needRender: boolean;
+
+  set text(value: string) {
+    this._text = value;
+    if (this.parent) {
+      this.parent.update();
+      this.parent.refresh();
+    }
+  }
 
   constructor(
     x: number,
@@ -68,7 +76,7 @@ export class UiButton extends UiElement {
   getSizes() {
     const spacing = this.size * 2;
     const textMagnifiying = Math.round((this.size / 100) * 80);
-    const textWidth = getTextRealSizes(this.text, textMagnifiying).width;
+    const textWidth = getTextRealSizes(this._text, textMagnifiying).width;
     const contentWidth = textWidth + (this.image ? this.image.width * getImageButtonMagnifying() + spacing : 0);
     return { textWidth, textMagnifiying, contentWidth, spacing };
   }
@@ -130,7 +138,7 @@ export class UiButton extends UiElement {
       ctx,
       this.x + paddingLeft,
       this.y + Math.round((realButtonHeight - imageTextHeight * textMagnifiying) / 2),
-      this.text.toUpperCase(),
+      this._text.toUpperCase(),
       textMagnifiying,
     );
     ctx.restore();

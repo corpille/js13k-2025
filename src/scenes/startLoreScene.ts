@@ -25,6 +25,7 @@ export function getStartLoreScene() {
   startLoreScene.add(list);
 
   startLoreScene.onLoad = async () => {
+    startLoreScene.autoRefresh = true;
     list.elements = [];
     list.inverted = 1;
     await slowDisplayText(list, msg);

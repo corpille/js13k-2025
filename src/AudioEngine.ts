@@ -11,10 +11,9 @@ import { startMelody } from './audio/startMelody';
 const BPM = 100;
 export const loopLength = (16 * 60000) / BPM;
 
-const melodies: { [name: string]: Melody } = {
-  game: gameMelody,
-  start: startMelody,
-};
+const melodies: { [name: string]: Melody } = {};
+melodies['game'] = gameMelody;
+melodies['start'] = startMelody;
 
 export default class AudioEngine {
   static _instance: AudioEngine;
