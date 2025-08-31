@@ -74,7 +74,7 @@ export default class Engine {
     }
 
     // Update Blocks
-    this.game.currentLevel.blocks.forEach((block) => block.update());
+    [...this.game.currentLevel.blocks, ...this.game.currentMirrorLevel.blocks].forEach((block) => block.update());
 
     // Compute Y force
     this.game.yForce = this.getGravityForce() + this.game.jumpForce;
@@ -187,7 +187,10 @@ export default class Engine {
 
   checkEndState() {
     const hitBox = this.game.player.getHitbox();
-    if (this.game.currentLevel.end.isFilled && isCollidingWith(hitBox, this.game.currentLevel.end)) {
+    if (
+      (this.game.currentLevel.end?.isFilled && isCollidingWith(hitBox, this.game.currentLevel.end)) ||
+      (this.game.currentMirrorLevel.end?.isFilled && isCollidingWith(hitBox, this.game.currentMirrorLevel.end))
+    ) {
       this.game.pause(false);
       this.playTransition(() => {
         this.jumpFrame = 0;

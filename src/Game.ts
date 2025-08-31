@@ -115,12 +115,22 @@ export default class Game {
   loadLevels(levels: any[]) {
     this.levels = [];
     this.mirrorLevels = [];
-    levels.forEach(({ name, startX, startY, isStartLeft, b, m, end, treat, mirrorTreat }, i) => {
+    levels.forEach(({ name, startX, startY, isStartLeft, b, m, end, treat, mirrorTreat, mirrorEnd }, i) => {
       this.levels.push(
         new Level(name, startX, startY, isStartLeft, b, false, this.treatsFound.indexOf(i) !== -1, treat, end),
       );
       this.mirrorLevels.push(
-        new Level(name, startX, startY, isStartLeft, m ?? [], true, this.treatsFound.indexOf(i) !== -1, mirrorTreat),
+        new Level(
+          name,
+          startX,
+          startY,
+          isStartLeft,
+          m ?? [],
+          true,
+          this.treatsFound.indexOf(i) !== -1,
+          mirrorTreat,
+          mirrorEnd,
+        ),
       );
     });
     this.reset();

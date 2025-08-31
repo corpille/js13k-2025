@@ -12,7 +12,8 @@ export interface Box extends Coord {
   height: number;
 }
 
-export function isCollidingWith(a: Box, b: Box) {
+export function isCollidingWith(a: Box, b: Box): boolean {
+  if (!a || !b) return false;
   return (
     (!(b instanceof BlocEntity) || (b instanceof BlocEntity && b.isFilled)) &&
     a.x < b.x + b.width &&

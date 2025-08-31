@@ -26,14 +26,14 @@ export function getStartScene(): UiScene {
   scene.add(sceneList);
 
   scene.onLoad = () => {
-    AudioEngine.instance.playBgMusic('start');
+    // AudioEngine.instance.playBgMusic('start');
     sceneList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
     buttonList.elements = [];
 
     if ((Game.instance.currentLvl || Game.instance.treatCount) && Game.instance.currentLvl < 6) {
       const continueButton = new UiButton(0, 0, 'Continue', [true, false]);
       continueButton.onClick = () => {
-        AudioEngine.instance.stopBgMusic();
+        // AudioEngine.instance.stopBgMusic();
         Game.instance.restart(Game.instance.currentLvl);
       };
       buttonList.add(continueButton);
@@ -49,7 +49,7 @@ export function getStartScene(): UiScene {
 
     const newGameButton = new UiButton(0, 0, 'New Game', [true, false]);
     newGameButton.onClick = () => {
-      AudioEngine.instance.stopBgMusic();
+      // AudioEngine.instance.stopBgMusic();
       Game.instance.hasSeenIntro = false;
       Game.instance.treatFound = [];
       localStorage.setItem(levelLocalStorageKey, '0');
