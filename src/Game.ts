@@ -240,8 +240,7 @@ export default class Game {
 
       ctx.beginPath();
       ctx.fillStyle = 'rgba(65, 188, 226, 0.2)';
-      ctx.rect(0, 0, getGridRealWidth(), getGridRealHeight());
-      ctx.fill();
+      ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
       ctx.closePath();
 
       this.currentMirrorLevel.render(ctx);
@@ -258,8 +257,7 @@ export default class Game {
 
       ctx.beginPath();
       ctx.fillStyle = '#c5cfdb69';
-      ctx.rect(0, getGridRealHeight(), getGridRealWidth(), 1);
-      ctx.fill();
+      ctx.fillRect(0, getGridRealHeight(), getGridRealWidth(), 1);
       ctx.closePath();
 
       ctx.restore();

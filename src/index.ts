@@ -15,12 +15,11 @@ window.addEventListener('keyup', function (e) {
 function init() {
   if (!canvas) return;
 
-  canvas.height = gridRealHeight;
-  canvas.width = getGridRealWidth();
-
   canvas.style.display = 'none';
   computeBackgrounds();
   canvas.style.display = 'flex';
+  canvas.height = gridRealHeight;
+  canvas.width = getGridRealWidth();
 
   window.addEventListener('resize', () => {
     computedSizes();

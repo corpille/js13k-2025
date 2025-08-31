@@ -3,7 +3,7 @@ import world2 from './levels/world-2';
 import world3 from './levels/world-3';
 
 // Sizes
-const ratio = (n: number, x: number, y: number = 100) => Math.round((n / y) * x);
+export const ratio = (n: number, x: number, y: number = 100) => Math.round((n / y) * x);
 
 const idealWidth = 20;
 export const uiSquareRatio = 40;

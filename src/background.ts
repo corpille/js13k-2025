@@ -1,10 +1,12 @@
-import { getGridRealHeight, getGridRealWidth, lightBackground } from './config';
+import { getGridRealHeight, getGridRealWidth, ratio } from './config';
 import { canvas } from './elements';
-import Game from './Game';
 import { randomBetween } from './utils';
 
 export let backgrounds: HTMLImageElement[] = [];
 export let backgroundShift = 4;
+
+const width = 800;
+const height = ratio(width, 10, 16);
 
 const colors: string[] = [
   '#061527', // 0
@@ -37,16 +39,15 @@ const levels = [
 
 const stars: [number, number][] = [];
 for (let i = 0; i < 400; i++) {
-  stars.push([randomBetween(0, getGridRealWidth()), randomBetween(0, getGridRealHeight())]);
+  stars.push([randomBetween(0, width), randomBetween(0, height)]);
 }
 
 function drawStars(ctx: CanvasRenderingContext2D) {
   ctx.save();
 
   stars.forEach(([x, y]) => {
-    ctx.fillStyle = '#ffffff';
-    ctx.rect(x, y, 1, 1);
-    ctx.fill();
+    ctx.fillStyle = '#ffffff4d';
+    ctx.fillRect(x, y, 1, 1);
   });
   ctx.restore();
 }
@@ -56,7 +57,7 @@ function drawBackground(ctx: CanvasRenderingContext2D, lvl: number) {
     (1 / levels[lvl].length) * i,
     colors[color],
   ]);
-  const fillStyle = ctx.createLinearGradient(getGridRealWidth() / 2, 0, getGridRealWidth() / 2, getGridRealHeight());
+  const fillStyle = ctx.createLinearGradient(width / 2, 0, width / 2, height);
   gradientColors.forEach(([offset, color]) => {
     (fillStyle as CanvasGradient).addColorStop(offset, color);
   });
@@ -64,7 +65,7 @@ function drawBackground(ctx: CanvasRenderingContext2D, lvl: number) {
   ctx.save();
   ctx.beginPath();
   ctx.fillStyle = fillStyle;
-  ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
+  ctx.fillRect(0, 0, width, height);
   ctx.closePath();
   if (lvl <= 7) {
     drawStars(ctx);
@@ -74,6 +75,8 @@ function drawBackground(ctx: CanvasRenderingContext2D, lvl: number) {
 
 export function computeBackgrounds() {
   const ctx = canvas.getContext('2d');
+  canvas.width = width;
+  canvas.height = height;
   if (!ctx) return;
   const bg: HTMLImageElement[] = [];
   levels.forEach((l, i) => {
@@ -81,7 +84,7 @@ export function computeBackgrounds() {
     const image = new Image();
     image.src = canvas.toDataURL('image/png');
     bg.push(image);
-    ctx.clearRect(0, 0, getGridRealWidth(), getGridRealHeight());
+    ctx.clearRect(0, 0, width, height);
   });
   backgrounds = bg;
 }
