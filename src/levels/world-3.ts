@@ -95,7 +95,7 @@ const level4 = {
     [32, 0, 2, 1, true],
   ],
   mirrorEnd: [37, 1],
-  treat: [28, 11],
+  treat: [29, 11],
 };
 
 export default [level1, level2, level3, level4];
