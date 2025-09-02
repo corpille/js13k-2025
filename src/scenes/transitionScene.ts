@@ -6,17 +6,19 @@ import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';
 
-export function getTransitionScene(msg: string) {
+const defautlCallback = () => {
+  Game.instance.currentLvl++;
+  Game.instance.loadScene(gameSym);
+  Game.instance.reset();
+};
+
+export function getTransitionScene(msg: string, btnLabel = 'Continue', callback = defautlCallback) {
   const scene = new UiScene(true);
   const list = new UiList(0, 0, [true, true]);
 
-  const button = new UiButton(0, 0, 'Continue', [true, false]);
+  const button = new UiButton(0, 0, btnLabel, [true, false]);
 
-  button.onClick = () => {
-    Game.instance.currentLvl++;
-    Game.instance.loadScene(gameSym);
-    Game.instance.reset();
-  };
+  button.onClick = callback;
   scene.add(list);
 
   scene.onLoad = async () => {

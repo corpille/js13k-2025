@@ -7,19 +7,24 @@ import { UiImage } from '../ui-elements/UiImage';
 import { UiButton } from '../ui-elements/UiButton';
 import Game from '../Game';
 import { startSym } from '.';
+import { backgroundShift } from '../background';
 
 // End Scene
-export const endScene = new UiScene();
-const endList = new UiList(0, 0, [true, true], 'column');
-endList.inverted = 1;
+export const scene = new UiScene();
+const sceneList = new UiList(0, 0, [true, true], 'column');
+sceneList.inverted = 1;
 
-const endMessage = new UiText(0, 0, 'GG WP', 12, [true, false]);
+const endMessage = new UiText(0, 0, 'The End', 12, [true, false]);
 const restartButton = new UiButton(0, 0, 'Back to menu', [true, false]);
 
 restartButton.onClick = () => {
   Game.instance.loadScene(startSym);
 };
 restartButton.inverted = 0;
+
+scene.onLoad = () => {
+  sceneList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
+};
 
 const treatLayout = new UiList(0, 0, [true, false], 'row');
 const treatUiImage2 = new UiImage(8, 6, 3, treatImage, [false, true]);
@@ -28,7 +33,7 @@ export const treatEndCounter = new UiText(0, 16, '0', 5, [false, true]);
 treatLayout.add(treatUiImage2);
 treatUiImage2.inverted = 0;
 treatLayout.add(treatEndCounter);
-endList.add(endMessage);
-endList.add(treatLayout);
-endList.add(restartButton);
-endScene.add(endList);
+sceneList.add(endMessage);
+sceneList.add(treatLayout);
+sceneList.add(restartButton);
+scene.add(sceneList);

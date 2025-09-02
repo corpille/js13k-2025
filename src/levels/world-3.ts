@@ -41,6 +41,31 @@ const level2 = {
 
 const level3 = {
   startX: 1,
+  startY: 1,
+  b: [
+    [-1, 0, 5, 1, true],
+    [0, 4, 2, 1, false, 8],
+    [19, 10, 2, 1, true, -8],
+    [23, 0, 2, 1, false],
+    [35, 5, 1, 1, true],
+    [30, 7, 4, 1, false],
+    [36, 8, 5, 1, true],
+  ],
+  m: [
+    [-1, 0, 1, 1, true],
+    [8, 6, 2, 1, true, -8],
+    [0, 8, 2, 1, false, 8],
+    [16, 4, 2, 1, true],
+    [25, 4, 1, 20, false],
+    [27, 0, 2, 1, true],
+    [28, 2, 1, 1, false, 10],
+  ],
+  end: [37, 9],
+  treat: [17, 5],
+};
+
+const level4 = {
+  startX: 1,
   startY: 9,
   b: [
     [-1, 8, 5, 1, true],
@@ -66,7 +91,7 @@ const level3 = {
   mirrorTreat: [16, 1],
 };
 
-const level4 = {
+const level5 = {
   startX: 1,
   startY: 9,
   b: [
@@ -98,4 +123,4 @@ const level4 = {
   treat: [29, 11],
 };
 
-export default [level1, level2, level3, level4];
+export default [level1, level2, level3, level4, level5];

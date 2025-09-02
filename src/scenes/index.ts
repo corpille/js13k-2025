@@ -1,4 +1,5 @@
-import { endScene } from './endScenes';
+import Game from '../Game';
+import { scene as endScene } from './endScenes';
 import { gameScene } from './gameScene';
 import { getLevelScene } from './levelScene';
 import { pauseScene } from './pauseScene';
@@ -14,6 +15,7 @@ export const endSym = Symbol('end');
 export const levelSym = Symbol('level');
 export const world1TransitionSym = Symbol('world1Transition');
 export const world2TransitionSym = Symbol('world2Transition');
+export const endTransitionSym = Symbol('endTransition');
 
 const transition1 = `In her feline disguise, Nyx navigated a world in the dark.
 But soon the night would end and the sun would rise.
@@ -28,6 +30,12 @@ It moved with a serene grace, strangely unafraid of the light.
 At the sight of Nyx's look, the white cat ran away.
 Drawn to her precense, she pierce through the dimensions and followed her.`;
 
+const transition3 = `Nyx gave her whole to try to catch up with the other cat.
+When she finally managed to, the little cat look right at her.
+Its gaze pierced right throught her, and that's when she knew. 
+This was her daughter, Aether, personification of the light itself.
+She was just born and had come to show her the way back home.`;
+
 export const getScenesList = () => ({
   [startSym]: getStartScene(),
   [gameSym]: gameScene,
@@ -37,4 +45,8 @@ export const getScenesList = () => ({
   [startLoreSym]: getStartLoreScene(),
   [world1TransitionSym]: getTransitionScene(transition1),
   [world2TransitionSym]: getTransitionScene(transition2),
+  [endTransitionSym]: getTransitionScene(transition3, 'Go back home', () => {
+    Game.instance.loadScene(endSym);
+    Game.instance.reset();
+  }),
 });

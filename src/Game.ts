@@ -15,7 +15,7 @@ import EndEntity from './entities/EndEntity';
 import { isCollidingWith } from './utils';
 import { UiScene } from './ui-elements/Scene';
 import {
-  endSym,
+  endTransitionSym,
   gameSym,
   getScenesList,
   pauseSym,
@@ -302,7 +302,7 @@ export default class Game {
     this.paused = true;
     setTimeout(() => {
       this.stop = true;
-      this.loadScene(endSym);
+      this.loadScene(endTransitionSym);
     }, 50);
   }
 }
