@@ -12,11 +12,11 @@ window.addEventListener('keyup', function (e) {
   Game.instance.keys[e.code] = false;
 });
 
-function init() {
+async function init() {
   if (!canvas) return;
 
   canvas.style.display = 'none';
-  computeBackgrounds();
+  await computeBackgrounds();
   canvas.style.display = 'flex';
   canvas.height = gridRealHeight;
   canvas.width = getGridRealWidth();

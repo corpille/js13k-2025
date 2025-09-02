@@ -12,7 +12,7 @@ treatImage.src = treat;
 export const imageTextHeight = 7;
 export const imageTextWidth = 5;
 
-export const textImage = new Image(textMatcher.length * imageTextWidth, imageTextHeight);
+const textImage = new Image(textMatcher.length * imageTextWidth, imageTextHeight);
 textImage.src = text;
 
 export const catImageWidth = 20;
@@ -30,3 +30,5 @@ export const buttonSideWidth = Math.floor(buttonWidth / 2);
 
 export const btnImage = new Image(buttonWidth, buttonHeight);
 btnImage.src = btn;
+
+export { textImage };

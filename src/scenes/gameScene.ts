@@ -1,6 +1,6 @@
 import { treatImage } from '../assets';
-import { backgroundShift } from '../background';
-import { getSquareSize } from '../config';
+import { backgroundShift, instructions } from '../background';
+import { getGridRealHeight, getSquareSize } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiImage } from '../ui-elements/UiImage';
@@ -19,8 +19,19 @@ const treatUiImage = new UiImage(0, 0, 2, treatImage, [false, true]);
 export const treatCounter = new UiText(0, 0, '0', 3, [false, true]);
 treatInfo.add(treatUiImage);
 treatInfo.add(treatCounter);
-gameScene.add(treatInfo);
+
+const instructionList = new UiList(0, getGridRealHeight() / 4, [true, false]);
 
 gameScene.onLoad = () => {
   treatCounter.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
+  console.log(instructions);
+  const controls = new UiImage(0, 0, 3, instructions, [true, true]);
+  instructionList.elements = [];
+  if (Game.instance.currentLvl === 0) {
+    instructionList.add(controls);
+  }
+  instructionList.update();
 };
+
+gameScene.add(instructionList);
+gameScene.add(treatInfo);

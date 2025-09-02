@@ -178,7 +178,7 @@ export default class Engine {
       } else {
         if (callback()) {
           this.game.radius = 0;
-          setTimeout(unZoom, 300);
+          setTimeout(unZoom, 150);
         }
       }
     };
@@ -192,13 +192,16 @@ export default class Engine {
       (this.game.currentMirrorLevel.end?.isFilled && isCollidingWith(hitBox, this.game.currentMirrorLevel.end))
     ) {
       this.game.pause(false);
+
+      this.game.scenes[this.game.currentScene].unload();
       this.playTransition(() => {
         this.jumpFrame = 0;
         if (this.game.currentLvl + 1 === this.game.levels.length) {
           this.game.endGame();
-        } else {
-          this.game.validateLvl();
+          return false;
         }
+        this.game.validateLvl();
+        return true;
       });
     } else if (hitBox.y < -hitBox.height * 2) {
       this.jumpFrame = 0;

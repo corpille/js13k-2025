@@ -1,8 +1,12 @@
-import { getGridRealHeight, getGridRealWidth, ratio } from './config';
+import { textImage } from './assets';
+import { getSquareSize, ratio, uiSquareRatio } from './config';
 import { canvas } from './elements';
+import { displayString, getTextRealSizes } from './text-utils';
 import { randomBetween } from './utils';
+import text from '/assets/text.webp';
 
 export let backgrounds: HTMLImageElement[] = [];
+export let instructions: HTMLImageElement;
 export let backgroundShift = 4;
 
 const width = 800;
@@ -20,7 +24,7 @@ const colors: string[] = [
   '#fde4dbff', // 8
 ];
 const levels = [
-  [0, 0, 1], // 1-1
+  [0, 0, 1, 1, 1, 2], // 1-1
   [0, 0, 1, 1, 2], // 1-2
   [0, 1, 1, 2, 3], // 1-3
   [0, 1, 2, 2, 3, 4], // 1-4
@@ -74,17 +78,37 @@ function drawBackground(ctx: CanvasRenderingContext2D, lvl: number) {
 }
 
 export function computeBackgrounds() {
-  const ctx = canvas.getContext('2d');
-  canvas.width = width;
-  canvas.height = height;
-  if (!ctx) return;
-  const bg: HTMLImageElement[] = [];
-  levels.forEach((l, i) => {
-    drawBackground(ctx, i);
-    const image = new Image();
-    image.src = canvas.toDataURL('image/png');
-    bg.push(image);
-    ctx.clearRect(0, 0, width, height);
+  return new Promise((resolve) => {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.save();
+    const bg: HTMLImageElement[] = [];
+    levels.forEach((l, i) => {
+      drawBackground(ctx, i);
+      const image = new Image();
+      image.src = canvas.toDataURL('image/png');
+      bg.push(image);
+      ctx.clearRect(0, 0, width, height);
+    });
+    backgrounds = bg;
+    textImage.onload = () => {
+      const instructionsText = 'Use arrow keys to move and space to jump.';
+      const instructionsText2 = 'Each jump switches the platform state.';
+      const { width: w, height: h } = getTextRealSizes(instructionsText, 1);
+      const { width: w2, height: h2 } = getTextRealSizes(instructionsText2, 1);
+      canvas.width = Math.max(w, w2);
+      canvas.height = h + h2 + 6 + 3;
+      ctx.filter = 'invert(1)';
+      displayString(ctx, 0, 0, instructionsText, 1);
+      displayString(ctx, Math.round((canvas.width - w2) / 2), h2 + 6, instructionsText2, 1);
+      instructions = new Image();
+      instructions.src = canvas.toDataURL('image/png');
+      ctx.clearRect(0, 0, width, height);
+      ctx.filter = 'none';
+      ctx.restore();
+      resolve(1);
+    };
   });
-  backgrounds = bg;
 }

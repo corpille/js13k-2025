@@ -163,7 +163,6 @@ export class UiButton extends UiElement {
       );
       paddingLeft += this.image.width * imageMagnifying;
       ctx.restore();
-      this.needRender = false;
     }
 
     //End
@@ -179,6 +178,7 @@ export class UiButton extends UiElement {
       realButtonHeight,
     );
 
+    this.needRender = false;
     ctx.restore();
   }
 }

@@ -13,6 +13,7 @@ export class UiScene {
   needRefresh: boolean = true;
   autoRefresh: boolean = false;
   onLoad: Function = () => {};
+  onRender: Function = () => {};
   centered: boolean[] = [true, true];
 
   get height() {
@@ -59,12 +60,14 @@ export class UiScene {
 
   unload() {
     this.isLoaded = false;
+    this.needRefresh = true;
     this.elements.forEach((element) => {
       element.unload();
     });
   }
 
   render(ctx: CanvasRenderingContext2D) {
+    if (!this.isLoaded) return;
     if (this.needRefresh) {
       if (!this.background && backgrounds[Game.instance.currentLvl]) {
         ctx.clearRect(0, 0, getGridRealWidth(), getGridRealHeight());
@@ -79,6 +82,7 @@ export class UiScene {
       }
     }
     this.needRefresh = this.autoRefresh;
+    this.onRender();
     this.elements.forEach((element) => {
       ctx.save();
       if (this.autoRefresh) {

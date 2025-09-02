@@ -1,7 +1,7 @@
 import { gameSym } from '.';
 import { backgroundShift } from '../background';
 import Game from '../Game';
-import { slowDisplayText } from '../text-utils';
+import { slowDisplayText } from '../ui-elements/text-animation';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';

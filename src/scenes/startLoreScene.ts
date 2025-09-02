@@ -1,7 +1,7 @@
 import { gameSym } from '.';
 import Game from '../Game';
-import { slowDisplayText } from '../text-utils';
 import { UiScene } from '../ui-elements/Scene';
+import { slowDisplayText } from '../ui-elements/text-animation';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';
 const msg = `Once upon a time, Nyx, goddess of the night

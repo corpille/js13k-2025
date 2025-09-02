@@ -201,6 +201,7 @@ export default class Game {
       this.loadScene(currentWorld === 0 ? world1TransitionSym : world2TransitionSym);
     } else {
       this.currentLvl++;
+      this.scenes[this.currentScene].load();
       this.reset();
     }
   }
