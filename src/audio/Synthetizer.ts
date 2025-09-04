@@ -3,6 +3,9 @@ import { notesTable } from './notesTable';
 
 interface Enveloppe {
   attack: number;
+  hold?: number;
+  decay?: number;
+  sustain?: number;
   release: number;
 }
 
@@ -41,7 +44,7 @@ export class Synthetizer extends Instrument {
     node.connect(instrumentVolume);
 
     this.oscillators.forEach((o) => o.start(time));
-    this.oscillators.forEach((o) => o.stop(time + duration));
+    this.oscillators.forEach((o) => o.stop(time + duration + this.synthConfig.enveloppe.release));
     return this.oscillators;
   }
 
@@ -74,6 +77,28 @@ export class Synthetizer extends Instrument {
     };
   }
 
+  configureEnvelope(params: AudioParam, enveloppe: Enveloppe, time: number, duration: number, min = 0, max = 0.1) {
+    params.cancelScheduledValues(time);
+    params.setValueAtTime(min, time);
+    if (!enveloppe) return;
+
+    const { attack, hold = 0, decay = 1, sustain = 1, release } = enveloppe;
+    const attackTime = attack <= duration ? attack : duration;
+    params.linearRampToValueAtTime(max, time + attackTime);
+    if (duration - attackTime > 0) {
+      const holdTime = attackTime + hold <= duration ? attackTime + hold : duration - attackTime;
+      params.linearRampToValueAtTime(max, time + holdTime);
+      if (duration - holdTime > 0) {
+        const decayTime = attackTime + holdTime + decay <= duration ? holdTime + decay : duration - holdTime;
+        params.linearRampToValueAtTime(max * sustain, time + decayTime);
+        if (duration - decayTime > 0) {
+          params.linearRampToValueAtTime(max * sustain, time + duration);
+        }
+      }
+    }
+    params.linearRampToValueAtTime(min, time + duration + release);
+  }
+
   createSynth(time: number, duration: number, key: string, octave: number) {
     const detune = this.getUnissonTable(this.synthConfig.unisson.amount, this.synthConfig.unisson.percent);
 
@@ -93,27 +118,37 @@ export class Synthetizer extends Instrument {
     const filter = this.audioContext.createBiquadFilter();
     const { key: fKey, octave: fOctave } = this.getShiftedNote(key, octave, this.synthConfig.filter.cutoff);
 
-    filter.frequency.setValueAtTime(notesTable[fOctave][fKey], time);
     if (this.synthConfig.filter.enveloppe && this.synthConfig.filter.enveloppeShift) {
       const { key: sKey, octave: sOctave } = this.getShiftedNote(fKey, fOctave, this.synthConfig.filter.enveloppeShift);
 
-      filter.frequency.linearRampToValueAtTime(
-        notesTable[sOctave][sKey],
-        time + this.synthConfig.filter.enveloppe.attack,
-      );
-      filter.frequency.linearRampToValueAtTime(
+      this.configureEnvelope(
+        enveloppe.gain,
+        this.synthConfig.enveloppe,
+        time,
+        duration,
         notesTable[fOctave][fKey],
-        time + this.synthConfig.filter.enveloppe.release,
+        notesTable[sOctave][sKey],
       );
+    } else {
+      filter.frequency.setValueAtTime(notesTable[fOctave][fKey], time);
     }
 
-    const hold = duration - this.synthConfig.enveloppe.release;
+    // filter.frequency.setValueAtTime(notesTable[fOctave][fKey], time);
+    // if (this.synthConfig.filter.enveloppe && this.synthConfig.filter.enveloppeShift) {
+    //   const { key: sKey, octave: sOctave } = this.getShiftedNote(fKey, fOctave, this.synthConfig.filter.enveloppeShift);
 
-    enveloppe.gain.cancelScheduledValues(time);
-    enveloppe.gain.setValueAtTime(0, time);
-    enveloppe.gain.linearRampToValueAtTime(0.1, time + this.synthConfig.enveloppe.attack);
-    enveloppe.gain.linearRampToValueAtTime(0.1, time + hold);
-    enveloppe.gain.linearRampToValueAtTime(0, time + hold + this.synthConfig.enveloppe.release);
+    //   filter.frequency.linearRampToValueAtTime(
+    //     notesTable[sOctave][sKey],
+    //     time + this.synthConfig.filter.enveloppe.attack,
+    //   );
+    //   filter.frequency.linearRampToValueAtTime(
+    //     notesTable[fOctave][fKey],
+    //     time + this.synthConfig.filter.enveloppe.release,
+    //   );
+    // }
+
+    this.configureEnvelope(enveloppe.gain, this.synthConfig.enveloppe, time, duration);
+
     enveloppe.connect(filter);
 
     return filter;

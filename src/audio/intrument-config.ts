@@ -3,18 +3,18 @@ import { SynthConfig } from './Synthetizer';
 export const minAttack = 0.008;
 
 export const subConfig: SynthConfig = {
-  volume: 0.7,
+  volume: 0.2,
   type: 'sawtooth',
   enveloppe: {
     attack: 0.5,
-    release: 0.5,
+    release: 0.08,
   },
   filter: {
     cutoff: -12,
     enveloppeShift: 12,
     enveloppe: {
       attack: 0.5,
-      release: 0.5,
+      release: 0.08,
     },
   },
   unisson: {
@@ -28,6 +28,7 @@ export const bassConfig: SynthConfig = {
   type: 'sawtooth',
   enveloppe: {
     attack: minAttack,
+    sustain: 0,
     release: 0.1,
   },
   filter: {
@@ -35,6 +36,7 @@ export const bassConfig: SynthConfig = {
     enveloppeShift: 24,
     enveloppe: {
       attack: minAttack,
+      sustain: 0,
       release: 1,
     },
   },
@@ -62,17 +64,19 @@ export const bass2Config: SynthConfig = {
 };
 
 export const lead1Config: SynthConfig = {
-  volume: 1,
+  volume: 0.75,
   type: 'sine',
   enveloppe: {
     attack: 0.075,
+    sustain: 0.42,
     release: 0.089,
   },
   filter: {
-    cutoff: -12,
-    enveloppeShift: 12,
+    cutoff: 0,
+    enveloppeShift: 14,
     enveloppe: {
       attack: 0.075,
+      sustain: 0.42,
       release: 0.089,
     },
   },

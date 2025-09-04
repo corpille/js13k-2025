@@ -6,14 +6,12 @@ import { Snare } from './audio/Snare';
 import { volumeLocalStorageKey } from './config';
 import { gameMelody } from './audio/gameMelody';
 import { Melody } from './audio/Melody';
-import { startMelody } from './audio/startMelody';
 
 const BPM = 100;
 export const loopLength = (16 * 60000) / BPM;
 
 const melodies: { [name: string]: Melody } = {};
 melodies['game'] = gameMelody;
-melodies['start'] = startMelody;
 
 export default class AudioEngine {
   static _instance: AudioEngine;
