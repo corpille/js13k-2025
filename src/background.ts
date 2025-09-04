@@ -77,6 +77,11 @@ function drawBackground(ctx: CanvasRenderingContext2D, lvl: number) {
   ctx.restore();
 }
 
+const instructionsText: string = `Use the Arrow Keys to move and Space to jump.
+You can pause the game using Escape.
+Each jump switches the platform state.`;
+const spacing = 8;
+
 export function computeBackgrounds() {
   return new Promise((resolve) => {
     const ctx = canvas.getContext('2d');
@@ -94,15 +99,16 @@ export function computeBackgrounds() {
     });
     backgrounds = bg;
     textImage.onload = () => {
-      const instructionsText = 'Use arrow keys to move and space to jump.';
-      const instructionsText2 = 'Each jump switches the platform state.';
-      const { width: w, height: h } = getTextRealSizes(instructionsText, 1);
-      const { width: w2, height: h2 } = getTextRealSizes(instructionsText2, 1);
-      canvas.width = Math.max(w, w2);
-      canvas.height = h + h2 + 6 + 3;
+      const lines = instructionsText.split('\n');
+      const boundingBoxes = lines.map((line) => getTextRealSizes(line, 1));
+      canvas.width = Math.max(...boundingBoxes.map(({ width }) => width));
+      canvas.height = boundingBoxes.reduce((res, { height }) => res + height + spacing, 0) - (spacing - 3);
       ctx.filter = 'invert(1)';
-      displayString(ctx, 0, 0, instructionsText, 1);
-      displayString(ctx, Math.round((canvas.width - w2) / 2), h2 + 6, instructionsText2, 1);
+
+      lines.reduce((y, line, i) => {
+        displayString(ctx, i == 0 ? 0 : Math.round((canvas.width - boundingBoxes[i].width) / 2), y, line, 1);
+        return y + boundingBoxes[i].height + spacing;
+      }, 0);
       instructions = new Image();
       instructions.src = canvas.toDataURL('image/png');
       ctx.clearRect(0, 0, width, height);

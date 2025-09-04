@@ -14,7 +14,7 @@ import {
 import { canvas } from './elements';
 import Game from './Game';
 import { checkColissions } from './physics';
-import { gameSym } from './scenes';
+import { gameSym, pauseSym } from './scenes';
 import { isCollidingWith } from './utils';
 
 export default class Engine {
@@ -223,7 +223,7 @@ export default class Engine {
         if (!this.game.paused) {
           this.changeState();
         }
-        if (this.game.started) {
+        if (this.game.started && [gameSym, pauseSym].includes(this.game.currentScene)) {
           this.render();
         }
 

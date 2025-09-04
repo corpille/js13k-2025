@@ -3,7 +3,6 @@ import { scene as endScene } from './endScenes';
 import { gameScene } from './gameScene';
 import { getLevelScene } from './levelScene';
 import { pauseScene } from './pauseScene';
-import { getStartLoreScene } from './startLoreScene';
 import { getStartScene } from './startScene';
 import { getTransitionScene } from './transitionScene';
 
@@ -16,6 +15,14 @@ export const levelSym = Symbol('level');
 export const world1TransitionSym = Symbol('world1Transition');
 export const world2TransitionSym = Symbol('world2Transition');
 export const endTransitionSym = Symbol('endTransition');
+
+const startLore = `Once upon a time, Nyx, goddess of the night,
+grew tired of her husband Darkness.
+She always used to rely on him to do anything
+and this was not suiting her anymore.
+So, one morning, disguised as a cat
+She sneaked her way out and left the heavens
+only to be followed by a looming darkness`;
 
 const transition1 = `In her feline disguise, Nyx navigated a world in the dark.
 But soon the night would end and the sun would rise.
@@ -42,7 +49,10 @@ export const getScenesList = () => ({
   [pauseSym]: pauseScene,
   [endSym]: endScene,
   [levelSym]: getLevelScene(),
-  [startLoreSym]: getStartLoreScene(),
+  [startLoreSym]: getTransitionScene(startLore, 'Leave', () => {
+    Game.instance.started = true;
+    Game.instance.loadScene(gameSym);
+  }),
   [world1TransitionSym]: getTransitionScene(transition1),
   [world2TransitionSym]: getTransitionScene(transition2),
   [endTransitionSym]: getTransitionScene(transition3, 'Go back home', () => {

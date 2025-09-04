@@ -76,7 +76,7 @@ export class UiButton extends UiElement {
   getSizes() {
     const spacing = this.size * 2;
     const textMagnifiying = Math.round((this.size / 100) * 80);
-    const textWidth = getTextRealSizes(this._text, textMagnifiying).width;
+    const textWidth = getTextRealSizes(this._text.toUpperCase(), textMagnifiying).width;
     const contentWidth = textWidth + (this.image ? this.image.width * getImageButtonMagnifying() + spacing : 0);
     return { textWidth, textMagnifiying, contentWidth, spacing };
   }
