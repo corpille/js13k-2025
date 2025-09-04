@@ -1,6 +1,6 @@
 import treat from '/assets/treat.webp';
 import text from '/assets/text.webp';
-import cat from '/assets/cat.webp';
+import cats from '/assets/cats.webp';
 import cardboard from '/assets/cardboard.webp';
 import btn from '/assets/btn.webp';
 
@@ -19,7 +19,7 @@ export const catImageWidth = 20;
 export const catImageHeight = 20;
 
 export const catImage = new Image(catImageWidth * 21, catImageHeight);
-catImage.src = cat;
+catImage.src = cats;
 
 export const cardBoardImage = new Image(40, 40);
 cardBoardImage.src = cardboard;

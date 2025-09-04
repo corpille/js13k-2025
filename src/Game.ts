@@ -109,6 +109,10 @@ export default class Game {
     this._currentLvl = value;
     treatCounter.text = `${this.treatCount}`;
     treatEndCounter.text = `${this.treatCount}/${worlds.flat().length}`;
+
+    const end = this.currentLevel.end ?? this.currentMirrorLevel.end;
+    const isAetherGoingLeft = end._x < gridWidth / 2;
+    this.aether = new Aether(end._x + 1.5 * (isAetherGoingLeft ? 1.5 : -1), end._y, isAetherGoingLeft);
   }
 
   get treatCount(): number {
@@ -168,9 +172,6 @@ export default class Game {
     this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, this.currentLevel.isStartLeft);
-    const end = this.currentLevel.end ?? this.currentMirrorLevel.end;
-    const isAetherGoingLeft = end._x < gridWidth / 2;
-    this.aether = new Aether(end._x + 2 * (isAetherGoingLeft ? 1 : -1), end._y, isAetherGoingLeft);
     this.jumpForce = 0;
     this.xForce = 0;
     this.keys = {};

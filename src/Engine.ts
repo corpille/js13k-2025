@@ -83,7 +83,7 @@ export default class Engine {
     let yOffset = 0;
     let xOffset = 0;
 
-    this.game.aether?.update(Math.round(getMoveSpeed() / 2), 0);
+    this.game.aether?.update(Math.round(getMoveSpeed() / 3));
 
     const colisions = checkColissions(this.game);
 

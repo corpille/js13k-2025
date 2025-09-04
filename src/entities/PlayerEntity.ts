@@ -22,10 +22,11 @@ export default class PlayerEntity extends Entity {
   hitBox: Entity;
   paused: boolean = false;
   offsets: Coord = { x: 0, y: 0 };
+  catSet: number = 0;
 
   animations: { [name: symbol]: number[] } = {
     [idleSym]: [0, 7],
-    [runSym]: [8, 12],
+    [runSym]: [8, 11],
     [jumpSym]: [13, 16, 1],
     [fallSym]: [17, 18],
     [landSym]: [19, 20],
@@ -162,7 +163,7 @@ export default class PlayerEntity extends Entity {
     ctx.drawImage(
       catImage,
       this.currentFrame * catImageWidth,
-      0,
+      this.catSet * catImageHeight,
       catImageWidth,
       catImageHeight,
       this.x * (this.isLeft ? -1 : 1),
