@@ -160,6 +160,7 @@ export default class Game {
     }
     this.levels.forEach((level, i) => {
       level.reset(this.treatsFound.includes(i));
+      level.nbTry = 0;
     });
     this.mirrorLevels.forEach((mirrorLevel, i) => {
       mirrorLevel.reset(this.treatsFound.includes(i));
@@ -168,13 +169,13 @@ export default class Game {
   }
 
   reset() {
+    this.keys = {};
     this.paused = false;
     this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, this.currentLevel.isStartLeft);
     this.jumpForce = 0;
     this.xForce = 0;
-    this.keys = {};
     this.isJumping = false;
     this.gravityForce = 0;
     this.radius = getDefaultRadius();

@@ -15,16 +15,14 @@ const scenelist = new UiList(0, 0, [true, true]);
 
 const title = new UiText(0, 0, 'Pause', 3, [true, false]);
 title.inverted = 1;
-scenelist.add(title);
 
 const infoList = new UiList(0, 0, [true, false], 'row');
-scenelist.add(infoList);
+const buttonList = new UiList(0, 0, [true, false]);
 
 const resumeButton = new UiButton(0, 0, 'Resume', [true, false]);
 resumeButton.onClick = () => {
   Game.instance.unPause();
 };
-scenelist.add(resumeButton);
 
 const muteButton = new UiButton(0, 0, getMuteStatus(), [true, false]);
 muteButton.onClick = () => {
@@ -32,7 +30,6 @@ muteButton.onClick = () => {
   muteButton.text = getMuteStatus();
   muteButton.update();
 };
-scenelist.add(muteButton);
 
 const quitButton = new UiButton(0, 0, 'Quit', [true, false]);
 quitButton.onClick = () => {
@@ -42,11 +39,22 @@ quitButton.onClick = () => {
   Game.instance.reset();
   Game.instance.loadScene(startSym);
 };
-scenelist.add(quitButton);
+
+const skipButton = new UiButton(0, 0, 'Skip', [true, false]);
+skipButton.onClick = () => {
+  Game.instance.currentLvl++;
+  Game.instance.reset();
+  Game.instance.unPause();
+};
+
+scenelist.add(title);
+scenelist.add(infoList);
+scenelist.add(buttonList);
 
 pauseScene.add(scenelist);
 
 pauseScene.onLoad = async () => {
+  buttonList.elements = [];
   infoList.elements = [];
   const world = Math.floor(Game.instance.currentLvl / 5) + 1;
   const level = (Game.instance.currentLvl % 5) + 1;
@@ -61,5 +69,13 @@ pauseScene.onLoad = async () => {
   treatInfo.add(treatUiImage);
   treatInfo.add(treatCounter);
   infoList.add(treatInfo);
+
   infoList.update();
+  buttonList.add(resumeButton);
+  buttonList.add(muteButton);
+  buttonList.add(quitButton);
+  if (Game.instance.currentLevel.nbTry > 4) {
+    buttonList.add(skipButton);
+  }
+  buttonList.update();
 };
