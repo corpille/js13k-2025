@@ -8,6 +8,7 @@ import {
   getSquareSize,
   treatLocalStorageKey,
   worlds,
+  gridWidth,
 } from './config';
 import Level from './level';
 import PlayerEntity from './entities/PlayerEntity';
@@ -28,6 +29,7 @@ import { treatCounter } from './scenes/gameScene';
 import { treatEndCounter } from './scenes/endScenes';
 import AudioEngine from './AudioEngine';
 import { backgrounds } from './background';
+import { Aether } from './entities/Aether';
 
 export default class Game {
   static _instance: Game;
@@ -49,6 +51,7 @@ export default class Game {
   currentScene: symbol = startSym;
   levels: Level[] = [];
   mirrorLevels: Level[] = [];
+  aether: Aether = new Aether();
 
   constructor() {
     treatCounter.text = `${this.treatCount}`;
@@ -165,6 +168,9 @@ export default class Game {
     this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
     this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, this.currentLevel.isStartLeft);
+    const end = this.currentLevel.end ?? this.currentMirrorLevel.end;
+    const isAetherGoingLeft = end._x < gridWidth / 2;
+    this.aether = new Aether(end._x + 2 * (isAetherGoingLeft ? 1 : -1), end._y, isAetherGoingLeft);
     this.jumpForce = 0;
     this.xForce = 0;
     this.keys = {};
@@ -246,6 +252,8 @@ export default class Game {
 
       this.currentMirrorLevel.render(ctx);
       this.player.render(ctx);
+
+      this.aether.render(ctx);
       ctx.restore();
 
       // Draw real
@@ -255,7 +263,6 @@ export default class Game {
 
       this.currentLevel.render(ctx);
       this.player.render(ctx, false);
-
       ctx.beginPath();
       ctx.fillStyle = '#c5cfdb69';
       ctx.fillRect(0, getGridRealHeight(), getGridRealWidth(), 1);
@@ -267,9 +274,7 @@ export default class Game {
 
   renderUI(ctx: CanvasRenderingContext2D) {
     ctx.imageSmoothingEnabled = false;
-    // if (this.scenes[this.currentScene].needRefresh) {
     this.scenes[this.currentScene].render(ctx);
-    // }
   }
 
   invertLevel() {

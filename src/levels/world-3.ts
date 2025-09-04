@@ -87,7 +87,7 @@ const level4 = {
     [28, 0, 1, 3, true],
     [36, 9, 5, 1, true],
   ],
-  end: [37, 9],
+  end: [37, 10],
   mirrorTreat: [16, 1],
 };
 

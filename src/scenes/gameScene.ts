@@ -24,7 +24,6 @@ const instructionList = new UiList(0, getGridRealHeight() / 4, [true, false]);
 
 gameScene.onLoad = () => {
   treatCounter.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
-  console.log(instructions);
   const controls = new UiImage(0, 0, 3, instructions, [true, true]);
   instructionList.elements = [];
   if (Game.instance.currentLvl === 0) {

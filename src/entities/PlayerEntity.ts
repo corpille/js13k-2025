@@ -4,7 +4,7 @@ import { Box, Coord } from '../utils';
 import Entity from './Entity';
 
 const idleSym = Symbol('idle');
-const runSym = Symbol('run');
+export const runSym = Symbol('run');
 const jumpSym = Symbol('jump');
 const fallSym = Symbol('fall');
 const landSym = Symbol('land');
