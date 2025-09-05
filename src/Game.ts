@@ -197,6 +197,10 @@ export default class Game {
   }
 
   validateLvl() {
+    if (this.currentLvl + 1 === this.levels.length) {
+      this.endGame();
+      return false;
+    }
     let levelCounter = 0;
     const currentWorld = worlds.findIndex((w, i) => {
       levelCounter += w.length;
@@ -209,9 +213,11 @@ export default class Game {
       this.loadScene(currentWorld === 0 ? world1TransitionSym : world2TransitionSym);
     } else {
       this.currentLvl++;
+      this.scenes[this.currentScene].unload();
       this.scenes[this.currentScene].load();
       this.reset();
     }
+    return true;
   }
 
   render(ctx: CanvasRenderingContext2D) {

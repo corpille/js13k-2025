@@ -6,7 +6,7 @@ import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';
 import { UiText } from '../ui-elements/UiText';
-import { getGridRealHeight } from '../config';
+import { getGridRealHeight, getGridRealWidth } from '../config';
 
 const defautlCallback = () => {
   Game.instance.currentLvl++;
@@ -19,9 +19,10 @@ export function getTransitionScene(msg: string, btnLabel = 'Continue', callback 
   const list = new UiList(0, 0, [true, false]);
   const button = new UiButton(0, 0, btnLabel, [true, false]);
 
-  msg.split('\n').forEach(() => list.add(new UiText(0, 0, '', 3, [true, false])));
+  msg.split('\n').forEach((line) => list.add(new UiText(0, 0, line, 3, [true, false])));
   list.add(button);
   list.y = (getGridRealHeight() - list.getRealSize().height) / 2;
+  list.x = (getGridRealWidth() - list.getRealSize().width) / 2;
 
   button.onClick = callback;
   scene.add(list);

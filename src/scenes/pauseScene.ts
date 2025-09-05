@@ -42,9 +42,8 @@ quitButton.onClick = () => {
 
 const skipButton = new UiButton(0, 0, 'Skip', [true, false]);
 skipButton.onClick = () => {
-  Game.instance.currentLvl++;
-  Game.instance.reset();
   Game.instance.unPause();
+  Game.instance.validateLvl();
 };
 
 scenelist.add(title);
