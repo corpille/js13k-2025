@@ -69,7 +69,7 @@ export default class Engine {
   }
 
   changeState() {
-    const hitBox = this.game.player.getHitbox();
+    const hitBox = this.game.player.hitbox;
     // Treat Handling
     if (
       this.game.player.isGrounded &&
@@ -88,7 +88,7 @@ export default class Engine {
     let yOffset = 0;
     let xOffset = 0;
 
-    this.game.aether?.update(Math.round(getMoveSpeed() / 3));
+    this.game.aether?.update(Math.round(getMoveSpeed() / 3) * (this.game.aether.isLeft ? -1 : 1));
 
     const colisions = checkColissions(this.game);
 
@@ -101,11 +101,8 @@ export default class Engine {
       }
       if (!isCoyoting || (isCoyoting && this.jumpFrame > coyoteFrames)) {
         yOffset += this.game.yForce;
-        if (this.game.yForce < 0) {
-          this.game.player.fallStart();
-        } else if (this.game.yForce > 0 && this.game.player.isGrounded) {
+        if (this.game.yForce > 0 && this.game.player.isGrounded) {
           yOffset = 0;
-          this.game.player.jumpStart();
         }
         this.game.player.isGrounded = false;
         this.game.gravityForce += getSquareSize() / 152;
@@ -114,10 +111,9 @@ export default class Engine {
       if (colisions.bottom) {
         const block = colisions.bottom.block;
         xOffset += block.currentMoveShiftX;
+        this.game.player.platformMovement = block.currentMoveShiftX;
         this.game.player.offsets.y += block.y + block.height - hitBox.y;
-        if (!this.game.player.isGrounded) {
-          this.game.player.landStart();
-        }
+
         this.game.player.isGrounded = true;
         this.game.gravityForce = 0;
       }
@@ -125,16 +121,12 @@ export default class Engine {
       if (colisions.top) {
         const block = colisions.top.block;
         this.game.player.offsets.y += hitBox.y + hitBox.height - block.y;
-        this.game.player.fallStart();
         this.game.jumpForce = 0;
       }
     }
 
     if ((!colisions.right && this.game.xForce > 0) || (!colisions.left && this.game.xForce < 0)) {
       xOffset += this.game.xForce;
-      if (this.game.xForce) {
-        this.game.player.runStart();
-      }
     } else {
       if (colisions.right) {
         this.game.player.offsets.x += colisions.right.block.x - (hitBox.x + hitBox.width);
@@ -142,9 +134,6 @@ export default class Engine {
 
       if (colisions.left) {
         this.game.player.offsets.x += colisions.left.block.x + colisions.left.block.width - hitBox.x;
-      }
-      if (this.game.xForce === 0 && this.game.player.isRunning) {
-        this.game.player.runStop();
       }
     }
     this.game.player.update(xOffset, yOffset);
@@ -193,7 +182,7 @@ export default class Engine {
   }
 
   checkEndState() {
-    const hitBox = this.game.player.getHitbox();
+    const hitBox = this.game.player.hitbox;
     if (
       (this.game.currentLevel.end?.isFilled && isCollidingWith(hitBox, this.game.currentLevel.end)) ||
       (this.game.currentMirrorLevel.end?.isFilled && isCollidingWith(hitBox, this.game.currentMirrorLevel.end))

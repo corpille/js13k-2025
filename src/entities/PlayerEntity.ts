@@ -3,7 +3,7 @@ import { getGridRealHeight, getGridRealWidth, getSquareSize, gridWidth } from '.
 import { Box, Coord } from '../utils';
 import Entity from './Entity';
 
-const idleSym = Symbol('idle');
+export const idleSym = Symbol('idle');
 export const runSym = Symbol('run');
 const jumpSym = Symbol('jump');
 const fallSym = Symbol('fall');
@@ -23,6 +23,7 @@ export default class PlayerEntity extends Entity {
   paused: boolean = false;
   offsets: Coord = { x: 0, y: 0 };
   catSet: number = 0;
+  platformMovement: number = 0;
 
   animations: { [name: symbol]: number[] } = {
     [idleSym]: [0, 7],
@@ -50,7 +51,7 @@ export default class PlayerEntity extends Entity {
     return Math.round(this._y * getSquareSize() + this.offsets.y);
   }
 
-  getHitbox(): Box {
+  get hitbox(): Box {
     return {
       x: this.x - this.hitBox.x * (this.isLeft ? 1 : -1),
       y: this.y - this.hitBox.y,
@@ -70,65 +71,38 @@ export default class PlayerEntity extends Entity {
     this.hitBox = new Entity(0.5, 0, 1, 1);
   }
 
-  runStart() {
-    if (!this.isRunning && !this.isJumping && this.currentAnimation !== fallSym) {
-      this.currentAnimation = runSym;
-      this.resetAnimationFrame();
-      this.loopAnimation = true;
+  resetAnimationFrame(sym?: symbol) {
+    if (sym) {
+      this.currentAnimation = sym;
     }
-    this.isRunning = true;
-  }
-
-  runStop() {
-    if (this.isRunning && this.currentAnimation !== fallSym) {
-      this.currentAnimation = idleSym;
-      this.resetAnimationFrame();
-      this.loopAnimation = true;
-    }
-    this.isRunning = false;
-  }
-
-  jumpStart() {
-    if (!this.isJumping) {
-      this.isJumping = true;
-      this.currentAnimation = jumpSym;
-      this.resetAnimationFrame();
-      this.loopAnimation = false;
-    }
-  }
-
-  fallStart() {
-    if (this.currentAnimation !== fallSym) {
-      this.currentAnimation = fallSym;
-      this.resetAnimationFrame();
-      this.loopAnimation = false;
-      this.backToIdle = false;
-    }
-  }
-
-  landStart() {
-    if ([jumpSym, fallSym].includes(this.currentAnimation)) {
-      this.isJumping = false;
-      this.currentAnimation = landSym;
-      this.resetAnimationFrame();
-      this.loopAnimation = this.isRunning;
+    this.currentFrame = this.animations[this.currentAnimation][0];
+    this.loopAnimation = [runSym, idleSym].includes(this.currentAnimation);
+    if (this.currentAnimation === landSym) {
       this.backToIdle = true;
     }
   }
 
-  resetAnimationFrame() {
-    this.currentFrame = this.animations[this.currentAnimation][0];
+  isInXLimit(x: number) {
+    const { x: hX, width } = this.hitbox;
+    return hX + x + width <= getGridRealWidth() && hX + x >= 0;
   }
 
   update(x: number = 0, y: number = 0) {
+    let anim: symbol = [fallSym, landSym].includes(this.currentAnimation) ? landSym : idleSym;
     if (x) {
-      const { x: hX, width } = this.getHitbox();
-      if (hX + x + width <= getGridRealWidth() && hX + x >= 0) {
+      if (this.isInXLimit(x)) {
+        if (x - this.platformMovement !== 0) {
+          anim = runSym;
+        }
         this.offsets.x += x;
       }
     }
     if (y) {
       this.offsets.y += y;
+      anim = y >= 0 ? jumpSym : fallSym;
+    }
+    if (this.currentAnimation !== anim) {
+      this.resetAnimationFrame(anim);
     }
   }
 
@@ -143,9 +117,7 @@ export default class PlayerEntity extends Entity {
             this.resetAnimationFrame();
           }
           if (this.backToIdle) {
-            this.currentAnimation = this.isRunning ? runSym : idleSym;
-            this.resetAnimationFrame();
-            this.loopAnimation = true;
+            this.resetAnimationFrame(this.isRunning ? runSym : idleSym);
             this.backToIdle = false;
           }
         } else {

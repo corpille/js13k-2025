@@ -22,7 +22,7 @@ interface Colission {
 }
 
 export function checkColissions(game: Game): Colission {
-  const hitBox = game.player.getHitbox();
+  const hitBox = game.player.hitbox;
   const colisions = game.checkColission({
     x: hitBox.x + game.xForce,
     y: hitBox.y + game.yForce,

@@ -1,5 +1,5 @@
-import { FPS, getGridRealWidth, getSquareSize } from '../config';
-import PlayerEntity, { runSym } from './PlayerEntity';
+import { FPS, getGridRealWidth } from '../config';
+import PlayerEntity from './PlayerEntity';
 
 const pauseTime = FPS * 1.5;
 export class Aether extends PlayerEntity {
@@ -13,16 +13,18 @@ export class Aether extends PlayerEntity {
     this.catSet = 1;
   }
 
+  isInXLimit() {
+    return this.offsets.x < getGridRealWidth() && this.x + this.width > 0;
+  }
+
   update(x: number = 0) {
     if (this.counter < pauseTime) {
       this.counter++;
       if (this.counter === pauseTime) {
-        this.currentAnimation = runSym;
-        this.resetAnimationFrame();
         this.isLeft = !this.isLeft;
       }
-    } else if (this.offsets.x < getGridRealWidth() && this.x + this.width > 0) {
-      this.offsets.x += x * (this.isLeft ? -1 : 1);
+    } else {
+      super.update(x);
     }
   }
 }

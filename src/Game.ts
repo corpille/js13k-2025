@@ -223,7 +223,7 @@ export default class Game {
   render(ctx: CanvasRenderingContext2D) {
     // Draw animation circle
     ctx.save();
-    const hitBox = this.player.getHitbox();
+    const hitBox = this.player.hitbox;
     ctx.fillStyle = darkBackground;
     ctx.fillRect(0, 0, getGridRealWidth(), getGridRealHeight());
 
