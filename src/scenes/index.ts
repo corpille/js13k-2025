@@ -14,34 +14,39 @@ export const endSym = Symbol('end');
 export const levelSym = Symbol('level');
 export const world1TransitionSym = Symbol('world1Transition');
 export const world2TransitionSym = Symbol('world2Transition');
-export const endTransitionSym = Symbol('endTransition');
+export const world3TransitionSym = Symbol('world3Transition');
+export const world3Part2TransitionSym = Symbol('world3Part2Transition');
 
-const startLore = `Once upon a time, Nyx, goddess of the night,
-grew tired of her husband Darkness.
-She always used to rely on him to do anything
-and this was not suiting her anymore.
-So, one morning, disguised as a cat
-She sneaked her way out and left the heavens
-only to be followed by a looming darkness`;
+const startLore = `At first, there was Chaos, a primordial and pure being.
+Then came Nyx, goddess of the night, and Erebus, god of darkness.
+Nyx was close to her brother, but their bond evolved beyond mere kinship.
+Ashamed of her actions, Nyx disguised herself as a cat and left Hell
+to ponder her choices.`;
 
-const transition1 = `In her feline disguise, Nyx navigated a world in the dark.
-But soon the night would end and the sun would rise.
-The light was relentless, its rays a physical weight.
-She had to hunt to eat and struggled in a way she never had as a goddess. 
-This wasn't the freedom she craved, she'd become a prisoner of another kind.`;
+const world1TransitionText = `In her feline disguise, she navigated through the shadows of the night.
+But as she moved farther from her home, the sun began to rise.
+The light was relentless, its rays a tangible, physical weight.
+She was hungry and needed food to recover from the pain.
+Yet for some obscure reason, she kept going, drawn toward the light.`;
 
-const transition2 = `Beyond the brightness, Nyx saw a flicker of movement. 
-Shifted in a mirror dimension, a small, white cat was peeking at her. 
-Its fur was the color of snow and its eyes a deep blue. 
-It moved with a serene grace, strangely unafraid of the light. 
-At the sight of Nyx's look, the white cat ran away.
-Drawn to her precense, she pierce through the dimensions and followed her.`;
+const world2TransitionText = `As the light filled the sky, Nyx saw a flicker of movement.
+Beyond the brightness, hidden in a mirror dimension,
+a small white cat was peeking directly at her. Its presence felt magnetic.
+Nyx pierced through the mirror to reach the little cat,
+but at the sight of her, the white cat ran away.`;
 
-const transition3 = `Nyx gave her whole to try to catch up with the other cat.
-When she finally managed to, the little cat look right at her.
-Its gaze pierced right throught her, and that's when she knew. 
-This was her daughter, Aether, personification of the light itself.
-She was just born and had come to show her the way back home.`;
+const world3TransitionText = `As she pushed forward to catch up,
+the little ball of fur stopped and looked right at her.
+As she approached, its gaze pierced through her soul.
+The white cat began to shine brighter and brighter, but Nyx remained unfazed.
+And then it clicked, the white cat before her was her own daughter.
+She had just created Aether, the personification of light itself.`;
+
+const world3Part2TransitionText = `Nyx and her newborn daughter returned to their ethereal forms
+and left the mirror dimension to travel back to the Atlas.
+There, Erebus was waiting for them and welcomed his daughter.
+They both looked at Aether and thought the same thing:
+She had just been born, and yet, she had come to restore equilibrium.`;
 
 export const getScenesList = () => ({
   [startSym]: getStartScene(),
@@ -53,9 +58,12 @@ export const getScenesList = () => ({
     Game.instance.started = true;
     Game.instance.loadScene(gameSym);
   }),
-  [world1TransitionSym]: getTransitionScene(transition1),
-  [world2TransitionSym]: getTransitionScene(transition2),
-  [endTransitionSym]: getTransitionScene(transition3, 'Go back home', () => {
+  [world1TransitionSym]: getTransitionScene(world1TransitionText),
+  [world2TransitionSym]: getTransitionScene(world2TransitionText),
+  [world3TransitionSym]: getTransitionScene(world3TransitionText, 'Continue', () => {
+    Game.instance.loadScene(world3Part2TransitionSym);
+  }),
+  [world3Part2TransitionSym]: getTransitionScene(world3Part2TransitionText, 'Continue', () => {
     Game.instance.loadScene(endSym);
     Game.instance.reset();
   }),

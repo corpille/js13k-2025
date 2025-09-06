@@ -41,8 +41,13 @@ export default class Engine {
     if (!this.game.keys['Space']) {
       this.jumpDebuff = false;
     }
-    if (this.game.keys['Escape'] && this.game.currentScene === gameSym) {
-      this.game.pause();
+    if (this.game.keys['Escape'] && [gameSym, pauseSym].includes(this.game.currentScene)) {
+      if (this.game.paused) {
+        this.game.unPause();
+      } else {
+        this.game.pause();
+      }
+      this.game.keys['Escape'] = false;
     }
     if (this.game.keys['KeyA'] || this.game.keys['ArrowLeft']) {
       this.game.xForce = -getMoveSpeed();
