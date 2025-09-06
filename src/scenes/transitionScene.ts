@@ -6,16 +6,47 @@ import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
 import { UiList } from '../ui-elements/UiList';
 import { UiText } from '../ui-elements/UiText';
-import { getGridRealHeight, getGridRealWidth } from '../config';
+import { FPS, getGridRealHeight, getGridRealWidth, getMoveSpeed, getSquareSize, gridWidth } from '../config';
+import PlayerEntity from '../entities/PlayerEntity';
+import BlocEntity from '../entities/BlocEntity';
+import { sleep } from '../utils';
+import { Aether } from '../entities/Aether';
 
-const defautlCallback = () => {
+export async function moveCat(player: PlayerEntity, limit: number) {
+  while (player.x < limit) {
+    player.update(getMoveSpeed(), 0, true);
+    await sleep(1000 / FPS);
+  }
+  player.update(0);
+}
+
+async function defautlCallback(player: PlayerEntity, aeter: Aether) {
+  await moveCat(player, getGridRealWidth());
   Game.instance.currentLvl++;
   Game.instance.loadScene(gameSym);
   Game.instance.reset();
-};
+}
 
-export function getTransitionScene(msg: string, btnLabel = 'Continue', callback = defautlCallback) {
+async function preLoad(player: PlayerEntity, aeter: Aether, ground: BlocEntity) {
+  await moveCat(player, getGridRealWidth() / 2 - player.width / 2);
+}
+
+export function getTransitionScene(
+  msg: string,
+  btnLabel = 'Continue',
+  buttonCallback = defautlCallback,
+  onloadCallback = preLoad,
+) {
+  const player = new PlayerEntity(-2, 1);
+  const aeter = new Aether(-2, 1);
+  const ground = new BlocEntity(0, 0, gridWidth, 1, true);
+
   const scene = new UiScene(true);
+  scene.onRender = (ctx: CanvasRenderingContext2D) => {
+    player.render(ctx);
+    aeter.render(ctx);
+    ground.render(ctx);
+  };
   const list = new UiList(0, 0, [true, false]);
   const button = new UiButton(0, 0, btnLabel, [true, false]);
 
@@ -24,15 +55,15 @@ export function getTransitionScene(msg: string, btnLabel = 'Continue', callback 
   list.y = (getGridRealHeight() - list.getRealSize().height) / 2;
   list.x = (getGridRealWidth() - list.getRealSize().width) / 2;
 
-  button.onClick = callback;
+  button.onClick = async () => await buttonCallback(player, aeter);
   scene.add(list);
 
   scene.onLoad = async () => {
     scene.autoRefresh = true;
     list.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
     list.elements = [];
+    await onloadCallback(player, aeter, ground);
     await slowDisplayText(list, msg);
-    scene.autoRefresh = false;
     list.add(button);
   };
   return scene;

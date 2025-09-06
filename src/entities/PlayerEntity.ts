@@ -60,7 +60,7 @@ export default class PlayerEntity extends Entity {
     };
   }
 
-  constructor(x: number, y: number, isStartLeft: boolean) {
+  constructor(x: number, y: number, isStartLeft: boolean = false) {
     super(x, y, 2, 2);
 
     this.isLeft = isStartLeft;
@@ -87,10 +87,10 @@ export default class PlayerEntity extends Entity {
     return hX + x + width <= getGridRealWidth() && hX + x >= 0;
   }
 
-  update(x: number = 0, y: number = 0) {
+  update(x: number = 0, y: number = 0, byPassLimit = false) {
     let anim: symbol = [fallSym, landSym].includes(this.currentAnimation) ? landSym : idleSym;
     if (x) {
-      if (this.isInXLimit(x)) {
+      if (byPassLimit || this.isInXLimit(x)) {
         if (x - this.platformMovement !== 0) {
           anim = runSym;
         }

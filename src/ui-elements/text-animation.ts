@@ -1,3 +1,4 @@
+import { textSpeed } from '../config';
 import { sleep } from '../utils';
 import { UiList } from './UiList';
 import { UiText } from './UiText';
@@ -9,7 +10,9 @@ export async function slowDisplayText(list: UiList, msg: string) {
     list.add(text);
     for (let i = 0; i < line.length; i++) {
       text.text = text._text + line[i];
-      await sleep(40);
+      await sleep(textSpeed);
     }
+    list.elements.pop();
+    list.add(text.toImage());
   }
 }

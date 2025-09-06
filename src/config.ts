@@ -52,3 +52,5 @@ export const introLocalStorageKey = `${gameName}-intro`;
 export const volumeLocalStorageKey = `${gameName}-volume`;
 
 export const worlds = [world1, world2, world3];
+export const textSpeed = 40;
+export const nbTryBeforeSkip = 5;

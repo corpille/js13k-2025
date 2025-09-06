@@ -1,10 +1,11 @@
+import { getGridRealWidth, getSquareSize, gridWidth } from '../config';
 import Game from '../Game';
 import { scene as endScene } from './endScenes';
 import { gameScene } from './gameScene';
 import { getLevelScene } from './levelScene';
 import { pauseScene } from './pauseScene';
 import { getStartScene } from './startScene';
-import { getTransitionScene } from './transitionScene';
+import { getTransitionScene, moveCat } from './transitionScene';
 
 export const startSym = Symbol('start');
 export const startLoreSym = Symbol('loreStart');
@@ -54,17 +55,55 @@ export const getScenesList = () => ({
   [pauseSym]: pauseScene,
   [endSym]: endScene,
   [levelSym]: getLevelScene(),
-  [startLoreSym]: getTransitionScene(startLore, 'Leave', () => {
-    Game.instance.started = true;
-    Game.instance.loadScene(gameSym);
-  }),
+  [startLoreSym]: getTransitionScene(
+    startLore,
+    'Leave',
+    async () => {
+      Game.instance.started = true;
+      Game.instance.loadScene(gameSym);
+    },
+    async (player, aether, ground) => {
+      ground.y = -1;
+    },
+  ),
   [world1TransitionSym]: getTransitionScene(world1TransitionText),
   [world2TransitionSym]: getTransitionScene(world2TransitionText),
-  [world3TransitionSym]: getTransitionScene(world3TransitionText, 'Continue', () => {
-    Game.instance.loadScene(world3Part2TransitionSym);
-  }),
-  [world3Part2TransitionSym]: getTransitionScene(world3Part2TransitionText, 'Continue', () => {
-    Game.instance.loadScene(endSym);
-    Game.instance.reset();
-  }),
+  [world3TransitionSym]: getTransitionScene(
+    world3TransitionText,
+    'Continue',
+    async (player, aether) => {
+      aether.isLeft = false;
+      await moveCat(player, (gridWidth / 2 + 4) * getSquareSize());
+      await Promise.all([
+        moveCat(player, getGridRealWidth() + player.width),
+        moveCat(aether, getGridRealWidth() + aether.width),
+      ]);
+      Game.instance.loadScene(world3Part2TransitionSym);
+    },
+    async (player, aether) => {
+      aether.x = gridWidth / 2 + 2;
+      aether.isLeft = true;
+      await moveCat(player, getGridRealWidth() / 2 - player.width / 2);
+    },
+  ),
+  [world3Part2TransitionSym]: getTransitionScene(
+    world3Part2TransitionText,
+    'Continue',
+    async (player, aether) => {
+      await Promise.all([
+        moveCat(player, getGridRealWidth() + player.width),
+        moveCat(aether, getGridRealWidth() + aether.width),
+      ]);
+      Game.instance.loadScene(endSym);
+      Game.instance.reset();
+    },
+    async (player, aether) => {
+      aether.isLeft = false;
+      aether.x = -4;
+      await Promise.all([
+        moveCat(player, getGridRealWidth() / 2 - player.width / 2),
+        moveCat(aether, getGridRealWidth() / 2 - player.width - aether.width / 2),
+      ]);
+    },
+  ),
 });

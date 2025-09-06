@@ -13,7 +13,7 @@ export class UiScene {
   needRefresh: boolean = true;
   autoRefresh: boolean = false;
   onLoad: Function = () => {};
-  onRender: Function = () => {};
+  onRender: Function = (ctx: CanvasRenderingContext2D) => {};
   centered: boolean[] = [true, true];
 
   get height() {
@@ -82,7 +82,6 @@ export class UiScene {
       }
     }
     this.needRefresh = this.autoRefresh;
-    this.onRender();
     this.elements.forEach((element) => {
       ctx.save();
       if (this.autoRefresh) {
@@ -91,5 +90,6 @@ export class UiScene {
       element.render(ctx, false);
       ctx.restore();
     });
+    this.onRender(ctx);
   }
 }

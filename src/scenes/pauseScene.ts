@@ -1,7 +1,7 @@
 import { gameSym, startSym } from '.';
 import { treatImage } from '../assets';
 import AudioEngine from '../AudioEngine';
-import { darkBackground, levelLocalStorageKey, volumeLocalStorageKey } from '../config';
+import { darkBackground, levelLocalStorageKey, nbTryBeforeSkip, volumeLocalStorageKey } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
@@ -73,7 +73,7 @@ pauseScene.onLoad = async () => {
   buttonList.add(resumeButton);
   buttonList.add(muteButton);
   buttonList.add(quitButton);
-  if (Game.instance.currentLevel.nbTry > 4) {
+  if (Game.instance.currentLevel.nbTry > nbTryBeforeSkip - 1) {
     buttonList.add(skipButton);
   }
   buttonList.update();

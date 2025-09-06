@@ -88,7 +88,7 @@ export default class Engine {
     let yOffset = 0;
     let xOffset = 0;
 
-    this.game.aether?.update(Math.round(getMoveSpeed() / 3) * (this.game.aether.isLeft ? -1 : 1));
+    this.game.aether?.mirrorUpdate(Math.round(getMoveSpeed() / 3) * (this.game.aether.isLeft ? -1 : 1));
 
     const colisions = checkColissions(this.game);
 
@@ -171,11 +171,9 @@ export default class Engine {
       if (this.game.radius >= 0) {
         this.game.radius -= getSquareSize() / 1.58;
         setTimeout(zoom.bind(this));
-      } else {
-        if (callback()) {
-          this.game.radius = 0;
-          setTimeout(unZoom, 150);
-        }
+      } else if (callback()) {
+        this.game.radius = 0;
+        setTimeout(unZoom, 150);
       }
     };
     zoom();

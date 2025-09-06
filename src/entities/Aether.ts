@@ -17,7 +17,7 @@ export class Aether extends PlayerEntity {
     return this.offsets.x < getGridRealWidth() && this.x + this.width > 0;
   }
 
-  update(x: number = 0) {
+  mirrorUpdate(x: number) {
     if (this.counter < pauseTime) {
       this.counter++;
       if (this.counter === pauseTime) {

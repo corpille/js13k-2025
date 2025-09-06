@@ -15,6 +15,7 @@ export class UiButton extends UiElement {
   image: HTMLImageElement | undefined;
   disableImage: boolean;
   needRender: boolean;
+  isPressed: boolean = false;
 
   set text(value: string) {
     this._text = value;
@@ -48,6 +49,7 @@ export class UiButton extends UiElement {
 
   unload() {
     super.unload();
+    this.isPressed = false;
     canvas.removeEventListener('mousedown', this.onMouseDown);
     canvas.removeEventListener('mousemove', this.onMouseHover);
   }
@@ -55,7 +57,8 @@ export class UiButton extends UiElement {
   onMouseDown = (e: MouseEvent) => {
     if (this.disabled) return;
     const coords = getCursorPosition(e);
-    if (isPointCollission(coords, this)) {
+    if (isPointCollission(coords, this) && !this.isPressed) {
+      this.isPressed = true;
       this.onClick();
     }
   };

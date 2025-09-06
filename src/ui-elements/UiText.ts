@@ -1,6 +1,8 @@
 import { getSquareSize } from '../config';
+import { canvas } from '../elements';
 import { displayString, getTextRealSizes } from '../text-utils';
 import { UiElement } from './UiElement';
+import { UiImage } from './UiImage';
 
 export class UiText extends UiElement {
   _text: string;
@@ -32,5 +34,19 @@ export class UiText extends UiElement {
     displayString(ctx, this.x, this.y, this._text, this.size);
     ctx.restore();
     this.needRender = false;
+  }
+
+  toImage() {
+    const exportImg = new Image();
+    exportImg.src = canvas.toDataURL('image/png');
+    const img = new UiImage(0, 0, 1, exportImg, this.centered);
+    img.inverted = 0;
+    img.crop = {
+      x: this.x,
+      y: this.y,
+      w: this.width,
+      h: this.height + 3 * this.size,
+    };
+    return img;
   }
 }
