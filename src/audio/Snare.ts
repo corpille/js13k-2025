@@ -1,13 +1,22 @@
 import { Instrument } from './Instrument';
 
+const sampleRate = 44100;
+const samples = 0.25 * sampleRate;
 export class Snare extends Instrument {
   audioContext: AudioContext;
   targetNode: AudioNode;
   volume: number;
+  noiseBuffer: AudioBuffer;
 
   constructor(audioContext: AudioContext, targetNode: AudioNode, volume: number) {
     super(audioContext, targetNode);
     this.volume = volume;
+    this.noiseBuffer = this.audioContext.createBuffer(1, samples, sampleRate);
+    const output = this.noiseBuffer.getChannelData(0);
+
+    for (let i = 0; i < 4096; i++) {
+      output[i] = Math.random();
+    }
   }
 
   playNote(time: number) {
@@ -24,7 +33,7 @@ export class Snare extends Instrument {
 
     const filterNode = this.audioContext.createBiquadFilter();
     filterNode.type = 'lowpass';
-    filterNode.frequency.setValueAtTime(7000, time);
+    filterNode.frequency.setValueAtTime(3000, time);
 
     osc.type = 'triangle';
     osc.frequency.value = 100;
@@ -43,13 +52,13 @@ export class Snare extends Instrument {
     const filter = this.audioContext.createBiquadFilter();
     filter.type = 'highpass';
     filter.frequency.setValueAtTime(100, time);
-    filter.frequency.linearRampToValueAtTime(4000, time + 0.2);
+    filter.frequency.linearRampToValueAtTime(10000, time + 0.2);
 
     for (let i = 0; i < 4096; i++) {
       data[i] = Math.random();
     }
 
-    node.buffer = buffer;
+    node.buffer = this.noiseBuffer;
     node.loop = true;
 
     //Connections

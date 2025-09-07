@@ -1,11 +1,19 @@
 import { Synthetizer } from './audio/Synthetizer';
-import { bass2Config, bassConfig, lead1Config, lead2Config, subConfig } from './audio/intrument-config';
+import {
+  bassSup1Config,
+  bassSup2Config,
+  bassConfig,
+  lead1Config,
+  lead2Config,
+  subConfig,
+} from './audio/intrument-config';
 import { Kick } from './audio/Kick';
 import { Instrument } from './audio/Instrument';
 import { Snare } from './audio/Snare';
 import { volumeLocalStorageKey } from './config';
 import { gameMelody } from './audio/gameMelody';
 import { Melody } from './audio/Melody';
+import { HighHat } from './audio/HighHat';
 
 const BPM = 100;
 export const loopLength = (16 * 60000) / BPM;
@@ -25,10 +33,10 @@ export default class AudioEngine {
   intruments: { [id: string]: Instrument[] } = {};
   audioNodes: (AudioScheduledSourceNode | AudioBufferSourceNode)[] = [];
 
-  _volume: number = 0.5;
+  _volume: number = 0.8;
 
   get volume(): number {
-    this._volume = parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0.5');
+    this._volume = parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0.8');
 
     return this._volume;
   }
@@ -49,9 +57,13 @@ export default class AudioEngine {
 
     this.intruments.sub = [new Synthetizer(this.audioContext, this.mainGainNode, subConfig)];
     this.intruments.bass = [new Synthetizer(this.audioContext, this.mainGainNode, bassConfig)];
-    this.intruments.bass2 = [new Synthetizer(this.audioContext, this.mainGainNode, bass2Config)];
-    this.intruments.kick = [new Kick(this.audioContext, this.mainGainNode, 0.4)];
-    this.intruments.snare = [new Snare(this.audioContext, this.mainGainNode, 0.04)];
+    this.intruments.supBass = [
+      new Synthetizer(this.audioContext, this.mainGainNode, bassSup1Config),
+      new Synthetizer(this.audioContext, this.mainGainNode, bassSup2Config),
+    ];
+    this.intruments.kick = [new Kick(this.audioContext, this.mainGainNode, 0.35)];
+    this.intruments.snare = [new Snare(this.audioContext, this.mainGainNode, 0.15)];
+    this.intruments.highHat = [new HighHat(this.audioContext, this.mainGainNode, 0.1)];
     this.intruments.lead = [
       new Synthetizer(this.audioContext, this.mainGainNode, lead1Config),
       new Synthetizer(this.audioContext, this.mainGainNode, lead2Config),
@@ -78,7 +90,7 @@ export default class AudioEngine {
       let delay = 0;
       notes[this.iterators[name]].forEach((note: string) => {
         const [sym, dur] = note.split(':');
-        const duration = parseFloat(dur ?? '0');
+        const duration = parseFloat(dur ?? '0.25');
         let symbols = [sym];
         if (sym.indexOf(',') !== 1) {
           symbols = sym.split(',');

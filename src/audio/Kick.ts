@@ -1,52 +1,86 @@
 import { Instrument } from './Instrument';
 
+const sampleRate = 44100;
+const samples = 0.25 * sampleRate;
+
 export class Kick extends Instrument {
   audioContext: AudioContext;
   targetNode: AudioNode;
   volume: number;
+  noiseBuffer: AudioBuffer;
 
   constructor(audioContext: AudioContext, targetNode: AudioNode, volume: number) {
     super(audioContext, targetNode);
     this.volume = volume;
+    this.noiseBuffer = this.audioContext.createBuffer(1, samples, sampleRate);
+    const output = this.noiseBuffer.getChannelData(0);
+
+    for (let i = 0; i < 4096; i++) {
+      output[i] = Math.random();
+    }
   }
+
   playNote(time: number) {
-    const instrumentVolume = this.audioContext.createGain();
-    instrumentVolume.gain.setValueAtTime(this.volume, time);
-    instrumentVolume.connect(this.targetNode);
-
     const osc = this.audioContext.createOscillator();
-    const osc2 = this.audioContext.createOscillator();
-    const gainOsc = this.audioContext.createGain();
-    const gainOsc2 = this.audioContext.createGain();
+    osc.frequency.value = 54;
+    var gain = this.audioContext.createGain();
+    var oscGain = this.audioContext.createGain();
 
-    const filterNode = this.audioContext.createBiquadFilter();
-    filterNode.frequency.setValueAtTime(265, time);
-    osc.type = 'triangle';
-    osc2.type = 'sine';
+    const decay = 50;
+    const tone = 64;
 
-    gainOsc.gain.setValueAtTime(1, time);
-    gainOsc.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+    const choke = this.audioContext.createGain();
+    choke.gain.value = 0;
 
-    gainOsc2.gain.setValueAtTime(1, time);
-    gainOsc2.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+    choke.gain.setValueAtTime(0, time + 0.0001);
+    choke.gain.linearRampToValueAtTime(this.volume, time + 0.0002);
 
-    osc.frequency.setValueAtTime(120, time);
-    osc.frequency.exponentialRampToValueAtTime(0.001, time + 0.5);
+    const max = 2.2;
+    const min = 0.09;
+    const duration = (max - min) * (decay / 127) + min;
 
-    osc2.frequency.setValueAtTime(50, time);
-    osc2.frequency.exponentialRampToValueAtTime(0.001, time + 0.5);
+    const noise = this.audioContext.createBufferSource();
+    noise.buffer = this.noiseBuffer;
+    noise.loop = true;
+    const noiseGain = this.audioContext.createGain();
+    const noiseFilter = this.audioContext.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.value = 1380 * 2;
+    noiseFilter.Q.value = 20;
 
-    osc.connect(gainOsc);
-    osc2.connect(gainOsc2);
-    gainOsc.connect(filterNode);
-    gainOsc2.connect(filterNode);
+    noiseGain.gain.setValueAtTime(2 * Math.max(tone / 127, 0.0001), time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.01);
 
-    filterNode.connect(instrumentVolume);
+    oscGain.gain.setValueAtTime(0.0001, time);
+    oscGain.gain.exponentialRampToValueAtTime(1, time + 0.004);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
 
-    const nodes = [osc, osc2];
-    nodes.forEach((node) => node.start(time));
-    nodes.forEach((node) => node.stop(time + 0.5));
+    osc.connect(oscGain);
 
-    return nodes;
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+
+    oscGain.connect(choke);
+    noiseGain.connect(choke);
+
+    choke.connect(gain);
+
+    gain.connect(this.targetNode);
+
+    noise.start(time);
+    noise.stop(time + duration);
+
+    osc.start(time);
+    osc.stop(time + duration);
+
+    // gain.stop = function(when) {
+    //   if (typeof when !== 'number') {
+    //     when = context.currentTime;
+    //   }
+
+    //   choke.gain.setValueAtTime(1, when);
+    //   choke.gain.linearRampToValueAtTime(0, when + 0.0001);
+    // };
+    return [osc, noise];
   }
 }
