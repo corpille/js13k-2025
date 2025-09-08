@@ -93,12 +93,14 @@ export class UiList extends UiElement {
     this.elements.forEach((e) => e.centerElement());
   }
 
-  add(element: UiElement) {
-    element.setParent(this);
-    if (this.loaded) {
-      element.load();
+  add(...elements: UiElement[]) {
+    for (const element of elements) {
+      element.setParent(this);
+      if (this.loaded) {
+        element.load();
+      }
+      this.elements.push(element);
     }
-    this.elements.push(element);
     this.updateElements();
   }
 

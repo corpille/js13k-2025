@@ -39,10 +39,12 @@ export class UiScene {
     this.elements.forEach((e) => e.centerElement());
   }
 
-  add(element: UiElement) {
-    element.setParent(this);
-    element.needRender = true;
-    this.elements.push(element);
+  add(...elements: UiElement[]) {
+    for (const element of elements) {
+      element.setParent(this);
+      element.needRender = true;
+      this.elements.push(element);
+    }
   }
 
   load() {

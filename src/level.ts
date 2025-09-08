@@ -67,9 +67,7 @@ export default class Level {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    this.blocks.forEach((block) => {
-      block.render(ctx);
-    });
+    this.blocks.forEach((block) => block.render(ctx));
     if (this.treat && !this.foundTreat) {
       ctx.save();
       if (this.alreadyFoundTreat) {
@@ -78,9 +76,7 @@ export default class Level {
       this.treat.render(ctx);
       ctx.restore();
     }
-    if (this.end) {
-      this.end.render(ctx);
-    }
+    this.end?.render(ctx);
   }
 
   invert() {

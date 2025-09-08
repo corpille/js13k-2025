@@ -28,12 +28,9 @@ scene.onLoad = () => {
 
 const treatLayout = new UiList(0, 0, [true, false], 'row');
 const treatUiImage2 = new UiImage(8, 6, 3, treatImage, [false, true]);
+treatUiImage2.inverted = 0;
 
 export const treatEndCounter = new UiText(0, 16, '0', 5, [false, true]);
-treatLayout.add(treatUiImage2);
-treatUiImage2.inverted = 0;
-treatLayout.add(treatEndCounter);
-sceneList.add(endMessage);
-sceneList.add(treatLayout);
-sceneList.add(restartButton);
+treatLayout.add(treatUiImage2, treatEndCounter);
+sceneList.add(endMessage, treatLayout, restartButton);
 scene.add(sceneList);

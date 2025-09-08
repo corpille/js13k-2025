@@ -17,8 +17,7 @@ const treatInfo = new UiList(
 );
 const treatUiImage = new UiImage(0, 0, 2, treatImage, [false, true]);
 export const treatCounter = new UiText(0, 0, '0', 3, [false, true]);
-treatInfo.add(treatUiImage);
-treatInfo.add(treatCounter);
+treatInfo.add(treatUiImage, treatCounter);
 
 const instructionList = new UiList(0, getGridRealHeight() / 4, [true, false]);
 
@@ -32,5 +31,4 @@ gameScene.onLoad = () => {
   instructionList.update();
 };
 
-gameScene.add(instructionList);
-gameScene.add(treatInfo);
+gameScene.add(instructionList, treatInfo);

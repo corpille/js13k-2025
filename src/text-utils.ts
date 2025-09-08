@@ -21,7 +21,7 @@ export function displayString(
 
     const yOffset = c === ',' ? size : 'gjpqy'.includes(c) ? (size * 4) / 2 : 0;
     ctx.drawImage(image, 0 + offset, 0, width, textHeight, x + xOffset, y + yOffset, width * size, textHeight * size);
-    return xOffset + width * size + size;
+    return xOffset + (width + 1) * size;
   }, 0);
   ctx.restore();
 }
@@ -32,7 +32,7 @@ export function getTextRealSizes(str: string, size: number) {
     return res + (foundWidth || textWidth);
   }, 0);
   return {
-    width: strWidth * size + (str.length - 1) * size,
+    width: (strWidth + str.length - 1) * size,
     height: textHeight * size,
   };
 }

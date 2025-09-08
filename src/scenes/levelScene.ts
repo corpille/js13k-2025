@@ -14,7 +14,6 @@ export function getLevelScene(): UiScene {
   sceneList.inverted = Game.instance.currentLvl > backgroundShift ? 0 : 1;
 
   const text = new UiText(0, 0, 'Choose a level', 5, [true, false]);
-  sceneList.add(text);
 
   const worldList = new UiList(0, 0, [true, false]);
   let lvlCount = 0;
@@ -43,13 +42,12 @@ export function getLevelScene(): UiScene {
     });
     worldList.add(levelList);
   });
-  sceneList.add(worldList);
 
   const backButton = new UiButton(0, 0, 'Back', [true, false]);
   backButton.onClick = () => {
     Game.instance.loadScene(startSym);
   };
-  sceneList.add(backButton);
+  sceneList.add(text, worldList, backButton);
   levelScene.add(sceneList);
   return levelScene;
 }

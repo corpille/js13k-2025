@@ -16,13 +16,10 @@ export function getStartScene(): UiScene {
   const sceneList = new UiList(0, 0, [true, true], 'column', 50);
 
   const title = new UiText(0, 0, gameName, 12, [true, false]);
-  sceneList.add(title);
-
   const author = new UiText(0, 0, 'A game by Corentin Pillet', 3, [true, false]);
-  sceneList.add(author);
-
   const buttonList = new UiList(0, 0, [true, false]);
-  sceneList.add(buttonList);
+
+  sceneList.add(title, author, buttonList);
   scene.add(sceneList);
 
   scene.onLoad = () => {
@@ -56,7 +53,6 @@ export function getStartScene(): UiScene {
       Game.instance.restart();
       Game.instance.started = false;
     };
-    buttonList.add(newGameButton);
 
     const muteButton = new UiButton(0, 0, getMuteStatus(), [true, false]);
     muteButton.onClick = () => {
@@ -64,7 +60,7 @@ export function getStartScene(): UiScene {
       muteButton.text = getMuteStatus();
       muteButton.update();
     };
-    buttonList.add(muteButton);
+    buttonList.add(newGameButton, muteButton);
 
     scene.update();
   };

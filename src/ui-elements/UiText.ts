@@ -1,5 +1,4 @@
-import { getSquareSize } from '../config';
-import { canvas } from '../elements';
+import { canvas } from '../assets';
 import { displayString, getTextRealSizes } from '../text-utils';
 import { UiElement } from './UiElement';
 import { UiImage } from './UiImage';
@@ -16,9 +15,7 @@ export class UiText extends UiElement {
 
   set text(value: string) {
     this._text = value;
-    if (this.parent) {
-      this.parent.update();
-    }
+    this.parent?.update();
   }
 
   getRealSize() {

@@ -11,7 +11,7 @@ import {
   getXForceDecrease,
   getYForceDecrease,
 } from './config';
-import { canvas } from './elements';
+import { canvas } from './assets';
 import Game from './Game';
 import { checkColissions } from './physics';
 import { gameSym, pauseSym } from './scenes';
@@ -79,7 +79,7 @@ export default class Engine {
     }
 
     // Update Blocks
-    [...this.game.currentLevel.blocks, ...this.game.currentMirrorLevel.blocks].forEach((block) => block.update());
+    this.game.currentLevel.blocks.concat(this.game.currentMirrorLevel.blocks).forEach((block) => block.update());
 
     // Compute Y force
     this.game.yForce = this.getGravityForce() + this.game.jumpForce;

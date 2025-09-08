@@ -4,6 +4,8 @@ import cats from '/assets/cats.webp';
 import cardboard from '/assets/cardboard.webp';
 import btn from '/assets/btn.webp';
 
+export const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+
 export const textMatcher = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#-/ .,'";
 
 export const treatImage = new Image(10, 10);

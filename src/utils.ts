@@ -1,5 +1,5 @@
 import { volumeLocalStorageKey } from './config';
-import { canvas } from './elements';
+import { canvas } from './assets';
 import BlocEntity from './entities/BlocEntity';
 
 export interface Coord {

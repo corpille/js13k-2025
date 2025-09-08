@@ -37,7 +37,6 @@ export default class AudioEngine {
 
   get volume(): number {
     this._volume = parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0.8');
-
     return this._volume;
   }
 
@@ -90,7 +89,7 @@ export default class AudioEngine {
       let delay = 0;
       notes[this.iterators[name]].forEach((note: string) => {
         const [sym, dur] = note.split(':');
-        const duration = parseFloat(dur ?? '0.25');
+        const duration = parseFloat(dur ?? '1') / 4;
         let symbols = [sym];
         if (sym.indexOf(',') !== 1) {
           symbols = sym.split(',');

@@ -1,6 +1,6 @@
 import { textImage } from './assets';
-import { getSquareSize, ratio, uiSquareRatio } from './config';
-import { canvas } from './elements';
+import { ratio } from './config';
+import { canvas } from './assets';
 import { displayString, getTextRealSizes } from './text-utils';
 import { randomBetween } from './utils';
 import text from '/assets/text.webp';

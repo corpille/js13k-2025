@@ -204,10 +204,7 @@ export default class Game {
     let levelCounter = 0;
     const currentWorld = worlds.findIndex((w, i) => {
       levelCounter += w.length;
-      if (this.currentLvl + 1 === levelCounter) {
-        return true;
-      }
-      return false;
+      return this.currentLvl + 1 === levelCounter;
     });
     if (currentWorld !== -1) {
       this.loadScene(currentWorld === 0 ? world1TransitionSym : world2TransitionSym);
@@ -291,9 +288,9 @@ export default class Game {
   }
 
   checkColission(entity: { x: number; y: number; width: number; height: number }) {
-    return [...this.currentLevel.blocks, ...this.currentMirrorLevel.blocks].filter((block) =>
-      isCollidingWith(entity, block),
-    );
+    return this.currentLevel.blocks
+      .concat(this.currentMirrorLevel.blocks)
+      .filter((block) => isCollidingWith(entity, block));
   }
 
   pause(playScene: boolean = true) {

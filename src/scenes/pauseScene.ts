@@ -46,9 +46,7 @@ skipButton.onClick = () => {
   Game.instance.validateLvl();
 };
 
-scenelist.add(title);
-scenelist.add(infoList);
-scenelist.add(buttonList);
+scenelist.add(title, infoList, buttonList);
 
 pauseScene.add(scenelist);
 
@@ -64,15 +62,11 @@ pauseScene.onLoad = async () => {
   const treatUiImage = new UiImage(0, 0, 3, treatImage, [false, true]);
   const treatCounter = new UiText(0, 0, Game.instance.treatCount.toString(), 3, [false, true]);
   treatCounter.inverted = 1;
-  infoList.add(text);
-  treatInfo.add(treatUiImage);
-  treatInfo.add(treatCounter);
-  infoList.add(treatInfo);
-
+  treatInfo.add(treatUiImage, treatCounter);
+  infoList.add(text, treatInfo);
   infoList.update();
-  buttonList.add(resumeButton);
-  buttonList.add(muteButton);
-  buttonList.add(quitButton);
+
+  buttonList.add(resumeButton, muteButton, quitButton);
   if (Game.instance.currentLevel.nbTry > nbTryBeforeSkip - 1) {
     buttonList.add(skipButton);
   }

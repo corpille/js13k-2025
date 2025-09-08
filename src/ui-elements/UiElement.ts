@@ -51,15 +51,11 @@ export abstract class UiElement {
   }
 
   update() {
-    if (this.parent) {
-      this.parent.update();
-    }
+    this.parent?.update();
   }
 
   refresh() {
-    if (this.parent) {
-      this.parent.refresh();
-    }
+    this.parent?.refresh();
   }
 
   getRealSize() {

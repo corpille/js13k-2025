@@ -1,16 +1,12 @@
 import { computeBackgrounds } from './background';
 import { computedSizes, gridRealHeight, getGridRealWidth, getDefaultRadius } from './config';
-import { canvas } from './elements';
+import { canvas } from './assets';
 import Engine from './Engine';
 import Game from './Game';
 
-window.addEventListener('keydown', function (e) {
-  Game.instance.keys[e.code] = true;
-});
+window.addEventListener('keydown', (e) => (Game.instance.keys[e.code] = true));
 
-window.addEventListener('keyup', function (e) {
-  Game.instance.keys[e.code] = false;
-});
+window.addEventListener('keyup', (e) => (Game.instance.keys[e.code] = false));
 
 async function init() {
   if (!canvas) return;
