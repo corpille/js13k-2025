@@ -11,7 +11,7 @@ import { Kick } from './audio/Kick';
 import { Instrument } from './audio/Instrument';
 import { Snare } from './audio/Snare';
 import { globalVolume, volumeLocalStorageKey } from './config';
-import { gameMelody } from './audio/gameMelody';
+import { gameMelody, transitionMelody } from './audio/gameMelody';
 import { Melody } from './audio/Melody';
 import { HighHat } from './audio/HighHat';
 
@@ -20,6 +20,7 @@ export const loopLength = (16 * 60000) / BPM;
 
 const melodies: { [name: string]: Melody } = {};
 melodies['game'] = gameMelody;
+melodies['transition'] = transitionMelody;
 
 export default class AudioEngine {
   static _instance: AudioEngine;
@@ -82,7 +83,7 @@ export default class AudioEngine {
       this.iterators[name] = 0;
     }
     if (this.iterators[name] === melody.loopLength) {
-      this.iterators[name] = melody.loopPoint ?? 0;
+      this.iterators[name] = 0;
     }
     this.audioNodes = [];
     for (const [instrument, notes] of Object.entries(melody.loop)) {
@@ -146,6 +147,7 @@ export default class AudioEngine {
   }
 
   playBgMusic(name: string) {
+    this.stopBgMusic();
     this.isPaused = false;
     this.mainGainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
     this.audioContext.resume();

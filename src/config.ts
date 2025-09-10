@@ -54,4 +54,4 @@ export const volumeLocalStorageKey = `${gameName}-volume`;
 export const worlds = [world1, world2, world3];
 export const textSpeed = 40;
 export const nbTryBeforeSkip = 5;
-export const globalVolume = 0.8;
+export const globalVolume = 0.5;

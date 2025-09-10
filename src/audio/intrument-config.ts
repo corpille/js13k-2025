@@ -102,7 +102,7 @@ export const lead1Config: SynthConfig = {
 };
 
 export const lead2Config: SynthConfig = {
-  volume: 0.18,
+  volume: 0.17,
   type: 'square',
   enveloppe: leadEnveloppe,
   filter: {

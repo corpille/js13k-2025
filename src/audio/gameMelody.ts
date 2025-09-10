@@ -213,3 +213,19 @@ export const gameMelody = {
   loop,
   loopLength: 14,
 };
+
+const endMel = ['C3,E3,G3:16', 'B2,D3,G3:16', 'D3,F#3,A3:32'];
+const mel = [
+  ['D3,F#3,A3:16', 'E3,G3,C4:16', 'D3,F#3,A3:32'],
+  endMel,
+  ['D3,F#3,A3:16', 'G3,B3,E4:16', 'F#3,A3,D4:32'],
+  endMel,
+];
+
+export const transitionMelody = {
+  loop: {
+    lead: mel,
+    supBass: mel,
+  },
+  loopLength: 4,
+};

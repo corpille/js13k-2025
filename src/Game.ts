@@ -24,6 +24,7 @@ import {
   startSym,
   world1TransitionSym,
   world2TransitionSym,
+  levelSym,
 } from './scenes';
 import { treatCounter } from './scenes/gameScene';
 import { treatEndCounter } from './scenes/endScenes';
@@ -187,6 +188,10 @@ export default class Game {
         AudioEngine.instance.playBgMusic('game');
       } else {
         AudioEngine.instance.resume();
+      }
+    } else if (name !== gameSym && name !== startSym && name !== levelSym && name !== pauseSym) {
+      if (!AudioEngine.instance.isPlaying('transition')) {
+        AudioEngine.instance.playBgMusic('transition');
       }
     } else {
       AudioEngine.instance.pause();

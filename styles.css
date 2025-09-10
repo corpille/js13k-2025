@@ -12,7 +12,6 @@ html {
 body {
     position: relative;
     display: flex;
-    flex-direction: column;
     height: 100%;
     width: 100%;
     margin: 0;
@@ -23,6 +22,5 @@ body {
 }
 
 canvas {
-    /* border: 10px solid #282828; */
     border-radius: 6px;
 }
