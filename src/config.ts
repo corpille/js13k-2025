@@ -41,9 +41,9 @@ export const coyoteFrames = 3;
 export const getDefaultRadius = () => getSquareSize() * gridWidth * 2;
 
 export const lightBackground = '#f7f6f0';
-export const darkBackground = '#111111'; //'#0B1026';
+export const darkBackground = '#111111';
 
-export const gameName = "Nyx's passage";
+export const gameName = 'Echoes of Nyx';
 document.title = gameName;
 
 export const treatLocalStorageKey = `${gameName}-treat`;
@@ -54,3 +54,4 @@ export const volumeLocalStorageKey = `${gameName}-volume`;
 export const worlds = [world1, world2, world3];
 export const textSpeed = 40;
 export const nbTryBeforeSkip = 5;
+export const globalVolume = 0.8;

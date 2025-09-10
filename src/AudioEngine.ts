@@ -10,7 +10,7 @@ import {
 import { Kick } from './audio/Kick';
 import { Instrument } from './audio/Instrument';
 import { Snare } from './audio/Snare';
-import { volumeLocalStorageKey } from './config';
+import { globalVolume, volumeLocalStorageKey } from './config';
 import { gameMelody } from './audio/gameMelody';
 import { Melody } from './audio/Melody';
 import { HighHat } from './audio/HighHat';
@@ -33,10 +33,10 @@ export default class AudioEngine {
   intruments: { [id: string]: Instrument[] } = {};
   audioNodes: (AudioScheduledSourceNode | AudioBufferSourceNode)[] = [];
 
-  _volume: number = 0.8;
+  _volume: number = globalVolume;
 
   get volume(): number {
-    this._volume = parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0.8');
+    this._volume = parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? globalVolume.toString());
     return this._volume;
   }
 

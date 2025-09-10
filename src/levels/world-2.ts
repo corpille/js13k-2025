@@ -45,7 +45,7 @@ const level2 = {
     [36, 0, 4, 1, false],
   ],
   end: [37, 1],
-  treat: [37, 23],
+  treat: [37, 23, false],
 };
 
 const level3 = {
@@ -128,7 +128,7 @@ const level5 = {
     [1, 18, 2, 1, true, 0, -18],
   ],
   end: [1, 19],
-  treat: [29, 18],
+  treat: [29, 18, false],
 };
 
 export default [level1, level2, level3, level4, level5];

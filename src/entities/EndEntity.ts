@@ -5,9 +5,8 @@ import Entity from './Entity';
 export default class EndEntity extends Entity {
   isFilled: boolean;
 
-  constructor(x: number, y: number, isFilled: boolean) {
+  constructor(x: number, y: number, isFilled: boolean = true) {
     super(x, y, 2, 2);
-
     this.isFilled = isFilled;
   }
 

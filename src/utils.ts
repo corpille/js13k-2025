@@ -1,4 +1,4 @@
-import { volumeLocalStorageKey } from './config';
+import { globalVolume, volumeLocalStorageKey } from './config';
 import { canvas } from './assets';
 import BlocEntity from './entities/BlocEntity';
 
@@ -58,5 +58,5 @@ export function randomBetween(min: number, max: number): number {
 }
 
 export function getMuteStatus(): string {
-  return parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? '0') === 0 ? 'Unmute' : 'Mute';
+  return parseFloat(localStorage.getItem(volumeLocalStorageKey) ?? globalVolume.toString()) === 0 ? 'Unmute' : 'Mute';
 }

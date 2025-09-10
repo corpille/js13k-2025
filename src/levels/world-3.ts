@@ -13,7 +13,7 @@ const level1 = {
     [31, 8, 4, 1, false, -8],
   ],
   end: [37, 1],
-  treat: [10, 9],
+  treat: [10, 9, false],
 };
 
 const level2 = {
@@ -120,7 +120,7 @@ const level5 = {
     [32, 0, 2, 1, true],
   ],
   mirrorEnd: [37, 1],
-  treat: [30, 11],
+  treat: [30, 11, false],
 };
 
 export default [level1, level2, level3, level4, level5];

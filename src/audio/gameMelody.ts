@@ -1,3 +1,5 @@
+import { loopLength } from '../AudioEngine';
+
 const sub = [['D2:64'], ['C2:64']];
 
 const bass = [
@@ -98,7 +100,7 @@ const lead = [
     '-',
     'F4',
     'D4',
-    '-:2',
+    '-:3',
     'G4',
     '-',
     'E4',
@@ -143,7 +145,7 @@ const lead = [
     '-',
     'F4',
     'E4',
-    '-',
+    '-:3',
     'G4',
     '-',
     'F4',
@@ -209,4 +211,5 @@ const loop: { [name: string]: string[][] } = {
 
 export const gameMelody = {
   loop,
+  loopLength: 14,
 };

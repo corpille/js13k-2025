@@ -1,7 +1,7 @@
 import { gameSym, startSym } from '.';
 import { treatImage } from '../assets';
 import AudioEngine from '../AudioEngine';
-import { darkBackground, levelLocalStorageKey, nbTryBeforeSkip, volumeLocalStorageKey } from '../config';
+import { darkBackground, globalVolume, levelLocalStorageKey, nbTryBeforeSkip, volumeLocalStorageKey } from '../config';
 import Game from '../Game';
 import { UiScene } from '../ui-elements/Scene';
 import { UiButton } from '../ui-elements/UiButton';
@@ -26,9 +26,10 @@ resumeButton.onClick = () => {
 
 const muteButton = new UiButton(0, 0, getMuteStatus(), [true, false]);
 muteButton.onClick = () => {
-  AudioEngine.instance.volume = AudioEngine.instance.volume ? 0 : 0.5;
+  AudioEngine.instance.volume = AudioEngine.instance.volume ? 0 : globalVolume;
   muteButton.text = getMuteStatus();
   muteButton.update();
+  muteButton.isPressed = false;
 };
 
 const quitButton = new UiButton(0, 0, 'Quit', [true, false]);
