@@ -159,7 +159,7 @@ export default class AudioEngine {
     return this.timeoutIds[name] !== undefined;
   }
 
-  async stopBgMusic() {
+  stopBgMusic() {
     this.mainGainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
     this.audioNodes.forEach((audioNode) => audioNode.stop(0));
     Object.values(this.timeoutIds).forEach(clearTimeout);

@@ -67,20 +67,10 @@ export class Kick extends Instrument {
 
     gain.connect(this.targetNode);
 
-    noise.start(time);
-    noise.stop(time + duration);
+    const nodes = [osc, noise];
+    nodes.forEach((node) => node.start(time));
+    nodes.forEach((node) => node.stop(time + 0.2));
 
-    osc.start(time);
-    osc.stop(time + duration);
-
-    // gain.stop = function(when) {
-    //   if (typeof when !== 'number') {
-    //     when = context.currentTime;
-    //   }
-
-    //   choke.gain.setValueAtTime(1, when);
-    //   choke.gain.linearRampToValueAtTime(0, when + 0.0001);
-    // };
-    return [osc, noise];
+    return nodes;
   }
 }

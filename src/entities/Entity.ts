@@ -5,6 +5,7 @@ export default class Entity {
   _y: number;
   _width: number;
   _height: number;
+  isFilled: boolean;
 
   set x(value: number) {
     this._x = value;

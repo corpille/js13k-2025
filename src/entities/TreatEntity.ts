@@ -6,7 +6,6 @@ export default class TreatEntity extends Entity {
   frameCounter: number = 0;
   offsetShift: number = 0;
   moveDown: boolean = true;
-  isFilled: boolean;
 
   constructor(x: number, y: number, isFilled: boolean = true) {
     super(x, y, 0.5, 0.5);

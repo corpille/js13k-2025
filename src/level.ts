@@ -15,7 +15,6 @@ export default class Level {
   treat: TreatEntity;
   foundTreat: boolean = false;
   alreadyFoundTreat: boolean = false;
-  nbTry: number = 0;
 
   constructor(
     name: string,

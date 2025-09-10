@@ -7,7 +7,6 @@ import Entity from './Entity';
 const getBlockMoveSpeed = () => Math.round(getSquareSize() / 8);
 export default class BlocEntity extends Entity {
   initialisFilled: boolean;
-  isFilled: boolean;
   startX: number;
   _moveRangeX: number = 0;
   _moveRangeY: number = 0;

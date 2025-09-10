@@ -161,7 +161,6 @@ export default class Game {
     }
     this.levels.forEach((level, i) => {
       level.reset(this.treatsFound.includes(i));
-      level.nbTry = 0;
     });
     this.mirrorLevels.forEach((mirrorLevel, i) => {
       mirrorLevel.reset(this.treatsFound.includes(i));
@@ -172,8 +171,9 @@ export default class Game {
   reset() {
     this.keys = {};
     this.paused = false;
-    this.currentLevel.reset(this.treatsFound.includes(this.currentLvl));
-    this.currentMirrorLevel.reset(this.treatsFound.includes(this.currentLvl));
+    const hasFoundTreat = this.treatsFound.includes(this.currentLvl);
+    this.currentLevel.reset(hasFoundTreat);
+    this.currentMirrorLevel.reset(hasFoundTreat);
     this.player = new PlayerEntity(this.currentLevel.startX, this.currentLevel.startY, this.currentLevel.isStartLeft);
     this.jumpForce = 0;
     this.xForce = 0;

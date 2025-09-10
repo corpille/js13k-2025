@@ -194,7 +194,6 @@ export default class Engine {
       });
     } else if (hitBox.y < -hitBox.height * 2) {
       this.jumpFrame = 0;
-      this.game.currentLevel.nbTry++;
       this.game.reset();
     }
   }

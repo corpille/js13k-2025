@@ -78,8 +78,8 @@ function drawBackground(ctx: CanvasRenderingContext2D, lvl: number) {
 }
 
 const instructionsText: string = `Use the Arrow Keys to move and Space to jump.
-You can pause the game using Escape.
-Each jump switches the platform state.`;
+Each jump switches the platform state.
+Press Escape to pause or skip the level`;
 const spacing = 8;
 
 export function computeBackgrounds() {

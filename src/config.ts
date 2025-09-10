@@ -46,12 +46,11 @@ export const darkBackground = '#111111';
 export const gameName = 'Echoes of Nyx';
 document.title = gameName;
 
-export const treatLocalStorageKey = `${gameName}-treat`;
-export const levelLocalStorageKey = `${gameName}-level`;
-export const introLocalStorageKey = `${gameName}-intro`;
-export const volumeLocalStorageKey = `${gameName}-volume`;
+export const treatLocalStorageKey = `${gameName}-t`;
+export const levelLocalStorageKey = `${gameName}-l`;
+export const introLocalStorageKey = `${gameName}-i`;
+export const volumeLocalStorageKey = `${gameName}-v`;
 
 export const worlds = [world1, world2, world3];
 export const textSpeed = 40;
-export const nbTryBeforeSkip = 5;
 export const globalVolume = 0.5;
