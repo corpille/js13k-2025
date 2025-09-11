@@ -15,6 +15,7 @@ export default class Level {
   treat: TreatEntity;
   foundTreat: boolean = false;
   alreadyFoundTreat: boolean = false;
+  treatFilled: boolean;
 
   constructor(
     name: string,
@@ -38,6 +39,7 @@ export default class Level {
         new BlocEntity(x, y, width, height, isFilled, moveRangeX, moveRangeY),
     );
     if (treat) {
+      this.treatFilled = treat[2] ?? true;
       this.treat = new TreatEntity(treat[0], treat[1], treat[2]);
     }
     if (end) {
@@ -51,6 +53,9 @@ export default class Level {
       this.end.isFilled = this.blocks[this.blocks.length - 1].isFilled;
     }
     this.foundTreat = hasFoundTreat;
+    if (this.treat) {
+      this.treat.isFilled = this.treatFilled;
+    }
   }
 
   checkTreatGathering(hitBox: Box) {
@@ -68,9 +73,6 @@ export default class Level {
     this.blocks.forEach((block) => block.render(ctx));
     if (this.treat && !this.foundTreat) {
       ctx.save();
-      if (this.alreadyFoundTreat) {
-        ctx.filter = 'opacity(0.1)';
-      }
       this.treat.render(ctx);
       ctx.restore();
     }
