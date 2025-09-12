@@ -133,20 +133,6 @@ export class Synthetizer extends Instrument {
       filter.frequency.setValueAtTime(notesTable[fOctave][fKey], time);
     }
 
-    // filter.frequency.setValueAtTime(notesTable[fOctave][fKey], time);
-    // if (this.synthConfig.filter.enveloppe && this.synthConfig.filter.enveloppeShift) {
-    //   const { key: sKey, octave: sOctave } = this.getShiftedNote(fKey, fOctave, this.synthConfig.filter.enveloppeShift);
-
-    //   filter.frequency.linearRampToValueAtTime(
-    //     notesTable[sOctave][sKey],
-    //     time + this.synthConfig.filter.enveloppe.attack,
-    //   );
-    //   filter.frequency.linearRampToValueAtTime(
-    //     notesTable[fOctave][fKey],
-    //     time + this.synthConfig.filter.enveloppe.release,
-    //   );
-    // }
-
     this.configureEnvelope(enveloppe.gain, this.synthConfig.enveloppe, time, duration);
 
     enveloppe.connect(filter);

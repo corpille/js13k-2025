@@ -1,4 +1,5 @@
 import { Instrument } from './Instrument';
+import { minAttack } from './intrument-config';
 
 const sampleRate = 44100;
 const samples = 0.25 * sampleRate;
@@ -33,7 +34,7 @@ export class Kick extends Instrument {
     choke.gain.value = 0;
 
     choke.gain.setValueAtTime(0, time + 0.0001);
-    choke.gain.linearRampToValueAtTime(this.volume, time + 0.0002);
+    choke.gain.linearRampToValueAtTime(1, time + 0.0002);
 
     const max = 2.2;
     const min = 0.09;
@@ -66,10 +67,14 @@ export class Kick extends Instrument {
     choke.connect(gain);
 
     gain.connect(this.targetNode);
+    const kickDuration = 0.2;
+    gain.gain.setValueAtTime(this.volume, time);
+    gain.gain.linearRampToValueAtTime(this.volume, time + kickDuration - minAttack);
+    gain.gain.linearRampToValueAtTime(0, time + kickDuration);
 
     const nodes = [osc, noise];
     nodes.forEach((node) => node.start(time));
-    nodes.forEach((node) => node.stop(time + 0.2));
+    nodes.forEach((node) => node.stop(time + kickDuration));
 
     return nodes;
   }
