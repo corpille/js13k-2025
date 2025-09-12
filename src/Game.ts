@@ -189,7 +189,9 @@ export default class Game {
       } else {
         AudioEngine.instance.resume();
       }
-    } else if (name !== gameSym && name !== startSym && name !== levelSym && name !== pauseSym) {
+    } else if (name === startSym) {
+      AudioEngine.instance.stopBgMusic();
+    } else if (name !== levelSym && name !== pauseSym) {
       if (!AudioEngine.instance.isPlaying('transition')) {
         AudioEngine.instance.playBgMusic('transition');
       }
